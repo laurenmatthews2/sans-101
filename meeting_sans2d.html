@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting SANS2d</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @keyframes pulse-beam {
+            0% { opacity: 0.3; transform: translateX(-10px); }
+            50% { opacity: 0.8; transform: translateX(10px); }
+            100% { opacity: 0.3; transform: translateX(-10px); }
+        }
+        .beam-animation {
+            animation: pulse-beam 3s infinite ease-in-out;
+        }
+        .component-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .component-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 p-2 rounded-xl text-white shadow-md shadow-indigo-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-slate-900 tracking-tight">ISIS SANS Instruments Explorer</h1>
+                    <p class="text-xs text-slate-500">Meeting SANS2d</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    Beamline Active
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+
+        <section class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-indigo-50/50 to-blue-50/20 rounded-full blur-3xl -z-0 pointer-events-none"></div>
+            <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900 mb-2">SANS2d: a Time-of-Flight Small-Angle Neutron Scattering Instrument</h2>
+                    <p class="text-slate-600 text-sm max-w-2xl leading-relaxed">
+                        Explore the SANS2d instrument, from source to detector, and understand how each component contributes to generating our high-quality small-angle neutron scattering (SANS) data. Click on the components to find out more information about them, and see our short video guide with one of our instrument scientists. 
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="highlightComponent('source')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Reset View</button>
+                    <button onclick="openInfoModal()" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 transition">Quick Guide</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-base font-semibold text-slate-900 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                    SANS2d Schematic
+                </h3>
+                <span class="text-xs text-slate-400 font-medium hidden sm:inline">Neutron Flight Path &rarr;</span>
+            </div>
+
+            <!-- Graphical Pipeline Container -->
+            <div class="relative py-8 px-2 overflow-x-auto">
+                <!-- Glowing Beam Track -->
+                <div class="absolute top-1/2 left-4 right-4 h-3 bg-gradient-to-r from-orange-400 via-indigo-500 to-cyan-500 rounded-full transform -translate-y-1/2 opacity-20 -z-0"></div>
+                <div class="absolute top-1/2 left-4 right-4 h-1.5 bg-gradient-to-r from-orange-500 via-indigo-600 to-cyan-600 rounded-full transform -translate-y-1/2 beam-animation -z-0"></div>
+
+                <!-- Component Nodes Grid / Flex -->
+                <div class="relative z-10 flex items-center justify-between min-w-[850px] gap-4">
+                    
+                    <!-- 1. Reactor / Source -->
+                    <div onclick="selectComponent('source')" id="node-source" class="component-card cursor-pointer bg-white border-2 border-slate-200 rounded-xl p-4 w-36 text-center shadow-sm hover:border-indigo-500 group">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-orange-100 transition">
+                            ☢️
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900 mb-1">Target Station</h4>
+                        <span class="text-[10px] text-slate-500 block">Generate Neutrons</span>
+                    </div>
+
+                    <!-- Connector Arrow -->
+                    <div class="text-slate-300 font-bold">&rsaquo;</div>
+
+                    <!-- 2. Moderator -->
+                    <div onclick="selectComponent('moderator')" id="node-moderator" class="component-card cursor-pointer bg-white border-2 border-slate-200 rounded-xl p-4 w-36 text-center shadow-sm hover:border-indigo-500 group">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-amber-100 transition">
+                            ❄️
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900 mb-1">Liquid H₂ Moderator</h4>
+                        <span class="text-[10px] text-slate-500 block">Thermalise Neutrons</span>
+                    </div>
+
+                    <!-- Connector Arrow -->
+                    <div class="text-slate-300 font-bold">&rsaquo;</div>
+
+                    <!-- 3. Bender -->
+                    <div onclick="selectComponent('bender')" id="node-bender" class="component-card cursor-pointer bg-white border-2 border-slate-200 rounded-xl p-4 w-36 text-center shadow-sm hover:border-indigo-500 group">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-blue-100 transition">
+                            🔄
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900 mb-1">Supermirror Bender</h4>
+                        <span class="text-[10px] text-slate-500 block">Reflect Neutrons</span>
+                    </div>
+
+                    <!-- Connector Arrow -->
+                    <div class="text-slate-300 font-bold">&rsaquo;</div>
+
+
+                    <!-- 4. Chopper -->
+                    <div onclick="selectComponent('chopper')" id="node-chopper" class="component-card cursor-pointer bg-white border-2 border-slate-200 rounded-xl p-4 w-36 text-center shadow-sm hover:border-indigo-500 group">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-green-50 text-green-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-green-100 transition">
+                            ⏳
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900 mb-1">Double Disc Chopper</h4>
+                        <span class="text-[10px] text-slate-500 block">ToF Structuring</span>
+                    </div>
+
+                    <!-- Connector Arrow -->
+                    <div class="text-slate-300 font-bold">&rsaquo;</div>
+
+                    <!-- 5. Collimation Guides -->
+                    <div onclick="selectComponent('collimation')" id="node-collimation" class="component-card cursor-pointer bg-white border-2 border-slate-200 rounded-xl p-4 w-36 text-center shadow-sm hover:border-indigo-500 group">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-blue-100 transition">
+                            🛡️
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900 mb-1">Collimation Guides</h4>
+                        <span class="text-[10px] text-slate-500 block">Beam Guidance</span>
+                    </div>
+
+                    <!-- Connector Arrow -->
+                    <div class="text-slate-300 font-bold">&rsaquo;</div>
+
+                    <!-- 6. Apertures -->
+                    <div onclick="selectComponent('apertures')" id="node-apertures" class="component-card cursor-pointer bg-white border-2 border-slate-200 rounded-xl p-4 w-36 text-center shadow-sm hover:border-indigo-500 group">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-purple-100 transition">
+                            ⚡
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900 mb-1">Beam Apertures</h4>
+                        <span class="text-[10px] text-slate-500 block">Neutron Beam Shaping</span>
+                    </div>
+
+                    <!-- Connector Arrow -->
+                    <div class="text-slate-300 font-bold">&rsaquo;</div>
+
+                    <!-- 7. Beam Shutter -->
+                    <div onclick="selectComponent('shutter')" id="node-shutter" class="component-card cursor-pointer bg-white border-2 border-slate-200 rounded-xl p-4 w-36 text-center shadow-sm hover:border-indigo-500 group">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-blue-100 transition">
+                            🛡️
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900 mb-1">Safety Shutter</h4>
+                        <span class="text-[10px] text-slate-500 block">Safety and Control</span>
+                    </div>
+
+
+                    <!-- Connector Arrow -->
+                    <div class="text-slate-300 font-bold">&rsaquo;</div>
+
+                    <!-- 8. Sample Area -->
+                    <div onclick="selectComponent('sample')" id="node-sample" class="component-card cursor-pointer bg-white border-2 border-slate-200 rounded-xl p-4 w-36 text-center shadow-sm hover:border-indigo-500 group">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-emerald-100 transition">
+                            🧪
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900 mb-1">Sample Area</h4>
+                        <span class="text-[10px] text-slate-500 block">Measurement Zone</span>
+                    </div>
+
+                    <!-- Connector Arrow -->
+                    <div class="text-slate-300 font-bold">&rsaquo;</div>
+
+                    <!-- 9. Detector -->
+                    <div onclick="selectComponent('detector')" id="node-detector" class="component-card cursor-pointer bg-white border-2 border-slate-200 rounded-xl p-4 w-36 text-center shadow-sm hover:border-indigo-500 group">
+                        <div class="w-12 h-12 mx-auto mb-3 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-indigo-100 transition">
+                            📊
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900 mb-1">Detector Tank</h4>
+                        <span class="text-[10px] text-slate-500 block">Detect Neutrons</span>
+                    </div>
+
+                </div>
+            </div>
+            <p class="text-center text-xs text-slate-400 mt-4">💡 Click on any component above or explore the card grid below to view detailed specifications.</p>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+            </div>
+
+            <!-- Right 1 Col: Inspector Sidebar / Drawer -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sticky top-24">
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                    <span id="detail-badge" class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-md">Component Inspector</span>
+                    <span id="detail-stage" class="text-xs font-medium text-slate-400">Select a component</span>
+                </div>
+
+                <div id="detail-content">
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-3 text-slate-400">🔍</div>
+                        <h4 class="font-bold text-slate-800 text-sm mb-1">No Component Selected</h4>
+                        <p class="text-xs text-slate-500 max-w-xs mx-auto">Click any component card in the diagram or grid to view deep physical descriptions and scattering roles.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500">
+        <p>Meet our ISIS SANS instruments &bull; ISIS SANS Group 2026</p>
+    </footer>
+
+    <script>
+        // Comprehensive component database for neutron scattering instruments
+        const componentData = {
+            source: {
+                title: "Target Station - Neutrons by spallation",
+                stage: "Stage 01 of 09",
+                icon: "☢️",
+                tagColor: "bg-orange-50 text-orange-700 border-orange-200",
+                description: "ISIS is a neutron spallation source where high-energy protons (800 MeV) strike a heavy metal target (tungsten or mercury), causing the ejection of neutrons from atomic nuclei. ISIS has two target stations (TS1 and TS2), however, our current running SANS instruments are located in TS2 alone.",
+                role: "Generates a high flux of fast neutrons (> 1 MeV) for subsequent moderation and scattering experiments.",
+                specs: [
+                    { label: "Neutron Energy", value: "> 1 MeV" },
+                    { label: "Flux Type", value: "Pulsed (Spallation)" },
+                    { label: "Primary Material", value: "Tantalum-clad tungsten" }
+                ]
+            },
+            moderator: {
+                title: "Liquid H₂ Moderator - Cooling fast neutrons to probe structure",
+                stage: "Stage 02 of 09",
+                icon: "❄️",
+                tagColor: "bg-amber-50 text-amber-700 border-amber-200",
+                description: "Fast neutrons possess too much energy and too short a wavelength to probe structure effectively. The moderator surrounds the source with liquid hydrogen where neutrons undergo multiple elastic collisions until their energy reaches 1 meV to 1 eV.",
+                role: "Cools fast neutrons to wavelengths from 1.75 to 16.5 Å.",
+                specs: [
+                    { label: "Temperature Range", value: "~ 20 K" },
+                    { label: "Moderator Media", value: "Liquid H₂" },
+                    { label: "Collision Count", value: "~20-30 elastic impacts" }
+                ]
+            },
+
+            bender: {
+                title: "Supermirror Bender - Removing line-of-sight fast neutrons",
+                stage: "Stage 03 of 09",
+                icon: "⚡",
+                tagColor: "bg-purple-50 text-purple-700 border-purple-200",
+                description: "To prevent fast neutrons and gamma rays from reaching the sample, a curved supermirror bender is used to eliminate line-of-sight from the moderator. The bender reflects cold neutrons while absorbing or scattering fast neutrons, ensuring that only the desired wavelength range reaches the sample.",
+                role: "Removes high-energy neutrons and gamma rays from the beam path, ensuring a clean cold neutron beam for SANS measurements.",
+                specs: [
+                    { label: "Mirror Material", value: "Nickel" },
+                    { label: "Angle of Rotation", value: "24 mrad" },
+                    { label: "Wavelength Removal", value: "λ < 1.5 Å" }
+                ]
+            },
+
+
+            chopper: {
+                title: "Double Disc Chopper - Defining neutron wavelength range",
+                stage: "Stage 04 of 09",
+                icon: "⚡",
+                tagColor: "bg-purple-50 text-purple-700 border-purple-200",
+                description: "To resolve time-of-flight effectively, neutrons of a single well-defined wavelength or velocity must be selected. Fermi choppers rotate rapidly to slice precise time-of-flight wavelength packets, leading to a highly structure neutron beam with respect to the time and energy.",
+                role: "Selects a narrow wavelength band from the broad spectrum of moderated neutrons, enabling precise ToF methods.",
+                specs: [
+                    { label: "Technique", value: "Time-of-Flight" },
+                    { label: "Chopper Types", value: "Counter-rotating double disc" },
+                    { label: "Wavelength Precision", value: "Δλ/λ < 4%" }
+                ]
+            },
+
+            collimation: {
+                title: "Collimation Guides - Guiding the neutron beam",
+                stage: "Stage 05 of 09",
+                icon: "⚡",
+                tagColor: "bg-purple-50 text-purple-700 border-purple-200",
+                description: "To maximise beam intensity over long distances, supermirror neutron guides utilise total external reflection to efficiently transport and herd cold neutrons from the moderator to the sample with minimal flux loss.",
+                role: "Guides and focuses the neutron beam over long distances with minimal losses.",
+                specs: [
+                    { label: "Guide Length", value: "Variable, 2 - 12 m" },
+                    { label: "Guide Material", value: "Nickel Supermirror" },
+                    { label: "Vaccuum", value: "~ 0.02 mbar" }
+                ]
+            },
+
+            apertures: {
+                title: "Beam Apertures - Giving the beam a defined shape",
+                stage: "Stage 06 of 09",
+                icon: "⚡",
+                tagColor: "bg-purple-50 text-purple-700 border-purple-200",
+                description: "Apertures are precision-engineered slits or pinholes that define the cross-sectional shape and divergence of the neutron beam. By controlling the beam profile, apertures reduce background scattering and improve spatial resolution at the sample.",
+                role: "Shapes and constrains the neutron beam to optimise scattering measurements.",
+                specs: [
+                    { label: "Aperture Size", value: "Variable, 0.1 - 30 mm" },
+                    { label: "Material", value: "Cadmium" },
+                    { label: "Beam Shape", value: "Rectangular, Disc, Slit" }
+                ]
+            },
+
+            shutter: {
+                title: "Safety Shutter",
+                stage: "Stage 07 of 09",
+                icon: "🛡️",
+                tagColor: "bg-blue-50 text-blue-700 border-blue-200",
+                description: "Heavy radiation shielding blocks (composed of thick layers of steel) that slide to open or close the neutron beamline. It ensures absolute radiation safety for researchers entering the experimental hutch. The shutter can only be opened when the safety search has been employed indicating that the instrument is vacant and locked up.",
+                role: "Acts as a primary safety interlock and containment barrier when beamline access is required.",
+                specs: [
+                    { label: "Shielding Materials", value: "150 mm thick steel plates" },
+                    { label: "Operation", value: "Hydraulic automated interlock" },
+                    { label: "Weight", value: "22 tonnes" }
+                ]
+            },
+            sample: {
+                title: "Sample Chamber / Environment",
+                stage: "Stage 08 of 09",
+                icon: "🧪",
+                tagColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
+                description: "The core experimental station where the prepared sample (protein crystal, magnetic alloy, polymer film, or ceramic) intercepts the incoming neutron beam. Specialised sample environments apply extreme conditions such as cryostats (down to 0.1 K), high-temperature furnaces (up to 2000 K), high magnetic fields, or rheometers. More information can be found ",
+                role: "Facilitates neutron-matter interaction under controlled thermodynamic and physical states.",
+                specs: [
+                    { label: "Temperature Control", value: "0.1 K to 2200 K" },
+                    { label: "Magnetic Field", value: "Up to 15+ Tesla" },
+                    { label: "Sample Types", value: "Crystals, powders, liquids, gels, gases, thin films" }
+                ]
+            },
+            detector: {
+                title: "Detector Array",
+                stage: "Stage 09 of 09",
+                icon: "📊",
+                tagColor: "bg-indigo-50 text-indigo-700 border-indigo-200",
+                description: "Neutrons carry no net electrical charge, so they cannot be detected directly by ionization. Detectors use nuclear reaction converters such as Helium-3 ($^3\\text{He}$) gas proportional tubes or Lithium-6 ($^6\\text{Li}$) scintillators. When a neutron is captured, secondary charged particles ionize gas or create flashes of light recorded by photomultipliers.",
+                role: "Records the scattering angle (2θ), time-of-flight, and intensity of scattered neutrons to map atomic structures.",
+                specs: [
+                    { label: "Detector Media", value: "$^3\\text{He}$ Gas tubes or $^6\\text{Li}$ Glass Scintillators" },
+                    { label: "Position Resolution", value: "Millimeter scale spatial grids" },
+                    { label: "Counting Efficiency", value: ">95% for thermal neutrons" }
+                ]
+            }
+        };
+
+        // Function to select and display component details in the sidebar
+        function selectComponent(key) {
+            const data = componentData[key];
+            if (!data) return;
+
+            // Highlight active node in schematic
+            document.querySelectorAll('.component-card').forEach(card => {
+                card.classList.remove('border-indigo-600', 'ring-2', 'ring-indigo-100');
+            });
+            const activeNode = document.getElementById(`node-${key}`);
+            if (activeNode) {
+                activeNode.classList.add('border-indigo-600', 'ring-2', 'ring-indigo-100');
+            }
+
+            // Render content in sidebar
+            const badgeEl = document.getElementById('detail-badge');
+            const stageEl = document.getElementById('detail-stage');
+            const contentEl = document.getElementById('detail-content');
+
+            badgeEl.textContent = data.title;
+            stageEl.textContent = data.stage;
+
+            let specsHTML = data.specs.map(spec => `
+                <div class="flex justify-between items-center py-2 border-b border-slate-100 text-xs">
+                    <span class="text-slate-500 font-medium">${spec.label}</span>
+                    <span class="font-semibold text-slate-800">${spec.value}</span>
+                </div>
+            `).join('');
+
+            contentEl.innerHTML = `
+                <div class="animate-fadeIn">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${data.tagColor} border shadow-sm">
+                            ${data.icon}
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-base">${data.title}</h4>
+                            <span class="text-xs text-indigo-600 font-medium">Scattering Beamline Component</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h5 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Physical Description</h5>
+                            <p class="text-xs text-slate-600 leading-relaxed">${data.description}</p>
+                        </div>
+
+                        <div>
+                            <h5 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Scattering Function</h5>
+                            <div class="bg-indigo-50/60 border border-indigo-100 rounded-xl p-3 text-xs text-indigo-900 font-medium leading-relaxed">
+                                ${data.role}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h5 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Technical Specifications</h5>
+                            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                                ${specsHTML}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Quick Guide Modal or Alert equivalent
+        function openInfoModal() {
+            alert("Neutron Scattering Guide:\n\nNeutrons are exceptional probes for condensed matter physics and materials science because:\n1. They have wavelengths comparable to atomic spacings (~1 Å).\n2. Their energy matches elementary atomic excitations (phonons, magnons).\n3. They are sensitive to light elements (Hydrogen/Deuterium) and magnetic moments.\n\nClick any component card in the layout to inspect its precise function.");
+        }
+
+        // Initialize default selection on load
+        window.onload = function() {
+            selectComponent('source');
+        };
+    </script>
+</body>
+</html>
