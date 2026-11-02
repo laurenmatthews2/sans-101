@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You've got beamtime: what do you do now? (ISIS SANS)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f6f8fa;--panel:#fff;--ink:#14212b;--mute:#5a6b78;--line:#d3dce3;--accent:#0b6e79;--accent2:#c2410c;--soft:#e2f0f1;--grid:#e6ebef;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1a21;--panel:#162531;--ink:#e6edf2;--mute:#9bb0bd;--line:#2a3d4b;--accent:#4cc3cf;--accent2:#fb923c;--soft:#173844;--grid:#223441;color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0f1a21;--panel:#162531;--ink:#e6edf2;--mute:#9bb0bd;--line:#2a3d4b;--accent:#4cc3cf;--accent2:#fb923c;--soft:#173844;--grid:#223441;color-scheme:dark}
+nav button.themebtn{margin-left:auto;flex:none;padding:6px 12px;font-size:13px;margin-top:6px;margin-bottom:6px}
+*{box-sizing:border-box}
+html{scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+header,main,nav .in{max-width:1000px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);z-index:5}
+nav .in{display:flex;gap:18px;overflow-x:auto;white-space:nowrap}
+nav a{padding:14px 0;color:var(--mute);text-decoration:none;font-size:14px;font-weight:500}
+nav a:hover,nav a:focus-visible{color:var(--accent)}
+h1,h2{font-family:Newsreader,Georgia,serif;font-weight:600;line-height:1.2}
+h1{font-size:clamp(30px,5vw,46px);margin:40px 0 10px}
+h2{font-size:28px;margin:0 0 6px}
+h3{font-size:18px;margin:24px 0 6px}
+.lede{color:var(--mute);max-width:none;margin:0 0 30px}
+section{padding:36px 0;border-top:1px solid var(--line)}
+section>p{max-width:none;color:var(--mute);margin:0 0 18px}
+a{color:var(--accent)}
+strong{color:var(--accent);font-weight:600}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:20px}
+@media(max-width:760px){.row{grid-template-columns:1fr}}
+.list{max-width:none;color:var(--mute);margin:0 0 18px;padding-left:22px}
+.list li{margin:4px 0}
+.list a{text-decoration:none}
+.list a:hover{text-decoration:underline}
+canvas{width:100%;display:block}
+label{display:flex;align-items:center;gap:8px;margin:6px 0;cursor:pointer;font-size:15px}
+input[type=checkbox]{accent-color:var(--accent);width:17px;height:17px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+button{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:7px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note{font-size:14px;color:var(--mute);margin-top:10px}
+.out{font-size:22px;font-family:Newsreader,serif;font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:18px}
+.card{padding:0;overflow:hidden;text-align:center;font:inherit;display:block;width:100%}
+.card .img{height:150px;background:#fff;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}
+.card img{max-width:100%;max-height:100%;object-fit:contain}
+.card b{display:block;padding:10px 10px 0;font-weight:600}
+.card span{display:block;padding:0 10px 10px;font-size:13px;color:var(--mute)}
+.card[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.info{max-width:none}
+.info .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.badge{display:inline-block;padding:2px 10px;background:var(--soft);color:var(--accent);font-size:12px;font-weight:600;border-radius:99px}
+.meta{display:flex;flex-wrap:wrap;gap:28px;border-top:1px solid var(--line);padding-top:12px;margin-top:14px;font-size:14px;color:var(--mute)}
+.meta b{display:block;color:var(--ink);font-weight:600}
+.empty{border-style:dashed;text-align:center;color:var(--mute);font-size:14px}
+.tablewrap{overflow-x:auto;margin:0 0 24px}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);font-size:15px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:var(--soft);font-weight:600}
+tbody tr:hover{background:var(--bg)}
+.chartbox{position:relative;height:460px}
+.inst{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500}
+.out2{font-weight:600;color:var(--accent)}
+footer{padding:30px 0 50px;color:var(--mute);font-size:14px}
+</style>
+</head>
+<body>
+<nav><div class="in">
+<a href="#discuss">Local contact</a><a href="#samples">Samples</a><a href="#environment">Sample holders</a><a href="#qrange">q-range</a><a href="#riskassessment">Safety</a>
+<button id="theme" class="themebtn" type="button">Theme</button></div></nav>
+<header>
+<h1>You've got beamtime, but what do you do now?</h1>
+<p class="lede"><strong>Congratulations</strong> on getting your proposal accepted! We look forward to seeing you at one of our instruments soon. However, there are some steps you'll need to complete before you come here.</p>
+</header>
+<main>
+
+<section id="checklist" style="border-top:0;padding-top:0">
+<p style="margin-bottom:10px">You should follow through the following checklist:</p>
+<ol class="list">
+<li><a href="#discuss">Have a discussion with your local contact</a></li>
+<li><a href="#samples">Prepare your samples for the experiment</a></li>
+<li><a href="#environment">Confirm the correct sample environment and sample holder</a></li>
+<li><a href="#qrange">Ensure the correct q-range is selected</a></li>
+<li><a href="#riskassessment">Prepare your risk assessment, both the one to be submitted online and the paper one for any lab work at ISIS</a></li>
+</ol>
+</section>
+
+<section id="discuss">
+<h2>Conversation with a local contact</h2>
+<p>Before you come to ISIS, you should have a conversation with your local contact. This is the person who will be helping you with your experiment and will be your main point of contact for any questions or concerns. This is particularly important when using a non-standard sample environment, and is helpful if you are unsure about any aspect of your experiment. Please note that this does not stop after the experiment, should you need help with data reduction and data analysis you can also ask questions after the experiment. The important things to talk to your local contact <strong>before</strong> the experiment are as follows:</p>
+<ul class="list">
+<li>What is the goal of your experiment?</li>
+<li>What sample environment will you be using?</li>
+<li>What is the optimal q-range for your experiment?</li>
+<li>Any other sample or setup related concerns/questions.</li>
+</ul>
+</section>
+
+<section id="samples">
+<h2>How should I make my samples?</h2>
+<p>ISIS SANS measurements can typically supports various forms of matter, for instance our standard sample changers can handle liquids, solids, and powders. However, we can also make use of high pressure environments for gaseous samples. The key is that your local contact is aware of this, and it was noted during the proposal submission.</p>
+</section>
+
+<section id="environment">
+<h2>How do I contain my samples?</h2>
+<h3>Standard sample changer experiments</h3>
+<p>For simple sample changer experiments, please see the various sample holders you can use and click on them to see more information about them.</p>
+<div class="cards" id="cards"></div>
+<div class="info" id="infoWrap">
+<div class="box empty" id="defaultPrompt">Select any of the photos above to display details here.</div>
+<div class="box" id="infoContent" hidden>
+<div class="hd"><div><span class="badge">Selected item</span><h3 id="infoTitle" style="margin:6px 0 0"></h3></div>
+<button id="closeBtn" aria-label="Close panel">Close</button></div>
+<p id="infoDescription" style="margin:10px 0 0"></p>
+<div class="meta"><div><b>Pathlengths available</b><span id="infoPathLength">-</span></div><div><b>Minimum cuvette volume</b><span id="infoCuvetteVolume">-</span></div></div>
+</div>
+</div>
+
+<h3>Other ISIS sample environments</h3>
+<p style="max-width:none;color:var(--mute);margin:0 0 18px">Aside from the standard sample changers, ISIS can provide the use of other sample environments, a detailed list can be found <a href="https://www.isis.stfc.ac.uk/using-isis/academics/experimental-support/sample-environment/" target="_blank" rel="noopener noreferrer"><b>here</b></a>. However, these must have been discussed prior to proposal submission, and for further details a discussion with your local contact is necessary.</p>
+
+<h3>User-developed sample environments</h3>
+<p style="max-width:none;color:var(--mute);margin:0">User-developed sample environments are also welcome at ISIS, but these <strong>must</strong> have been discussed prior to proposal submission, and for further details a discussion with your local contact is necessary.</p>
+</section>
+
+<section id="qrange">
+<h2>What is my q-range and why is it important?</h2>
+<p>The q-range refers to the range of momentum transfer values that can be accessed in a single measurement, which determines the lengthscales accessible in the experiment. Therefore, it is important to discuss this and choose the correct configuration for the experiment, to capture all of the lengthscales you are interested in probing. Below is a table containing the q-range for each instrument in each configuration, and a graphic enabling you to visualise the size to q-range relationship.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Instrument</th><th>Configuration</th><th>q-Range (Å⁻¹)</th></tr></thead>
+<tbody>
+<tr><td>Larmor</td><td>4 m</td><td>0.0035 - 0.7</td></tr>
+<tr><td>SANS2d</td><td>4 m</td><td>0.0045 - 1.0</td></tr>
+<tr><td>SANS2d</td><td>6 m</td><td>0.0035 - 1.0</td></tr>
+<tr><td>SANS2d</td><td>8 m</td><td>0.0025 - 0.8</td></tr>
+<tr><td>SANS2d</td><td>8 m</td><td>0.0015 - 0.7</td></tr>
+<tr><td>ZOOM</td><td>4 m</td><td>0.0045 - 0.85</td></tr>
+<tr><td>ZOOM</td><td>8 m</td><td>0.0025 - 0.45</td></tr>
+</tbody></table></div>
+
+<h3 style="margin-top:0">What is the optimum configuration for a sphere with a given radius?</h3>
+<p style="max-width:none;color:var(--mute);margin:0 0 14px">Adjust the sphere radius to observe which configuration provides the best q-range for the sample.</p>
+<div class="box"><div class="row" style="grid-template-columns:minmax(0,260px) minmax(0,1fr)">
+<div>
+<label style="display:block">Sphere radius (R): <b class="out2" id="radiusValue">50 Å</b></label>
+<input id="radiusSlider" type="range" min="1" max="3000" value="847" aria-label="Sphere radius">
+<div style="margin-top:16px;font-weight:600;font-size:15px">Instrument q-ranges</div>
+<div id="instList" style="margin-top:6px"></div>
+</div>
+<div class="chartbox"><canvas id="sansChart" aria-label="Sphere scattering with instrument q-ranges"></canvas></div>
+</div></div>
+</section>
+
+<section id="riskassessment">
+<h2>Safety is a priority not a compromise</h2>
+<p>There is an important aspect in any practical science environment, which is risk assessments. We understand that risk assessments might be time-consuming and/or tedious. However, they are also extremely important and can be the key in an emergency. At ISIS, we have two main risk assessments that you need to take care to prepare. The first is before the experiment, and is the one submitted online. This <strong>must</strong> be submitted at least <strong>2 weeks</strong> before your experiment. The other risk assessment to be engaged with is the handwritten ones in the labs when you arrive, make sure that these can be read/understood by <strong>everyone</strong> and are <strong>legible</strong>.</p>
+</section>
+
+</main>
+<footer><div style="max-width:1000px;margin:0 auto;padding:0 20px">&copy; 2026 ISIS SANS Group. Built with HTML and JavaScript.</div></footer>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var css=function(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()};
+
+/* ---- sample holder cards ---- */
+var PHOTOS=[
+{title:"Skinny Cuvettes",img:"https://www.hellma.com/fileadmin/_processed_/a/1/csm_110-1-40_4a0a8212e0.png",alt:"A skinny rectangular cuvette",
+ description:"These are our most commonly used cuvettes, they are a simple geometry and require a smaller sample volume than the other sample holders for equivalent pathlengths. In our sample changers, we are able to use 40 of these cuvettes in the rack at a time and we have some available for use.",pathlength:"1, 2, 5 mm",volume:"0.25, 0.4, 1 mL"},
+{title:"Banjo Cuvettes",img:"https://www.hellma.com/fileadmin/_processed_/e/c/csm_120-000-1-40_3c2dbab87f.png",alt:"A banjo cylindrical cuvette",
+ description:"These cuvettes require a larger sample volume than the skinny cuvettes and they are more difficult to clean. However, they are compatible with a larger beam size, which can decrease acquisition time for samples. In our sample changers, we are able to use 36 of these cuvettes in the rack at a time and we have some available for use.",pathlength:"1, 2, 5 mm",volume:"0.28, 0.56, 1.4 mL"},
+{title:"Tank Cuvettes",img:"https://www.hellma.com/fileadmin/_processed_/3/1/csm_404-1-46_7c465dcf1d.png",alt:"A tank rectangular cuvette",
+ description:"These cuvettes also have a higher sample volume requirement than the skinny cuvettes, but they are compatible with a larger beam size, which can decrease acquisition time for samples. In our sample changers, we are able to use 28 of these cuvettes in the rack at a time and we have some available for use.",pathlength:"1, 2, 5 mm",volume:"1, 2, 5 mL"},
+{title:"Sandwich Cells",img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAVa8ARBymiE1IzE5xWpO72ZA8OlrmYAhXbJadSb78ew&s=10",alt:"Sandwich cells",
+ description:"These cuvettes are designed for use with gel or solid-like samples. They have a large window, which again enables for a larger beam size if required. In our sample changers, we are able to use 36 of these cuvettes in the rack at a time and we have some available for use.",pathlength:"Variable",volume:"Variable"}];
+var cardEls=[];
+PHOTOS.forEach(function(p,i){
+  var b=document.createElement("button");b.className="card";b.setAttribute("aria-pressed","false");
+  b.innerHTML='<div class="img"><img alt="" src="'+p.img+'"></div><b>'+p.title+'</b><span>Click to view details</span>';
+  b.querySelector("img").alt=p.alt;
+  b.onclick=function(){showInfo(i)};$("cards").appendChild(b);cardEls.push(b)});
+function showInfo(i){
+  var d=PHOTOS[i];
+  cardEls.forEach(function(c,j){c.setAttribute("aria-pressed",j===i)});
+  $("infoTitle").textContent=d.title;$("infoDescription").textContent=d.description;
+  $("infoPathLength").textContent=d.pathlength;$("infoCuvetteVolume").textContent=d.volume;
+  $("defaultPrompt").hidden=true;$("infoContent").hidden=false;
+  $("infoWrap").scrollIntoView({behavior:"smooth",block:"nearest"})}
+function closeInfo(){$("infoContent").hidden=true;$("defaultPrompt").hidden=false;
+  cardEls.forEach(function(c){c.setAttribute("aria-pressed","false")})}
+$("closeBtn").onclick=closeInfo;
+
+/* ---- sphere q-range chart ---- */
+var INST=[
+{name:"Larmor (4m)",min:0.0035,max:0.7,color:"#e11d48"},
+{name:"SANS2d (4m)",min:0.0045,max:1.0,color:"#f59e0b"},
+{name:"SANS2d (6m)",min:0.0035,max:1.0,color:"#10b981"},
+{name:"SANS2d (8m)",min:0.0025,max:0.8,color:"#3b82f6"},
+{name:"SANS2d (12m)",min:0.0015,max:0.7,color:"#8b5cf6"},
+{name:"ZOOM (4m)",min:0.0045,max:0.85,color:"#ec4899"},
+{name:"ZOOM (8m)",min:0.0025,max:0.45,color:"#64748b"}];
+INST.forEach(function(s,i){
+  var l=document.createElement("label");l.className="inst";
+  var c=document.createElement("input");c.type="checkbox";c.checked=true;c.style.accentColor=s.color;c.addEventListener("change",updateGraph);
+  var t=document.createElement("span");t.textContent=s.name;t.style.color=s.color;
+  l.appendChild(c);l.appendChild(t);$("instList").appendChild(l)});
+function checks(){return [].slice.call($("instList").querySelectorAll("input"))}
+
+function calculateSANS(radius){
+  var q=[],I=[],n=3000,qMin=0.001,qMax=1.5,sigma=radius*0.05;
+  var gn=[-2.8159,-2.1044,-1.4886,-0.9163,-0.3705,0.3705,0.9163,1.4886,2.1044,2.8159];
+  var gw=[0.0006,0.0125,0.0792,0.2223,0.3854,0.3854,0.2223,0.0792,0.0125,0.0006];
+  var baseVol=(4/3)*Math.PI*Math.pow(radius,3);
+  for(var i=0;i<=n;i++){
+    var qq=qMin*Math.pow(qMax/qMin,i/n);q.push(qq);var avg=0;
+    for(var j=0;j<gn.length;j++){
+      var r=radius+gn[j]*sigma;if(r<=0)continue;
+      var qr=qq*r,p;
+      if(qr<1e-5)p=1;else{var t=3*(Math.sin(qr)-qr*Math.cos(qr))/Math.pow(qr,3);p=t*t}
+      var v=(4/3)*Math.PI*Math.pow(r,3);
+      avg+=p*Math.pow(v/baseVol,2)*gw[j]}
+    I.push((avg>0?avg*1e5:1e-10)+0.1)}
+  return{q:q,intensity:I}}
+
+function radiusNow(){
+  var v=Math.max(+$("radiusSlider").value,1);
+  return Math.round(10*Math.pow(3000/10,(v-1)/(3000-1)))}
+
+var chart=null,BASE=2e5,MULT=2.2;
+function instData(q){
+  var act=[];checks().forEach(function(c,i){if(c.checked)act.push(i)});
+  return{act:act,sets:INST.map(function(s,i){
+    var a=act.indexOf(i);
+    return a!==-1?q.map(function(x){return(x>=s.min&&x<=s.max)?BASE*Math.pow(MULT,a+1):null}):q.map(function(){return null})})}}
+function yMax(n){return n?BASE*Math.pow(MULT,n+1):BASE}
+
+function buildChart(){
+  if(chart)chart.destroy();
+  var r=radiusNow();$("radiusValue").textContent=r+" Å";
+  var d=calculateSANS(r),inst=instData(d.q);
+  Chart.defaults.font.family='"IBM Plex Sans",system-ui,sans-serif';
+  Chart.defaults.color=css("--mute");
+  var grid=css("--grid");
+  chart=new Chart($("sansChart").getContext("2d"),{
+    type:"line",
+    data:{labels:d.q,datasets:[
+      {label:"Intensity I(q)",data:d.intensity,borderColor:css("--accent"),backgroundColor:css("--soft"),borderWidth:2,fill:true,tension:0.15,pointRadius:0}
+    ].concat(INST.map(function(s,i){return{label:s.name,data:inst.sets[i],borderColor:s.color,borderWidth:4,pointRadius:0,fill:false,spanGaps:false}}))},
+    options:{responsive:true,maintainAspectRatio:false,
+      scales:{
+        x:{type:"logarithmic",title:{display:true,text:"Scattering Vector q (Å⁻¹)",font:{weight:"bold"}},grid:{color:grid},ticks:{callback:function(v){return Number(v).toFixed(3)}}},
+        y:{type:"logarithmic",title:{display:true,text:"Intensity I(q) (a.u.)",font:{weight:"bold"}},grid:{color:grid},min:1e-1,max:yMax(inst.act.length)}},
+      plugins:{legend:{display:true,position:"top",labels:{boxWidth:15,font:{size:11}}},
+        tooltip:{callbacks:{title:function(it){return"q: "+it[0].label+" Å⁻¹"},label:function(it){return it.dataset.label+": "+(it.raw?"In Range":"Out of Range")}}}}}})}
+
+function updateGraph(){
+  if(!chart)return;
+  var r=radiusNow();$("radiusValue").textContent=r+" Å";
+  var d=calculateSANS(r),inst=instData(d.q);
+  chart.data.labels=d.q;chart.data.datasets[0].data=d.intensity;
+  inst.sets.forEach(function(s,i){chart.data.datasets[i+1].data=s});
+  chart.options.scales.y.max=yMax(inst.act.length);
+  chart.update("none")}
+$("radiusSlider").addEventListener("input",updateGraph);
+
+buildChart();
+window.matchMedia("(prefers-color-scheme:dark)").addEventListener("change",buildChart);window.addEventListener("themechange",buildChart);
+})();
+</script>
+<script>
+(function(){var r=document.documentElement,m=matchMedia("(prefers-color-scheme: dark)"),b=document.getElementById("theme");
+function dark(){var t=r.dataset.theme;return t?t==="dark":m.matches}
+function label(){b.textContent=dark()?"Light mode":"Dark mode"}
+b.onclick=function(){r.dataset.theme=dark()?"light":"dark";label();window.dispatchEvent(new Event("themechange"))};
+m.addEventListener("change",label);label()})();
+</script>
+</body>
+</html>

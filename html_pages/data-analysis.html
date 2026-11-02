@@ -1,0 +1,1169 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ISIS SANS data analysis</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/h5wasm@latest/dist/iife/h5wasm.js"></script>
+<style>
+:root{--bg:#f6f8fa;--panel:#fff;--fg:#14212b;--mut:#5a6b78;--line:#d3dce3;--acc:#1156b1;--acc2:#c2410c;--soft:#e2f0f1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a21;--panel:#162531;--fg:#e6edf2;--mut:#9bb0bd;--line:#2a3d4b;--acc:#4cc3cf;--acc2:#fb923c;--soft:#173844;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1a21;--panel:#162531;--fg:#e6edf2;--mut:#9bb0bd;--line:#2a3d4b;--acc:#4cc3cf;--acc2:#fb923c;--soft:#173844;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+header,main,nav .in,footer{max-width:1080px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);z-index:5}
+nav .in{display:flex;gap:18px;overflow-x:auto;white-space:nowrap;align-items:center}
+nav a{padding:14px 0;color:var(--mut);text-decoration:none;font-size:14px;font-weight:500}
+nav a:hover{color:var(--acc)}
+nav button{margin-left:auto}
+h1,h2{font-family:Newsreader,Georgia,serif;font-weight:600;line-height:1.2}
+h1{font-size:clamp(30px,5vw,46px);margin:40px 0 10px}
+h2{font-size:28px;margin:0 0 6px}
+.lede{color:var(--mut);max-width:none;margin:0 0 30px}
+section{padding:36px 0;border-top:1px solid var(--line)}
+section>p{max-width:none;color:var(--mut);margin:0 0 18px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:20px}
+@media(max-width:820px){.row{grid-template-columns:1fr}}
+.list{max-width:none;color:var(--mute);margin:0 0 18px;padding-left:22px}
+.list li{margin:4px 0}
+.list a{text-decoration:none}
+.list a:hover{text-decoration:underline}
+.plot{height:380px;min-width:0}.plot.s{height:170px}
+.lab{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);margin-top:10px}
+.lab b{color:var(--fg);font-weight:600}
+input[type=range]{width:100%;accent-color:var(--acc)}
+input[type=checkbox]{accent-color:var(--acc);width:17px;height:17px}
+select,input[type=number],button,.btn{font:inherit;font-size:14px;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:7px 12px;cursor:pointer;display:inline-block}
+select,input[type=number]{width:100%;background:var(--bg);cursor:auto;padding:6px 9px}
+select{cursor:pointer}
+button:hover,.btn:hover{border-color:var(--acc)}
+button.p{background:var(--acc);border-color:var(--acc);color:var(--bg);font-weight:600}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.ck{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:14px}
+.res{font:13px/1.65 ui-monospace,Menlo,monospace;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:10px;margin-top:12px}
+.h{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin-top:14px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+table{border-collapse:collapse;width:100%}td,th{padding:2px 6px;text-align:right;border-bottom:1px solid var(--line)}
+.hid{display:none}.lst{border:1px solid var(--line);border-radius:4px;max-height:130px;overflow:auto;margin-top:6px;background:var(--bg)}.li{display:flex;gap:8px;align-items:center;font-size:13px;padding:2px 6px;cursor:pointer}.li.on{background:var(--soft)}.li span{flex:1}details{margin-top:12px;font-size:14px}summary{cursor:pointer;color:var(--mut)}details input[type=text]{width:100%;font:inherit;font-size:13px;padding:5px 8px;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:4px}
+.nb{width:56px!important;padding:1px 4px!important;text-align:right;font-size:12px;line-height:1.2;-moz-appearance:textfield;appearance:textfield}.nb::-webkit-outer-spin-button,.nb::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.sg,.sg2{display:grid;grid-template-columns:1fr 1fr;gap:2px 22px}.sg.hid,.sg2.hid{display:none}.sg{grid-template-columns:1fr}.sg>div,.sg2>div{min-width:0}.sg .lab{margin-top:8px;gap:6px}.sg .lab span{font-size:12.5px}.sg2 .lab{margin-top:0}.stick{position:sticky;top:58px;align-self:start}.ck2{display:flex;gap:20px;flex-wrap:wrap}@media(max-width:820px){#model .row{grid-template-columns:1fr!important}.stick{position:static}}@media(max-width:520px){.sg,.sg2{grid-template-columns:1fr}}
+#res-peaks,#res-lat{overflow-x:auto}#res-lat table{font-size:12px;width:100%}#res-peaks table,#res-lat table{font-size:11.5px;width:100%}#res-peaks td,#res-peaks th,#res-lat td,#res-lat th{text-align:center!important}
+#res-peaks td,#res-peaks th{padding:2px 2px;white-space:nowrap}@media(max-width:820px){#peaks .row{grid-template-columns:1fr!important}}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}.pp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:16px}@media(max-width:900px){.pp{grid-template-columns:1fr}}
+footer{padding:30px 20px 50px;color:var(--mut);font-size:14px}
+</style></head>
+<body>
+<nav><div class="in"><a href="#data">Visualise</a><a href="#guinier">Guinier</a><a href="#porod">Porod</a><a href="#formfac">Form</a><a href="#structfac">Structure</a><a href="#guess">Guess</a><a href="#model">Model</a><a href="#peaks">Index</a><a href="#crys">Crystal</a><a href="#twod">Annulus</a><a href="#sector">Sector</a><a href="#azim">Azimuthal</a><a href="#tips">Tips</a><a href="#useful">Links</a><button id="theme">Theme</button></div></nav>
+<header><h1>Analysing ISIS SANS data</h1>
+<p class="lede">Now you have data fully reduced to I(q) in absolute units, unfortunately, this is not the end of the story, we still have the analysis to complete. You are able to follow the steps below, initially looking at the data in a few different representations. Then, you can probe more complex data analysis methods, investigate form and structure factors, and identify more crystalline structures. Then, we leave behind analysis of 1D datasets to explore some analytic methods for 2D datasets, understanding alignment in materials in more depth. You’ll be able to work with both example datasets and also you are able to upload your own datasets!</p></header>
+<main>
+
+<section id="data"><h2>Visualise Data</h2>
+<p>The first step during analysis is to visualise the data, here you can take the opportunity to notice any specific features in the data. This will inform you of the next steps to take, whether you have a clear assembled structure, or something more crystalline. In this section, you are welcome to look through the example data, or upload a few of your own datasets (all ISIS data formats for 1D datasets are accepted: .txt, .h5, .xml).</p>
+<div class="box"><div class="row"><div>
+<div class="h" style="margin-top:0">Upload data</div>
+<div class="btns" style="margin-top:6px"><label class="btn">Upload data<input id="file" type="file" multiple accept=".dat,.txt,.csv,.xml,.h5,.hdf5,.hdf,.nxs,.nx5" class="hid"></label><button id="rawRm">Remove</button><button id="rawUp">Up</button><button id="rawDn">Down</button></div>
+<div class="lst" id="rawList"></div>
+<div class="h">Example data</div>
+<select id="sample"><option value="sph">Dilute spheres</option><option value="hs">Interacting spheres (hard-sphere S(q))</option><option value="hm">Charged spheres (Hayter-MSA S(q))</option><option value="cyl">Cylinders</option><option value="ell">Ellipsoids (prolate)</option><option value="hex">Hexagonal phase (crystalline)</option><option value="lam">Lamellar phase (crystalline)</option></select>
+<div class="h">Representation</div>
+<select id="view"><option value="loglog">I(q), selected datasets</option><option value="guinier">Guinier ln I vs q² (active plot)</option><option value="porod">Porod I·q⁴ vs q (active plot)</option></select>
+<div class="h">Plot style</div>
+<select id="dstyle"><option value="pts">Points</option><option value="line">Line</option><option value="both" selected>Line + points</option></select>
+<div class="res" id="res-data"></div><span id="dname" class="hid"></span></div>
+<div><div id="pData" class="plot" style="height:460px"></div></div></div></div></section>
+
+<section id="guinier"><h2>Guinier analysis</h2>
+<p>A simple form of analysis is Guinier analysis coming from a key scientist Andre Guinier, who literally wrote the book on small-angle scattering. He also developed an equation to describe the low-q region of data, giving a simple way of calculating the radius of gyration. For an object of a discrete size, the intensity should follow: lnI = lnI(0) – q<sup>2</sup>R<sub>g</sub><sup>2</sup>/3. This only falls within the Guinier valid region, where q·R<sub>g</sub> < 1.3. Have a look at the example dataset, uploaded in the <a href="#data">visualise data</a> section, and see whether you can apply a Guinier analysis to it. </p>
+<div class="box"><div class="row"><div>
+<div class="lab"><span>First point (q)</span><b id="gi0_v"></b></div><input type="range" id="gi0" min="0" max="100" value="0">
+<div class="lab"><span>Last point (q)</span><b id="gi1_v"></b></div><input type="range" id="gi1" min="0" max="100" value="20">
+<label class="ck"><input type="checkbox" id="gView" checked> Guinier plot (ln I vs q²); untick for log-log I(q)</label>
+<label class="ck"><input type="checkbox" id="gW"> Weight fit by errors (1/σ² on ln I)</label>
+<div class="btns"><button id="gAuto" class="p">Auto range (q·Rg &lt; 1.3)</button></div>
+<div class="res" id="res-guinier"></div>
+<div class="box" id="eq-guinier" style="margin-top:12px;font-size:15px;text-align:center">I(q) = I(0)·exp(−q²R<sub>g</sub>²/3)</div></div>
+<div><div id="pGuin" class="plot"></div><div id="pGuinR" class="plot s"></div></div></div></div></section>
+
+<section id="porod"><h2>Porod analysis</h2>
+<p>Another key diagnostic tool is Porod analysis, developed by the Austrian physicist Georges Porod. While Guinier looks at overall particle size at low-q, Porod analysis focuses on the high-q asymptotic region to yield insights into specific surface areas, particle morphology, and the sharpness of interfacial boundaries. For a system with smooth, sharp interfaces, the scattering intensity follows Porod’s law: I(q) = K q<sup>-4</sup> + background (or I(q) &propto; q<sup>-4</sup>). This only holds in the high-q valid region, well beyond the Guinier regime, where q·R<sub>g</sub> &gg; 1. Have a look at the example dataset, uploaded in the visualise data section, and see whether you can apply a Porod analysis to it.</p>
+<div class="box"><div class="row"><div>
+<div class="lab"><span>Fit range start (q)</span><b id="po0_v"></b></div><input type="range" id="po0" min="0" max="100" value="70">
+<div class="lab"><span>Fit range end (q)</span><b id="po1_v"></b></div><input type="range" id="po1" min="0" max="100" value="100">
+<div class="lab"><span>Background B (cm⁻¹)</span><b id="pB_v"></b></div><input type="range" id="pB" min="0" max="1" step="0.0001" value="0">
+<label class="ck"><input type="checkbox" id="pView" checked> Porod plot (I·q⁴ vs q); untick for log-log I(q)</label>
+<label class="ck"><input type="checkbox" id="pLog" checked> Log y-axis (Porod plot)</label>
+<div class="btns"><button id="pFit" class="p">Fit B and K from range</button></div>
+<div class="res" id="res-porod"></div></div>
+<div><div id="pPorod" class="plot"></div></div></div></div></section>
+
+<section id="formfac"><h2>Form factors</h2>
+<style>.sk svg{width:100%;height:150px;display:block}#ffeq{margin-top:12px;font-family:Newsreader,Georgia,serif;font-size:16px;line-height:1.9}#ffeq .eq{text-align:center;padding:4px 0}#ffeq .nt{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:12.5px;color:var(--mut);line-height:1.5;margin-top:6px}.sk{margin-bottom:6px}#ffinfo b,#sfinfo b{color:var(--fg)}</style>
+<p>For shape-dependent analysis, there are two important models to follow, one is the description of the particle geometry, and one is the description of interparticle interactions. In this section, we will discuss the description of the shape, also known as the form factor. The form factor describes the scattering from a single, isolated particle, averaged over every orientation. For various geometries, the mathematical description—and consequently the resulting scattering profile—differ, allowing us to pinpoint the assembled nanostructure. A list of the mathematical equations for various form factors can be found in the <a href = "https://www.sasview.org/docs/old_docs/3.0.0/user/models/model_functions.html#shape-based-functions" target="_blank" rel="noopener noreferrer">Sasview documentation</a> (a software for analysing small-angle scattering data). Here, you can explore various form factor models to observe how the curves change with various simple models. When you’ve had your fill of looking at form factors, you can have a go at the challenge! The challenge gives you an example raw small-angle scattering dataset, where you can try to model it – if you get stuck you can also always reveal the answer.</p>
+<div class="box"><div class="row" style="align-items:start"><div>
+<div class="h" style="margin-top:0">Shape</div>
+<select id="ffshape"><option value="sphere">Sphere</option><option value="coreshell">Core-shell sphere</option><option value="cylinder">Cylinder</option><option value="ellipsoid">Ellipsoid</option><option value="lamellar">Lamellar sheet</option></select>
+<div class="h">Dimensions and contrast</div>
+<div id="ffsl" class="sg"></div>
+<label class="ck" style="margin-top:12px"><input type="checkbox" id="ffnorm" checked> Normalise to P(0) = 1</label>
+<div class="btns"><button id="ffPin">Pin current curve</button><button id="ffClr">Clear pins</button></div>
+<div class="h" style="font-size: medium;"><strong>Challenge</strong></div>
+<div class="btns" style="margin-top:6px"><button id="ffMys" class="p">Mystery curve</button><button id="ffRev">Reveal</button></div>
+<div id="ffmsg" style="font-size:13px;color:var(--mut);margin-top:8px"></div>
+<div class="res" id="ffres"></div>
+<div class="h">Form factor equation</div><div class="box" id="ffeq" style="margin-top:6px"></div>
+</div>
+<div><div id="ffsketch" class="sk"></div><div id="pFF" class="plot"></div>
+<div class="h">About this shape</div><div class="res" id="ffinfo" style="margin-top:6px;font-family:inherit;font-size:14px"></div>
+</div></div></div></section>
+
+<section id="structfac"><h2>Structure factors</h2>
+<p>As soon as particles are close enough to feel each other, the scattering is no longer P(q) alone. Interactions correlate their positions, and the measured intensity becomes I(q) = φ V Δρ² P(q) S(q). The structure factor S(q) is 1 when particles are far apart and independent, and it is the part of the curve that carries information about how particles are arranged. Repulsion keeps neighbours apart, which pushes S(q) below 1 at low q and creates a correlation peak near q* ≈ 2π/d, where d is the typical centre-to-centre spacing. Choose between uncharged hard spheres and charged spheres with a screened Coulomb repulsion, then raise the concentration or change the charge and salt and see how the peak responds. Spheres are used throughout, so the lower plot shows how S(q) reshapes the sphere form factor.</p>
+<div class="box"><div class="row"><div>
+<div class="h" style="margin-top:0">Interaction</div>
+<select id="sfmodel"><option value="hs">Hard sphere (Percus-Yevick)</option><option value="hm">Charged sphere (Hayter-MSA)</option></select>
+<div class="h">Particles</div>
+<div id="sfsl" class="sg"></div>
+<div id="sfhm" class="sg hid" style="margin-top:6px"></div>
+<div class="btns"><button id="sfPin">Pin current S(q)</button><button id="sfClr">Clear pins</button></div>
+<div class="res" id="sfres"></div></div>
+<div><div id="pSF" class="plot" style="height:330px"></div><div id="pSFI" class="plot" style="height:330px;margin-top:10px"></div></div></div>
+<div class="res" id="sfinfo" style="margin-top:14px;font-family:inherit;font-size:14px"></div>
+<div style="margin-top:12px;font-size:14px;color:var(--mut)"><b style="color:var(--fg)">Things to try.</b>
+<ul class="list" style="margin-top:6px"><li>Hard spheres: raise φ from 0.02 to 0.4. The peak grows, moves to higher q as the spacing shrinks, and S(0) falls.</li>
+<li>Pin a curve, then change R. The peak position scales with 1/R at fixed φ, because the spacing scales with the particle size.</li>
+<li>Charged spheres: at φ = 0.05, vary the added salt. Screening shortens the range of the repulsion, so the peak weakens and S(0) rises towards the hard-sphere value.</li></ul></div>
+</div></section>
+
+<section id="guess"><h2>Guess model</h2>
+<p>With years of experience, you might be able to spy certain features in your datasets and see a strategy to modelling data. In this section, you can borrow the expert eye to try and find the strategy from features in the data. There are two methods you can follow, one is to try the manual selection. There are four selections to make, which are the: low-q region (q-range: 0.006 – 0.01 Å⁻¹), mid-q region (0.01 – 0.09 Å⁻¹), high-q region (> 0.09 Å⁻¹), and crystalline behaviour (the presence of Bragg peaks). By looking at the plotted dataset, you can select the features you see and get some advice based on those physical observations. You can also try your luck with the automated process, which will try to find those features itself and provide a suggestion for the data analysis strategy – even with your own uploaded data. <a style="color: var(--acc);"><strong> Just remember this is a simple tool and does not tell you whether something is definitely there or not, it is an advice of a place to start.</strong></a></p>
+<div class="box"><div class="row"><div>
+<div class="btns" style="margin-top:0;margin-bottom:6px"><button id="gAn" class="p">Analyse dataset</button></div>
+<div class="lab"><span>Sharp-peak limit Δq/q (below = Bragg, above = broad)</span></div><input type="number" id="gSharp" value="0.1" step="0.01" min="0.005">
+<div class="lab"><span>1. Low-q region behaviour</span></div><select id="gl"></select>
+<div class="lab"><span>2. Mid-q region features</span></div><select id="gm"></select>
+<div class="lab"><span>3. High-q region (Porod slope)</span></div><select id="gh"></select>
+<div class="lab"><span>4. Crystalline behaviour</span></div><select id="gx"></select>
+<div class="res" id="gInfo" style="font-size:12.5px;margin-top:14px"></div></div>
+<div><div id="pGuess" class="plot s" style="height:260px"></div>
+<div class="res" id="recs" style="margin-top:10px;font-family:inherit;font-size:14px;min-height:120px;max-height:260px;overflow:auto"></div></div></div></div></section>
+
+<section id="model"><h2>Model data</h2>
+<p>I(q) = scale · V · Δρ² · P(q) · S(q) + background, in sasmodels units (SLDs in 10⁻⁶ Å⁻², scale acts as the volume fraction). Use the sliders or type a value into the box beside each one.</p>
+<div class="box"><div class="row"><div>
+<div class="sg">
+<div><div class="h" style="margin-top:0">Form factor P(q)</div><select id="mtype"><option value="sphere">Sphere (PD = polydisperse)</option><option value="coreshell">Core-shell sphere</option><option value="power">Power law</option><option value="cylinder">Cylinder</option><option value="ellipsoid">Ellipsoid (orientation averaged)</option><option value="lamellar">Lamellar sheet</option></select></div>
+<div data-m="sphere cylinder ellipsoid coreshell"><div class="h" style="margin-top:0">Structure factor S(q)</div><select id="useS"><option value="">None</option><option value="hs">Hard sphere (Percus-Yevick)</option><option value="hm">Hayter MSA (charged, rescaled MSA)</option></select></div>
+</div>
+<div class="h">Parameters</div>
+<div id="msl" class="sg"></div>
+<div id="hmsl" class="sg hid"></div>
+<div class="h">Scale and background</div>
+<div class="sg2"><div><div class="lab" style="margin-top:0"><span>Scale</span></div><input type="number" id="scale" value="1" step="0.01"></div><div><div class="lab" style="margin-top:0"><span>Background (cm⁻¹)</span></div><input type="number" id="bkg" value="0.01" step="0.001"></div></div>
+</div>
+<div class="stick"><div id="pModel" class="plot"></div>
+<div class="ck2"><label class="ck"><input type="checkbox" id="showRaw" checked> Show raw data</label><label class="ck"><input type="checkbox" id="showPS"> Show P(q) and S(q)</label></div>
+<div class="res" id="res-model"></div></div></div></div></section>
+
+<section id="peaks"><h2>Peak indexing</h2>
+<p>Each local maximum above the height threshold is fitted with a peak function plus a background inside the chosen window. The table gives amplitude, centre, width and height; the index is the centre divided by the first peak. Fitted peaks are labelled P1, P2… on the Data plot.</p>
+<div class="box"><div class="row" style="grid-template-columns:minmax(0,1fr) minmax(0,1.35fr)"><div>
+<div class="lab"><span>Peak type</span></div><select id="ptype"><option>Gaussian</option><option>Lorentzian</option><option>Voigt</option></select>
+<div class="lab"><span>Background type</span></div><select id="pbg"><option>Linear</option><option>Polynomial</option></select>
+<div class="lab"><span>Fit half-width (Å⁻¹)</span></div><input type="number" id="pxl" value="0.02" step="0.005" min="0.001">
+<div class="lab"><span>Min q</span></div><input type="number" id="pq0" value="0.01" step="0.005">
+<div class="lab"><span>Max q</span></div><input type="number" id="pq1" value="0.4" step="0.01">
+<div class="lab"><span>Min height (cm⁻¹)</span></div><input type="number" id="phm" value="0" step="0.05">
+<div class="btns"><button id="pRun" class="p">Extract and fit peaks</button></div>
+<div class="res" id="res-peaks"></div></div>
+<div><div id="pPeaks" class="plot"></div>
+<div class="h">Lattice match</div><div class="res" id="res-lat" style="margin-top:6px"></div></div></div></div></section>
+
+<section id="crys"><h2>Crystal structure browser</h2>
+<p>Overlay the theoretical reflections of a structure on the active dataset. Set q₁ by hand or take it from the first fitted peak.</p>
+<div class="box"><div class="row"><div>
+<select id="cs" size="8"></select>
+<div class="lab"><span>Base peak position q₁ (Å⁻¹)</span></div><input type="number" id="cq1" value="0.1" step="0.01" min="0.0001">
+<div class="btns"><button id="cq1p">Use first fitted peak</button></div>
+<div class="res" id="res-crys"></div></div>
+<div><div id="pCrys" class="plot"></div></div></div></div></section>
+
+<section id="twod"><h2>2D data and annulus slicer</h2>
+<p>Load a reduced 2D pattern (Mantid NeXus / NXcanSAS .h5 or .nxs, or a plain text file with columns Qx, Qy, I[, dI]). The annulus slicer averages the pixels between two radii as a function of azimuthal angle φ, giving I(φ) beside the image as in SasView. φ is measured anticlockwise from the +Qx axis.</p>
+<div class="box">
+<div class="g3">
+<div>
+<div class="h" style="margin-top:0">2D data</div>
+<div class="btns" style="margin-top:6px"><label class="btn">Upload 2D data<input id="f2d" type="file" multiple accept=".h5,.hdf5,.hdf,.nxs,.nx5,.dat,.txt,.csv" class="hid"></label><button id="d2rm">Remove</button></div>
+<div class="lst" id="d2list" style="max-height:90px"></div>
+<div class="h">Example</div>
+<select id="d2sample"><option value="cyl">Aligned cylinders</option><option value="lam">Aligned lamellar (Bragg arcs)</option></select>
+<div class="sg2" style="margin-top:8px"><div><div class="lab"><span>Axis angle (°)</span></div><input type="number" id="d2ax" value="35" step="5"></div><div><div class="lab"><span>Alignment κ</span></div><input type="number" id="d2k" value="6" step="0.5" min="0"></div></div>
+<div class="btns"><button id="d2gen" class="p">Load example</button></div>
+<details id="d2map" style="display:none"><summary>Dataset mapping (HDF5)</summary>
+<div class="lab"><span>Intensity I</span></div><select id="mI"></select>
+<div class="lab"><span>Error dI (optional)</span></div><select id="mE"></select>
+<div class="lab"><span>Qx axis</span></div><select id="mX"></select>
+<div class="lab"><span>Qy axis</span></div><select id="mY"></select>
+<div class="sg2"><div><div class="lab"><span>Q scale</span></div><input type="number" id="d2sc" value="1" step="any"></div><label class="ck" style="margin-top:22px"><input type="checkbox" id="d2tr"> Transpose I</label></div>
+<div class="btns"><button id="mApply" class="p">Apply mapping</button></div></details>
+<div id="d2msg" style="font-size:13px;color:var(--mut);margin-top:8px"></div>
+</div>
+<div>
+<div class="h" style="margin-top:0">Image display</div>
+<select id="d2cm"><option>plasma</option><option>viridis</option><option>magma</option><option>coolwarm</option><option>rainbow</option></select>
+<label class="ck"><input type="checkbox" id="d2log" checked> Log intensity scale</label>
+<div class="lab"><span>Mask q below (Å⁻¹)</span></div><input type="number" id="d2qm" value="0" step="0.005" min="0">
+<div class="h">Annulus slicer</div>
+<div class="lab"><span>Inner radius Q<sub>min</sub> (Å⁻¹)</span><b id="an0_v"></b></div><input type="range" id="an0" min="0" max="1" step="0.001" value="0.05">
+<div class="lab"><span>Outer radius Q<sub>max</sub> (Å⁻¹)</span><b id="an1_v"></b></div><input type="range" id="an1" min="0" max="1" step="0.001" value="0.1">
+<div class="lab"><span>Number of φ bins</span></div><input type="number" id="anb" value="90" step="10" min="8" max="720">
+<label class="ck"><input type="checkbox" id="d2link" checked> Send I(φ) to the Azimuthal analysis below</label>
+</div>
+</div>
+<div class="pp"><div><div id="p2D" class="plot" style="height:420px"></div></div><div><div id="pPhi" class="plot" style="height:420px"></div></div></div>
+<div class="res" id="res-2d" style="margin-top:14px"></div>
+</div></section>
+
+<section id="sector"><h2>Sector averaging</h2>
+<p>Average the pixels inside wedges of a chosen direction and half-width as a function of |q|, then compare directions on an aligned sample. This uses the dataset, display settings and q mask chosen in the 2D section above. The wedges are drawn on the image, and the sector curves can be sent to the Data section for Guinier, model or peak analysis.</p>
+<div class="box">
+<div class="g3">
+<div>
+<div class="h" style="margin-top:0">Direction and width</div>
+<div class="lab"><span>Axis φ₀ (°)</span><b id="sax_v"></b></div><input type="range" id="sax" min="0" max="360" step="1" value="35">
+<div class="btns" style="margin-top:6px"><button id="sFind">Set φ₀ to intensity maximum of annulus</button></div>
+<div class="lab"><span>Half-width Δφ (°)</span><b id="sw2_v"></b></div><input type="range" id="sw2" min="1" max="90" step="1" value="20">
+<div class="lab"><span>Custom angle (°)</span><b id="scu_v"></b></div><input type="range" id="scu" min="0" max="360" step="1" value="45">
+<label class="ck" style="margin-top:10px"><input type="checkbox" id="ssym" checked> Symmetric (also φ+180°)</label>
+</div>
+<div>
+<div class="h" style="margin-top:0">q range and sectors</div>
+<div class="sg2"><div><div class="lab"><span>q min (Å⁻¹)</span></div><input type="number" id="sq0" value="0.015" step="0.005" min="0"></div><div><div class="lab"><span>q max (Å⁻¹)</span></div><input type="number" id="sq1" value="0.28" step="0.01" min="0"></div></div>
+<div class="sg2" style="margin-top:8px"><div><div class="lab"><span>q bins</span></div><input type="number" id="snb" value="40" step="5" min="5" max="400"></div><div><label class="ck" style="margin-top:22px"><input type="checkbox" id="slog" checked> Log bins</label></div></div>
+<div class="h">Sectors to show</div>
+<div class="ck2"><label class="ck"><input type="checkbox" id="sk_circ"> Circular</label><label class="ck"><input type="checkbox" id="sk_par" checked> φ₀</label><label class="ck"><input type="checkbox" id="sk_perp" checked> φ₀+90°</label><label class="ck"><input type="checkbox" id="sk_cus"> Custom</label></div>
+<div class="btns"><button id="sAdd" class="p">Add shown sectors to datasets</button></div>
+</div>
+</div>
+<div class="pp"><div><div id="p2Ds" class="plot" style="height:420px"></div></div><div><div id="pSect" class="plot" style="height:420px"></div></div></div>
+<div class="pp"><div><select id="srt" style="margin-bottom:6px"><option value="ratio">Ratio I(φ₀) / I(φ₀+90°)</option><option value="af">Anisotropy (I∥ − I⊥)/(I∥ + I⊥)</option></select><div id="pRat" class="plot" style="height:320px"></div></div><div><div class="res" id="res-sect" style="margin-top:0"></div></div></div>
+</div></section>
+
+<section id="azim"><h2>Azimuthal intensity and anisotropy</h2>
+<p>For aligned samples, I(φ) at fixed q peaks along the orientation direction. The Hermans factor f = (3⟨cos²Δφ⟩ − 1)/2 is +1 for perfect alignment along the reference axis, 0 for isotropic and −0.5 for perpendicular. Shaded bands show the sector used for the sector mean. When the 2D annulus section has "Send I(φ) to the Azimuthal analysis" ticked, this plot shows the annulus I(φ) from the 2D data; untick it to use the demo generator or an uploaded φ, I(φ) file.</p>
+<div class="box"><div class="row"><div>
+<label class="btn">Upload φ(deg), I(φ)<input id="afile" type="file" class="hid"></label>
+<div class="h">Demo generator</div>
+<div class="lab"><span>Demo φ₀ (°)</span><b id="dφ_v"></b></div><input type="range" id="dφ" min="0" max="180" value="35">
+<div class="lab"><span>Alignment κ</span><b id="dk_v"></b></div><input type="range" id="dk" min="0" max="12" step="0.1" value="4">
+<div class="btns"><button id="aGen" class="p">Generate</button></div>
+<div class="h">Analysis</div>
+<div class="lab"><span>Sector centre (°)</span><b id="sc_v"></b></div><input type="range" id="sc" min="0" max="180" value="35">
+<div class="lab"><span>Sector width (°)</span><b id="sw_v"></b></div><input type="range" id="sw" min="2" max="90" value="30">
+<div class="lab"><span>Reference axis (°)</span><b id="ra_v"></b></div><input type="range" id="ra" min="0" max="180" value="0">
+<div class="lab"><span>Isotropic background</span><b id="ab_v"></b></div><input type="range" id="ab" min="0" max="1" step="0.01" value="0">
+<div class="res" id="res-azim"></div></div>
+<div><div id="pAzim" class="plot"></div></div></div></div></section>
+
+<section id="Tips"><h2>Tips and tricks</h2>
+<p>Please do not overparameterise your data, or I will crawl out from wherever I am to find you and stop it personally.</p>
+</section>
+
+<section id="useful"><h2>Useful Links</h2>
+<p>Here, we have discussed largely the theory of various data analysis methods, but there is a variety of support to assist you with data analysis. There are options for those who are not confident with computer programming, and other options for those more confident.</p>
+<li><a href="https://www.sasview.org/" target="_blank" rel="noopener noreferrer">Sasview</a>: a small-angle scattering  data analysis software with a GUI</li>
+<li><a href="https://sasfit.org/" target="_blank" rel="noopener noreferrer">Sasfit</a>: a small-angle scattering  data analysis software with a GUI</li>
+<li><a href="https://jscatter.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer">Jscatter</a>: a python package containing form and structure factors for small-angle scattering data</li>
+<li><a href="https://gitlab.com/simnavi/shapespyer" target="_blank" rel="noopener noreferrer">ShapeSpyer</a>: a python package bridging computational simulation with experimental small-angle scattering data</li>
+<li><a href="https://mcsas.readthedocs.io/en/latest/quickstart.html" target="_blank" rel="noopener noreferrer">McSAS</a>: a Monte Carlo approach for extracting form-free size and parameter distributions from small-angle scattering data with a GUI</li>
+<li><a href="https://www.embl-hamburg.de/biosaxs/download.html" target="_blank" rel="noopener noreferrer">ATSAS</a>: a small-angle scattering data analysis software for biological molecules with a GUI</li>
+<li><a href="https://saxs-igorcodedocs.readthedocs.io/en/stable/Irena/Introduction.html" target="_blank" rel="noopener noreferrer">Irena</a>: a small-angle scattering data analysis package for Igor Pro</li>
+</section>
+
+</main>
+<footer>Models are JavaScript implementations of the standard sphere, cylinder and lamellar forms; hard-sphere S(q) uses the Percus-Yevick closure, and the charged S(q) is a rescaled MSA (Hansen-Hayter) solved numerically in the browser, so it is not guaranteed to match the sasmodels hayter_msa numbers exactly.</footer>
+<div id="ov" class="hid" style="position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.5)">
+  <div class="box" style="width:100%;max-width:700px"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><b id="ovt"></b><span><button id="ovc" class="p">Copy</button> <button id="ovx">Close</button></span></div>
+  <img id="ovimg" class="hid" alt="plot" style="max-width:100%;background:#fff"><textarea id="ovta" style="width:100%;height:300px;font:12px ui-monospace,monospace;background:var(--bg);color:var(--fg);border:1px solid var(--line);padding:8px"></textarea></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id), css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const TABS=[['data','Data'],['guinier','Guinier'],['porod','Porod'],['model','Model'],['peaks','Peaks'],['azim','Azimuthal']];
+let PFN='',RAW=[],FITS=[],ACT=null,ACTF=null,PKF=[],TOUCH=0;let D={q:[],I:[],dI:[],name:''}, A={phi:[],I:[]}, tab='data', G=null, PO=null, PK=[], MC=null;
+const PI=Math.PI, g=id=>+$(id).value;
+
+/* ---------- Physics ---------- */
+function J1(x){const ax=Math.abs(x);if(ax<8){const y=x*x,a=x*(72362614232.0+y*(-7895059235.0+y*(242396853.1+y*(-2972611.439+y*(15704.4826+y*(-30.16036606))))));const b=144725228442.0+y*(2300535178.0+y*(18583304.74+y*(99447.43394+y*(376.9991397+y))));return a/b}
+ const z=8/ax,y=z*z,xx=ax-2.356194491,a1=1+y*(0.183105e-2+y*(-0.3516396496e-4+y*(0.2457520174e-5+y*(-0.240337019e-6)))),a2=0.04687499995+y*(-0.2002690873e-3+y*(0.8449199096e-5+y*(-0.88228987e-6+y*0.105787412e-6)));
+ const r=Math.sqrt(0.636619772/ax)*(Math.cos(xx)*a1-z*Math.sin(xx)*a2);return x<0?-r:r}
+function sphP(q,R){const x=q*R;if(x<1e-3)return 1;const f=3*(Math.sin(x)-x*Math.cos(x))/(x*x*x);return f*f}
+function cylP(q,R,L){let s=0;const n=60;for(let i=0;i<n;i++){const a=(i+.5)/n*PI/2,sa=Math.sin(a),x=q*R*sa,y=q*L*Math.cos(a)/2;const f=(x<1e-4?1:2*J1(x)/x)*(y<1e-4?1:Math.sin(y)/y);s+=f*f*sa}return s*PI/2/n}
+function ellP(q,Rp,Re){let s=0;const n=60;for(let i=0;i<n;i++){const a=(i+.5)/n*PI/2,ca=Math.cos(a),x=q*Math.sqrt(Re*Re*(1-ca*ca)+Rp*Rp*ca*ca),f=x<1e-3?1:3*(Math.sin(x)-x*Math.cos(x))/(x*x*x);s+=f*f*Math.sin(a)}return s*PI/2/n}
+function hsS(q,R,p){if(p<=0)return 1;const A_=2*q*R;if(A_<0.02)return Math.pow(1-p,4)/Math.pow(1+2*p,2);
+ const d=Math.pow(1-p,4),al=Math.pow(1+2*p,2)/d,be=-6*p*Math.pow(1+p/2,2)/d,ga=p*al/2,s=Math.sin(A_),c=Math.cos(A_);
+ const G=al/A_**2*(s-A_*c)+be/A_**3*(2*A_*s+(2-A_*A_)*c-2)+ga/A_**5*(-(A_**4)*c+4*((3*A_*A_-6)*c+(A_**3-6*A_)*s+6));
+ return 1/(1+24*p*G/A_)}
+function fft(re,im){const n=re.length;for(let i=1,j=0;i<n;i++){let b=n>>1;for(;j&b;b>>=1)j^=b;j^=b;if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t}}
+ for(let len=2;len<=n;len<<=1){const h=len>>1,ang=-2*PI/len,wr=Math.cos(ang),wi=Math.sin(ang);for(let i=0;i<n;i+=len){let cr=1,ci=0;for(let j=0;j<h;j++){const a=i+j,b=a+h,xr=re[b]*cr-im[b]*ci,xi=re[b]*ci+im[b]*cr;re[b]=re[a]-xr;im[b]=im[a]-xi;re[a]+=xr;im[a]+=xi;const t=cr*wr-ci*wi;ci=cr*wi+ci*wr;cr=t}}}}
+function dst(f,N,re,im){re.fill(0);im.fill(0);for(let i=1;i<N;i++){re[i]=f[i];re[2*N-i]=-f[i]}fft(re,im);const o=new Float64Array(N);for(let j=1;j<N;j++)o[j]=-im[j]/2;return o}
+/* solve a small dense system A x = b (A is n x n array of arrays, destroyed) */
+function lsolve(A,b){const n=b.length,M=A.map((r,i)=>r.concat([b[i]]));
+ for(let i=0;i<n;i++){let p=i;for(let r=i+1;r<n;r++)if(Math.abs(M[r][i])>Math.abs(M[p][i]))p=r;[M[i],M[p]]=[M[p],M[i]];const d=M[i][i]||1e-300;for(let r=i+1;r<n;r++){const f=M[r][i]/d;for(let c=i;c<=n;c++)M[r][c]-=f*M[i][c]}}
+ const x=new Array(n).fill(0);for(let i=n-1;i>=0;i--){let s=M[i][n];for(let c=i+1;c<n;c++)s-=M[i][c]*x[c];x[i]=s/(M[i][i]||1e-300)}return x}
+
+/* Hard sphere (sigma = 1) with a Yukawa tail c(x) = -lam*K*exp(-k(x-1))/x outside contact, closed with the MSA.
+   Ornstein-Zernike is solved on a radial grid by FFT; the indirect function gamma = h - c is found by safeguarded Anderson mixing,
+   with continuation in the coupling lam when a direct solve from the start point does not converge. */
+function msa(eta,k,K,o){o=o||{};
+ const m=o.m||24,rmax=Math.min(Math.max(o.rmax||48,24/Math.max(k,.05)),400);let N=1;while(N<rmax*m)N<<=1;
+ const dr=1/m,dq=PI/(N*dr),rho=6*eta/PI,M=Math.min(N-1,Math.round(14*m)),tolr=o.tol||1e-7;
+ const re=new Float64Array(2*N),im=new Float64Array(2*N),c=new Float64Array(N),rc=new Float64Array(N),base=new Float64Array(N),qg=new Float64Array(N),ch=new Float64Array(N);
+ for(let i=m;i<N;i++){const x=i*dr;base[i]=-Math.exp(-k*(x-1))/x}
+ const DMIN=.04;
+ /* one fixed-point map: gamma -> gamma_new, for coupling lam */
+ function G(g,lam){const lk=lam*K;
+  for(let i=1;i<N;i++){c[i]=i<m?-1-g[i]:i===m?.5*(-1-g[i]+lk*base[i]):lk*base[i];rc[i]=i*dr*c[i]}
+  const T=dst(rc,N,re,im);let c0=0;for(let i=1;i<N;i++)c0+=(i*dr)**2*c[i];ch[0]=4*PI*dr*c0;for(let j=1;j<N;j++)ch[j]=4*PI*dr*T[j]/(j*dq);
+  for(let j=0;j<N;j++){let d=1-rho*ch[j];if(!(d>DMIN))d=DMIN;qg[j]=(j*dq)*rho*ch[j]*ch[j]/d}
+  const U=dst(qg,N,re,im),out=new Float64Array(N);for(let i=1;i<N;i++)out[i]=dq*U[i]/(2*PI*PI*i*dr);out[0]=out[1];return out}
+ /* Anderson-accelerated iteration at fixed lam, starting from g0; returns {g,ok,it,err} */
+ function solveOne(g0,lam,maxit,beta0,depth){let gam=Float64Array.from(g0);let X=[],F=[],best=Infinity,beta=beta0,err=Infinity,it=0;
+  for(;it<maxit;it++){const gn=G(gam,lam),f=new Float64Array(M+1);err=0;let nf=0;
+   for(let i=1;i<=M;i++){f[i]=gn[i]-gam[i];nf+=f[i]*f[i];if(i<4*m&&Math.abs(f[i])>err)err=Math.abs(f[i])}
+   if(!isFinite(nf)||!isFinite(err))return{g:gam,ok:false,it,err:Infinity};
+   if(err<tolr){for(let i=M+1;i<N;i++)gam[i]=gn[i];return{g:gam,ok:true,it,err,gn}}
+   nf=Math.sqrt(nf);
+   if(nf>4*best&&X.length){X=[];F=[];beta=Math.max(.15,beta*.7);best=nf}  /* the iteration got worse: forget the history and damp harder */
+   if(nf<best)best=nf;
+   X.push(Float64Array.from(gam.subarray(0,M+1)));F.push(f);if(X.length>depth){X.shift();F.shift()}
+   const n=X.length;let nxt=new Float64Array(M+1);for(let i=0;i<=M;i++)nxt[i]=X[n-1][i]+beta*f[i];
+   if(n>1){const p=n-1,dF=[],dX=[];for(let j=0;j<p;j++){const a=new Float64Array(M+1),b=new Float64Array(M+1);for(let i=0;i<=M;i++){a[i]=F[j+1][i]-F[j][i];b[i]=X[j+1][i]-X[j][i]}dF.push(a);dX.push(b)}
+    const A=[],bb=[];let tr=0;for(let a=0;a<p;a++){A.push(new Array(p));let r=0;for(let i=1;i<=M;i++)r+=dF[a][i]*f[i];bb.push(r);for(let b=0;b<p;b++){let d=0;for(let i=1;i<=M;i++)d+=dF[a][i]*dF[b][i];A[a][b]=d}tr+=A[a][a]}
+    for(let a=0;a<p;a++)A[a][a]+=1e-9*tr/p+1e-30;
+    const xs=lsolve(A,bb);let big=0;xs.forEach(v=>{if(Math.abs(v)>big)big=Math.abs(v)});
+    if(isFinite(big)&&big<50)for(let j=0;j<p;j++)for(let i=0;i<=M;i++)nxt[i]-=xs[j]*(dX[j][i]+beta*dF[j][i])}
+   for(let i=0;i<=M;i++)gam[i]=nxt[i]}
+  return{g:gam,ok:false,it,err}}
+/* the best mixing settings differ between dilute-and-strongly-coupled and dense systems, so several are tried in turn */
+ const SET=[[1,5],[.5,9],[.1,4],[.3,12]];
+ function solveAt(g0,lam,maxit){let tot=0,last=null;for(const[b,d]of SET){const r=solveOne(g0,lam,maxit,b,d);tot+=r.it;if(r.ok){r.it=tot;return r}last=r}last.it=tot;return last}
+  const start=o.gam0&&o.gam0.length===N?o.gam0:new Float64Array(N);
+ let res=solveAt(start,1,o.maxit||120),iters=res.it;
+ if(!res.ok){ /* continuation in the coupling: 0 -> 1, from the hard-sphere (Percus-Yevick) solution */
+  let r0=solveAt(new Float64Array(N),0,300);iters+=r0.it;
+  if(r0.ok){let lam=0,step=.25,gcur=r0.g,fin=null;
+   for(let n=0;n<80&&lam<1;n++){const nl=Math.min(1,lam+step),r=solveAt(gcur,nl,160);iters+=r.it;
+    if(r.ok){lam=nl;gcur=r.g;step=Math.min(.5,step*1.5);if(lam>=1)fin=r}else{step/=2;if(step<1/256)break}}
+   if(fin)res=fin}}
+ const conv=res.ok,gam=res.g;
+ if(conv){const gn=res.gn;for(let i=M+1;i<N;i++)gam[i]=gn[i]}
+ /* the final transform at the converged gamma gives c(q) and S(q) */
+ G(gam,1);
+ const nq=N>>1,q=new Float64Array(nq),S=new Float64Array(nq);for(let j=0;j<nq;j++){q[j]=j*dq;S[j]=1/Math.max(1-rho*ch[j],DMIN/4)}
+ /* contact value g(1+) = 1 + gamma(1) + c(1+): gamma is smooth, extrapolated to x = 1 from the outside; c(1+) = -K is exact */
+ const y1=gam[m+1],y2=gam[m+2],y3=gam[m+3],g0=3*y1-3*y2+y3;
+ const gc=1+g0-K;
+ return{q,S,g1:conv?gc:-1e9,conv,it:iters,err:res.err,gam,m,dr,N,eta,k,K}}
+
+/* Hayter-Penfold style rescaled MSA: hard sphere + screened Coulomb (Yukawa) tail, with the diameter rescaled so that g(contact) = 0 when the plain MSA would give a negative contact value */
+function interpS(r,x){const dq=r.q[1],S=r.S,n=S.length,j=x/dq,i=Math.floor(j);if(i>=n-3)return 1;const f=j-i;
+ if(i<1)return S[i]*(1-f)+S[i+1]*f;
+ const p0=S[i-1],p1=S[i],p2=S[i+1],p3=S[i+2];return Math.max(1e-6,p1+.5*f*(p2-p0+f*(2*p0-5*p1+4*p2-p3+f*(3*(p1-p2)+p3-p0))))}
+const KSKIP=20;
+function hayter(R,phi,Z,T,Cs,eps){const sig=2*R,n=phi/(4/3*PI*R**3),lB=167100.8/(eps*T),kap=Math.sqrt(4*PI*lB*(Z*n+2*Cs*6.022e-4)),k=kap*sig,K=4*Z*Z*lB/(sig*(2+k)**2);
+ let warm=null,iters=0;
+ /* g(1+) at rescaled diameter s. A coupling above KSKIP gives g(1+) far below zero (no physical solution), so it is classed negative without solving. */
+ const solve=s=>{const Ke=K/s*Math.exp(k*(1-s));if(Ke>KSKIP)return{skip:true,g1:-1e9,Ke};const r=msa(phi*s**3,k*s,Ke,{gam0:warm});iters+=r.it;r.Ke=Ke;if(r.conv)warm=r.gam;return r};
+ const neg=r=>r.skip||(r.conv&&r.g1<0)||(!r.conv&&r.Ke>=5),pos=r=>r.conv&&r.g1>=0;
+ let s=1,r=solve(1),bad=false;
+ if(!neg(r)&&!pos(r))bad=true;
+ else if(neg(r)){const smax=Math.min(8,Math.cbrt(.62/phi));let lo=1,flo=r.conv?r.g1:NaN,hi=null,fhi=null,rh=null,last=null;
+  for(let t=1.03;;t*=(t<1.5?1.03:1.06)){const ss=Math.min(t,smax),rr=solve(ss);if(pos(rr)){hi=ss;fhi=rr.g1;rh=rr;break}if(neg(rr)){lo=ss;flo=rr.conv?rr.g1:NaN;if(rr.conv)last=rr}else break;if(ss>=smax)break}
+  if(hi){let side=0;
+   for(let i=0;i<40&&hi-lo>2e-5&&Math.abs(fhi)>2e-4;i++){let sm=isFinite(flo)?(lo*fhi-hi*flo)/(fhi-flo):.5*(lo+hi);if(!(sm>lo&&sm<hi))sm=.5*(lo+hi);
+    const rm=solve(sm);
+    if(pos(rm)){hi=sm;fhi=rm.g1;rh=rm;if(side===1&&isFinite(flo))flo/=2;side=1}
+    else if(neg(rm)){lo=sm;flo=rm.conv?rm.g1:NaN;if(side===-1)fhi/=2;side=-1}
+    else{lo=sm;flo=NaN}}
+   r=rh;s=hi}
+  else bad=true}
+ return{k,K,s,kinv:1/kap,unconv:bad||(s>1&&r.g1>.05),g1:bad?NaN:r.g1,iters,Sq:bad?(()=>1):q=>interpS(r,q*sig*s)}}
+
+const HMC=new Map();
+function hmGet(R,phi,Z,T,Cs,eps){const key=[R,phi,Z,T,Cs,eps].join('|');let h=HMC.get(key);if(h){HMC.delete(key);HMC.set(key,h);return h}
+ h=hayter(R,phi,Z,T,Cs,eps);HMC.set(key,h);if(HMC.size>8)HMC.delete(HMC.keys().next().value);return h}
+const gv=id=>{const n=$(id+'_n');if(n&&n.value!==''&&isFinite(+n.value))return +n.value;return $(id)?+$(id).value:0};
+function mparams(){return{type:$('mtype').value,R:gv('m_R'),Rp:gv('m_Rp'),Re:gv('m_Re'),rc:gv('m_rc'),th:gv('m_th'),L:gv('m_L'),d:gv('m_d'),sld:gv('m_sld'),sldsh:gv('m_sldsh'),sldso:gv('m_sldso'),pw:gv('m_pw'),pd:gv('m_pd'),vf:gv('m_vf'),sf:$('useS').value,Zc:gv('m_Z'),Tk:gv('m_T'),cs:gv('m_cs'),eps:gv('m_eps'),scale:g('scale'),bkg:g('bkg')}}
+const j1x=x=>x<1e-3?1:3*(Math.sin(x)-x*Math.cos(x))/(x*x*x);
+function modelI(q,p,ns){const sc=ns?1:p.scale,bk=ns?0:p.bkg;
+ if(p.type==='power'){const v=sc*Math.pow(q,-p.pw);return{I:v+bk,P:v,S:1}}
+ const dr=p.sld-p.sldso;let F,S=1,Req=p.R;
+ if(p.type==='lamellar'){const N=p.pd>0?10:0;let num=0,den=0;for(let k=-N;k<=N;k++){const t=N?3*k/N:0,w=Math.exp(-t*t/2),d=p.d*(1+p.pd*t);if(d<=0)continue;num+=w*(q*d<1e-3?d*d:2*(1-Math.cos(q*d))/(q*q));den+=w*d}F=dr*dr*1e-4*num/den}
+ else if(p.type==='coreshell'){const N=p.pd>0?10:0;let num=0,den=0;for(let k=-N;k<=N;k++){const t=N?3*k/N:0,w=Math.exp(-t*t/2),s=1+p.pd*t;if(s<=0)continue;const rc=p.rc*s,Rt=(p.rc+p.th)*s,Vc=4/3*PI*rc**3,Vt=4/3*PI*Rt**3,a=Vc*(p.sld-p.sldsh)*j1x(q*rc)+Vt*(p.sldsh-p.sldso)*j1x(q*Rt);num+=w*a*a;den+=w*Vt}F=num/den*1e-4;Req=p.rc+p.th}
+ else{const N=p.pd>0?10:0;let num=0,den=0;
+  for(let k=-N;k<=N;k++){const t=N?3*k/N:0,w=Math.exp(-t*t/2),s=1+p.pd*t;if(s<=0)continue;const R=p.R*s,Rp=p.Rp*s,Re=p.Re*s,ty=p.type,V=ty==='sphere'?4/3*PI*R**3:ty==='ellipsoid'?4/3*PI*Rp*Re*Re:PI*R*R*p.L,P=ty==='sphere'?sphP(q,R):ty==='ellipsoid'?ellP(q,Rp,Re):cylP(q,R,p.L);num+=w*V*V*P;den+=w*V}
+  F=num/den*dr*dr*1e-4;if(p.type==='cylinder')Req=Math.cbrt(3*PI*p.R*p.R*p.L/(4*PI));if(p.type==='ellipsoid')Req=Math.cbrt(p.Rp*p.Re*p.Re)}
+ const sf=p.sf||(p.useS?'hs':'');if(p.type!=='lamellar'&&p.type!=='power'){if(sf==='hs')S=hsS(q,Req,p.vf);else if(sf==='hm'&&p.vf>0)S=hmGet(Req,p.vf,p.Zc,p.Tk,p.cs,p.eps).Sq(q)}
+ return{I:sc*F*S+bk,P:sc*F,S}}
+const mrun=(qs,p,ns)=>qs.map(q=>modelI(q,p,ns));
+
+/* ---------- Statistics ---------- */
+function fitLin(x,y,w){const n=x.length;w=w||x.map(()=>1);let sw=0,mx=0,my=0;for(let i=0;i<n;i++){sw+=w[i];mx+=w[i]*x[i];my+=w[i]*y[i]}mx/=sw;my/=sw;
+ let sxx=0,sxy=0;for(let i=0;i<n;i++){sxx+=w[i]*(x[i]-mx)**2;sxy+=w[i]*(x[i]-mx)*(y[i]-my)}
+ const m=sxy/sxx,b=my-m*mx;let sr=0,st=0;for(let i=0;i<n;i++){sr+=w[i]*(y[i]-m*x[i]-b)**2;st+=w[i]*(y[i]-my)**2}return{m,b,r2:1-sr/st}}
+const hasErr=()=>D.dI.length&&D.dI.every(v=>v>0);
+const gauss=()=>Math.sqrt(-2*Math.log(Math.random()+1e-12))*Math.cos(2*PI*Math.random());
+const logsp=(a,b,n)=>Array.from({length:n},(_,i)=>a*Math.pow(b/a,i/(n-1)));
+
+/* ---------- Data ---------- */
+function setData(q,I,dI,name){const idx=q.map((_,i)=>i).filter(i=>q[i]>0&&isFinite(I[i])).sort((a,b)=>q[a]-q[b]);
+ D={q:idx.map(i=>q[i]),I:idx.map(i=>I[i]),dI:dI&&dI.length?idx.map(i=>dI[i]||0):[],name};
+ let r=RAW.find(x=>x.name===name);if(!r){r={name,sel:true};RAW.push(r)}Object.assign(r,{q:D.q,I:D.I,dI:D.dI});ACT=r;const n=D.q.length;$('pq0').value=+D.q[0].toPrecision(3);$('pq1').value=+D.q[n-1].toPrecision(3);['gi0','gi1','po0','po1'].forEach(id=>$(id).max=n-1);
+ $('gi0').value=0;$('gi1').value=Math.round(n*.2);$('po0').value=Math.round(n*.7);$('po1').value=n-1;
+ const mn=Math.min(...D.I.filter(v=>v>0));$('pB').max=mn*1.5;$('pB').step=mn*1.5/1000;$('pB').value=0;
+ $('dname').textContent=name+' ('+n+' pts)';autoGuinier();rd();lists()}
+function parseTxt(t){const q=[],I=[],d=[];t.split(/\r?\n/).forEach(l=>{l=l.trim();if(!l||/^[#%!]/.test(l))return;const c=l.split(/[\s,;]+/).map(Number);if(c.length>=2&&c.slice(0,2).every(isFinite)){q.push(c[0]);I.push(c[1]);d.push(isFinite(c[2])?c[2]:0)}});return{q,I,d}}
+function peakSample(q1,rat,amp,bg){const q=logsp(0.012,0.4,260),I=q.map(x=>{let v=bg+0.05*Math.pow(0.02/x,2);rat.forEach((r,n)=>{const s=0.0014*(1+0.25*n);v+=amp[n]*Math.exp(-((x-q1*r)**2)/(2*s*s))});return v});return[q,I]}
+const EX={
+ sph:{nm:'Dilute spheres R=50 Å, PD 12%',p:{type:'sphere',R:50,pd:.12,sld:3,sldso:0,sf:'',vf:.01,scale:.01,bkg:.01}},
+ hs:{nm:'Interacting spheres R=40 Å, φ=0.25',p:{type:'sphere',R:40,pd:.1,sld:3,sldso:0,sf:'hs',vf:.25,scale:.25,bkg:.02}},
+ hm:{nm:'Charged spheres R=40 Å, φ=0.05 (Hayter-MSA)',p:{type:'sphere',R:40,pd:.08,sld:3,sldso:0,sf:'hm',vf:.05,Zc:15,Tk:298.15,cs:0,eps:78.5,scale:.05,bkg:.01}},
+ cyl:{nm:'Unaligned cylinders R=20 Å, L=250 Å',p:{type:'cylinder',R:20,L:250,pd:.1,sld:3,sldso:0,sf:'',vf:.01,scale:.01,bkg:.01}},
+ ell:{nm:'Prolate ellipsoids Rp=60 Å, Re=20 Å',p:{type:'ellipsoid',Rp:60,Re:20,pd:.1,sld:3,sldso:0,sf:'',vf:.01,scale:.01,bkg:.01}}};
+function sample(k){let q,I,dI,nm;
+ if(EX[k]){q=logsp(0.004,0.35,150);I=mrun(q,EX[k].p).map(r=>r.I);nm=EX[k].nm}
+ else{const h=k==='hex';[q,I]=peakSample(h?.075:.1,h?[1,1.732,2,2.646,3,3.464]:[1,2,3,4,5],h?[40,12,6,3,2,1]:[50,22,9,4,2],.3);nm=h?'Hexagonal, q₁=0.075 Å⁻¹':'Lamellar, q₁=0.10 Å⁻¹'}
+ dI=I.map(v=>0.04*v);I=I.map((v,i)=>v+dI[i]*gauss());setData(q,I,dI,nm)}
+
+/* ---------- Guinier ---------- */
+function guinier(){const n=D.q.length;if(!n)return null;let a=g('gi0'),b=g('gi1');if(a>b)[a,b]=[b,a];
+ const x=[],y=[],w=[],ix=[];for(let i=a;i<=b;i++)if(D.I[i]>0){x.push(D.q[i]**2);y.push(Math.log(D.I[i]));w.push($('gW').checked&&hasErr()?Math.min((D.I[i]/D.dI[i])**2,1e6):1);ix.push(i)}
+ if(x.length<3)return null;const f=fitLin(x,y,w);if(f.m>=0)return{bad:1,n:x.length};const Rg=Math.sqrt(-3*f.m);return{...f,Rg,I0:Math.exp(f.b),n:x.length,x,y,ix,ia:a,ib:b,qRg:D.q[b]*Rg}}
+function autoGuinier(){const n=D.q.length;if(n<6)return;$('gi0').value=0;let b=Math.max(4,Math.round(n*.15));$('gi1').value=b;
+ for(let k=0;k<8;k++){const r=guinier();if(!r||r.bad)break;let nb=0;for(let i=0;i<n;i++)if(D.q[i]*r.Rg<1.3)nb=i;nb=Math.max(nb,4);if(nb===+$('gi1').value)break;$('gi1').value=nb}}
+
+/* ---------- Porod ---------- */
+function porod(){const n=D.q.length;if(!n)return null;let a=g('po0'),b=g('po1');if(a>b)[a,b]=[b,a];const B=g('pB');let s=0,c=0;
+ for(let i=a;i<=b;i++){s+=(D.I[i]-B)*D.q[i]**4;c++}return{K:s/c,B,a,b}}
+function porodFit(){let a=g('po0'),b=g('po1');if(a>b)[a,b]=[b,a];const x=[],y=[];for(let i=a;i<=b;i++){x.push(D.q[i]**4);y.push(D.I[i]*D.q[i]**4)}
+ if(x.length<3)return;const f=fitLin(x,y),B=Math.max(0,f.m),sl=$('pB');if(B>+sl.max)sl.max=B*1.2;sl.value=B;PFN=f.m<0?'Fitted B was negative; set to 0 (no flat background resolvable in this range).':'';return f}
+
+/* ---------- Peaks ---------- */
+const LAT={Lamellar:[1,2,3,4,5,6],'Hexagonal (2D)':[1,Math.sqrt(3),2,Math.sqrt(7),3,Math.sqrt(12)],'Cubic SC':[1,Math.SQRT2,Math.sqrt(3),2,Math.sqrt(5),Math.sqrt(6)],'Cubic BCC':[1,Math.SQRT2,Math.sqrt(3),2,Math.sqrt(5),Math.sqrt(6),Math.sqrt(7)],'Cubic FCC':[1,1.1547,1.633,1.915,2,2.309],'Gyroid (Ia3d)':[1,1.1547,1.528,1.633,1.826]};
+function latScore(pk,tol){if(!pk.length)return[];const q1=pk[0].q,xs=pk.map(p=>p.q/q1),xm=Math.max(...xs);
+ return Object.entries(LAT).map(([nm,r])=>{let m=0,er=0;const used=new Set();
+  xs.forEach(x=>{let bi=-1,be=9;r.forEach((v,i)=>{const e=Math.abs(x/v-1);if(e<be){be=e;bi=i}});if(be<tol&&!used.has(bi)){used.add(bi);m++;er+=be}});
+  const miss=r.filter((v,i)=>v<=xm*(1+tol)&&!used.has(i)).length;
+  return{nm,m,miss,err:m?er/m:1,score:m/(xs.length+miss)}}).sort((a,b)=>b.score-a.score||a.err-b.err||a.nm.localeCompare(b.nm))}
+
+/* ---------- Azimuthal ---------- */
+function genAzim(){const p0=g('dφ'),k=g('dk');A={phi:[],I:[]};for(let i=0;i<180;i++){const f=i*2,d=(f-p0)*PI/180;const v=0.2+Math.exp(k*(Math.cos(d)**2-1))*1.0;A.phi.push(f);A.I.push(v*(1+0.03*gauss()))}}
+function azim(){const n=A.phi.length;if(!n)return null;const ab=g('ab')*Math.min(...A.I),I=A.I.map(v=>Math.max(v-ab,0));let S=0,c2=0,s2=0;
+ I.forEach((v,i)=>{const r=A.phi[i]*PI/180;S+=v;c2+=v*Math.cos(2*r);s2+=v*Math.sin(2*r)});
+ let p0=0.5*Math.atan2(s2,c2)*180/PI;if(p0<0)p0+=180;
+ const cc=ref=>{let t=0;I.forEach((v,i)=>t+=v*Math.cos((A.phi[i]-ref)*PI/180)**2);return t/S},hf=ref=>(3*cc(ref)-1)/2;
+ const sc=g('sc'),sw=g('sw');let sec=0,cnt=0;A.phi.forEach((f,i)=>{const d=((f-sc+90)%180+180)%180-90;if(Math.abs(d)<=sw/2){sec+=I[i];cnt++}});
+ return{p0,f0:hf(p0),fr:hf(g('ra')),S2:Math.hypot(c2,s2)/S,sec:cnt?sec/cnt:0,cnt,ref:g('ra')}}
+
+/* ---------- Plotting ---------- */
+function lay(xt,yt,xl,yl,ex){return Object.assign({margin:{l:66,r:56,t:20,b:50},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',font:{color:css('--fg'),size:12},
+ xaxis:{title:xt,type:xl?'log':'linear',gridcolor:css('--line'),zerolinecolor:css('--line')},yaxis:{title:yt,type:yl?'log':'linear',gridcolor:css('--line'),zerolinecolor:css('--line')},legend:{orientation:'h',y:1.1},showlegend:true},ex||{})}
+const draw=(el,t,l)=>Plotly.react(el,t,l,{responsive:true,displaylogo:false});
+const pts=(x,y,nm,col,ex)=>Object.assign({x,y,name:nm,mode:'markers',type:'scatter',marker:{size:5,color:col||css('--acc')}},ex||{});
+const eb=()=>hasErr()?{error_y:{type:'data',array:D.dI,visible:true,thickness:1,width:0,color:css('--line')}}:{};
+const A1=()=>css('--acc'),A2=()=>css('--acc2');
+const rs=(id,h)=>{$(id).innerHTML=h};
+
+function rData(){const v=$('view').value,q=D.q,I=D.I;let t,l;
+ if(v==='loglog'||v==='linlin'){t=[pts(q,I,'data',A1(),eb())];l=lay('q (Å⁻¹)','I(q) (cm⁻¹)',v==='loglog',v==='loglog')}
+ else if(v==='guinier'){const ok=q.map((_,i)=>I[i]>0);t=[pts(q.filter((_,i)=>ok[i]).map(x=>x*x),I.filter((_,i)=>ok[i]).map(Math.log),'data',A1())];l=lay('q² (Å⁻²)','ln I(q)')}
+ else{t=[pts(q,q.map((x,i)=>I[i]*x**4),'I·q⁴',A1())];l=lay('q (Å⁻¹)','I·q⁴',false,true)}
+ draw('pData',t,l);rs('res-data',`${D.name}<br>N = ${q.length}<br>q: ${q[0]?.toPrecision(3)} – ${q[q.length-1]?.toPrecision(3)} Å⁻¹<br>d range: ${(2*PI/q[q.length-1]).toFixed(1)} – ${(2*PI/q[0]).toFixed(0)} Å<br>errors: ${hasErr()?'yes':'no'}`)}
+function rGuinier(){G=guinier();const q=D.q,I=D.I,gv_=$('gView').checked,ok=q.map((_,i)=>I[i]>0),good=G&&!G.bad;
+ let t,l;const xf=good?G.x[0]:0,xl=good?G.x[G.x.length-1]:0,qf=Math.sqrt(xf),ql=Math.sqrt(xl);
+ if(gv_){t=[pts(q.filter((_,i)=>ok[i]).map(x=>x*x),I.filter((_,i)=>ok[i]).map(Math.log),'all data','#9aa5b1')];l=lay('q² (Å⁻²)','ln I(q)',false,false);
+  if(good){t.push(pts(G.x,G.y,'fit range',A1(),{marker:{size:7,color:A1()}}));
+   t.push({x:[xf,xl],y:[xf,xl].map(x=>G.m*x+G.b),mode:'lines',name:'fit',line:{color:A2(),width:2.5}});
+   t.push({x:[0,xf],y:[0,xf].map(x=>G.m*x+G.b),mode:'lines',name:'extrapolation to q=0',line:{color:A2(),width:1.5,dash:'dot'}})}}
+ else{t=[pts(q.filter((_,i)=>ok[i]),I.filter((_,i)=>ok[i]),'all data','#9aa5b1')];l=lay('q (Å⁻¹)','I(q) (cm⁻¹)',true,true);
+  if(good){t.push(pts(ix2(G,q),ix2(G,I),'fit range',A1(),{marker:{size:7,color:A1()}}));
+   const m=n=>Array.from({length:n},(_,i)=>qf+(ql-qf)*i/(n-1)),f=x=>G.I0*Math.exp(-x*x*G.Rg*G.Rg/3);
+   t.push({x:m(40),y:m(40).map(f),mode:'lines',name:'Guinier fit',line:{color:A2(),width:2.5}});
+   const qe=Array.from({length:25},(_,i)=>q[0]+(qf-q[0])*i/24);t.push({x:qe,y:qe.map(f),mode:'lines',name:'extrapolation',line:{color:A2(),width:1.5,dash:'dot'}})}}
+ if(good){
+  draw('pGuinR',[pts(G.x,G.y.map((y,i)=>y-(G.m*G.x[i]+G.b)),'residual',A2()),{x:[0,Math.max(...G.x)],y:[0,0],mode:'lines',showlegend:false,line:{color:css('--mut'),width:1}}],lay('q² (Å⁻²)','Δ ln I',false,false,{margin:{l:66,r:56,t:8,b:40},showlegend:false}));
+  rs('res-guinier',`R<sub>g</sub> = ${G.Rg.toFixed(2)} Å<br>I(0) = ${G.I0.toPrecision(4)} cm⁻¹<br>R² = ${G.r2.toFixed(4)}<br>q<sub>max</sub>·R<sub>g</sub> = ${G.qRg.toFixed(2)} ${G.qRg>1.3?'<span style="color:var(--acc2)">(&gt;1.3!)</span>':''}<br>points = ${G.n}<br>weighting: ${$('gW').checked&&hasErr()?'by errors':'unweighted'}<br>sphere R = ${(Rg2R(G.Rg)).toFixed(1)} Å (√(5/3)·Rg)`);
+  }
+ else{rs('res-guinier','Fit not valid (need ≥3 points and negative slope).');Plotly.purge('pGuinR')}
+ draw('pGuin',t,l)}
+const ix2=(G,a)=>G.ix.map(i=>a[i]);
+const Rg2R=r=>r*Math.sqrt(5/3);
+function rPorod(){PO=porod();const q=D.q,B=PO.B,K=PO.K,qa=q[PO.a],qb=q[PO.b],pv=$('pView').checked,xs=Array.from({length:40},(_,i)=>qa+(qb-qa)*i/39);let t,l;
+ const rng=[];for(let i=PO.a;i<=PO.b;i++)rng.push(i);
+ if(pv){const y=q.map((x,i)=>(D.I[i]-B)*x**4);
+  t=[pts(q,q.map((x,i)=>D.I[i]*x**4),'raw I·q⁴','#9aa5b1'),pts(q,y,'(I − B)·q⁴',A1()),
+   {x:xs,y:xs.map(x=>K+B*x**4),mode:'lines',name:'fit: K + B·q⁴',line:{color:A2(),width:2.5}},
+   {x:[qa,qb],y:[K,K],mode:'lines',name:'Porod constant K',line:{color:A2(),width:1.5,dash:'dot'}}];
+  l=lay('q (Å⁻¹)','I·q⁴ (cm⁻¹ Å⁻⁴)',false,$('pLog').checked)}
+ else{t=[pts(q,D.I,'data','#9aa5b1'),pts(rng.map(i=>q[i]),rng.map(i=>D.I[i]),'fit range',A1(),{marker:{size:6,color:A1()}}),
+   {x:xs,y:xs.map(x=>K/x**4+B),mode:'lines',name:'fit: K/q⁴ + B',line:{color:A2(),width:2.5}},
+   {x:xs,y:xs.map(()=>B),mode:'lines',name:'background B',line:{color:css('--mut'),width:1,dash:'dot'}}];
+  l=lay('q (Å⁻¹)','I(q) (cm⁻¹)',true,true)}
+ let sse=0,sst=0,m=0;rng.forEach(i=>m+=D.I[i]*q[i]**4);m/=rng.length;rng.forEach(i=>{const y=D.I[i]*q[i]**4;sse+=(y-K-B*q[i]**4)**2;sst+=(y-m)**2});
+ draw('pPorod',t,l);
+ rs('res-porod',`Porod constant K = ${K.toExponential(3)} cm⁻¹Å⁻⁴<br>Background B = ${B.toPrecision(3)} cm⁻¹<br>range: ${qa.toFixed(4)} – ${qb.toFixed(4)} Å⁻¹ (${rng.length} pts)<br>R² of K + B·q⁴ = ${sst>0?(1-sse/sst).toFixed(4):'n/a'}<br>S/V = ${(K/(2*PI)).toExponential(3)} (K/2πΔρ² in Δρ² units)${PFN?'<br><span style="color:var(--acc2)">'+PFN+'</span>':''}`)}
+function rModel(){const p=mparams(),q=D.q,qs=q.length?logsp(q[0],q[q.length-1],200):logsp(.003,.4,200),r=mrun(qs,p);
+ const t=[];if(q.length&&$('showRaw').checked)t.push(pts(q,D.I,'data',A1(),eb()));t.push({x:qs,y:r.map(x=>x.I),mode:'lines',name:'model I(q)',line:{color:A2(),width:2}});
+ let ex={};if($('showPS').checked){t.push({x:qs,y:r.map(x=>x.P),mode:'lines',name:'P(q) (scaled)',line:{dash:'dot',color:'#7a9a5a'}});t.push({x:qs,y:r.map(x=>x.S),yaxis:'y2',mode:'lines',name:'S(q)',line:{dash:'dash',color:'#8a6fb0'}});ex={yaxis2:{overlaying:'y',side:'right',title:'S(q)',showgrid:false}}}
+ const l=lay('q (Å⁻¹)','I(q) (cm⁻¹)',true,true,ex);if(ex.yaxis2)l.yaxis2=ex.yaxis2;draw('pModel',t,l);
+ let h=`type: ${p.type}${p.pd>0&&p.type!=='lamellar'?' (polydisperse)':''}`;
+ if(q.length){const m=mrun(q,p);let c=0,n=0;q.forEach((x,i)=>{const s=D.dI[i]>0?D.dI[i]:0.05*D.I[i];c+=((D.I[i]-m[i].I)/s)**2;n++});MC=c/n;h+=`<br>χ²<sub>red</sub> ≈ ${MC.toFixed(2)}`}
+ if(p.type==='sphere')h+=`<br>V = ${(4/3*PI*p.R**3).toExponential(2)} Å³<br>R<sub>g</sub> = ${(p.R*Math.sqrt(.6)).toFixed(1)} Å`;
+ if(p.sf==='hm'&&p.type!=='lamellar'&&p.type!=='power'){const Rq=p.type==='coreshell'?p.rc+p.th:p.type==='ellipsoid'?Math.cbrt(p.Rp*p.Re*p.Re):p.R,hh=hmGet(Rq,p.vf,p.Zc,p.Tk,p.cs,p.eps);h+=`<br>Debye length = ${hh.kinv.toFixed(1)} Å, κσ = ${hh.k.toFixed(2)}<br>RMSA diameter rescale = ${hh.s.toFixed(3)}${hh.unconv?'<br><span style="color:var(--acc2)">S(q) solver did not fully converge (very strong coupling); treat with caution.</span>':''}`}
+ rs('res-model',h);}
+function rAzim(){if(!A.phi.length)genAzim();const r=azim(),sc=g('sc'),sw=g('sw'),ab=g('ab')*Math.min(...A.I),sh=[];
+ [sc,sc+180].forEach(c=>sh.push({type:'rect',xref:'x',yref:'paper',x0:c-sw/2,x1:c+sw/2,y0:0,y1:1,fillcolor:A2(),opacity:.18,line:{width:0}}));
+ draw('pAzim',[pts(A.phi,A.I.map(v=>v-ab),'I(φ)',A1())],lay('φ (°)','I(φ) (a.u.)',false,false,{shapes:sh}));
+ rs('res-azim',`Orientation φ₀ = ${r.p0.toFixed(1)}°<br>Hermans f (axis φ₀) = ${r.f0.toFixed(3)}<br>Hermans f (axis ${r.ref}°) = ${r.fr.toFixed(3)}<br>2D order S = ${r.S2.toFixed(3)}<br>Sector mean I = ${r.sec.toPrecision(4)} (${r.cnt} pts)<br><span style="color:var(--mut)">f = (3⟨cos²Δφ⟩−1)/2; +1 aligned, −0.5 perpendicular</span>`)}
+
+/* ---------- Wiring ---------- */
+function showRes(){document.querySelectorAll('input[type=range]').forEach(e=>{const o=$(e.id+'_v');if(!o)return;let v=+e.value;
+ o.textContent=/^(gi|po)[01]$/.test(e.id)?(D.q[v]??0).toFixed(4):(Math.abs(v)<10&&v%1?+v.toPrecision(3):v)})}
+const RF={data:rData,guinier:rGuinier,porod:rPorod,model:rModel,peaks:rPeaks,crys:rCrys,guess:rGuess,azim:rAzim};
+function rd(k){showRes();(k&&RF[k]?[k]:Object.keys(RF)).forEach(s=>RF[s]())}
+const sec=e=>e.target.closest('section')?.id;
+const MS=[['R','Radius R (Å)',5,250,.5,22,'sphere cylinder'],['Rp','Polar radius Rp (Å)',5,500,.5,60,'ellipsoid'],['Re','Equatorial radius Re (Å)',5,250,.5,20,'ellipsoid'],['rc','Core radius (Å)',5,150,.5,16.5,'coreshell'],['th','Shell thickness (Å)',0,100,.5,5.5,'coreshell'],['L','Length L (Å)',10,1500,5,200,'cylinder'],['d','Thickness δ (Å)',5,300,1,40,'lamellar'],['sld','SLD sphere / core',-1,10,.01,.3,'sphere cylinder ellipsoid coreshell lamellar'],['sldsh','SLD shell',-1,10,.01,2,'coreshell'],['sldso','SLD solvent',-1,10,.01,6.35,'sphere cylinder ellipsoid coreshell lamellar'],['pw','Exponent m',1,6,.01,4,'power'],['pd','Polydispersity ΔR/R',0,.4,.01,0,'sphere cylinder ellipsoid coreshell lamellar'],['vf','Volume fraction',0,.6,.001,.02,'sphere cylinder ellipsoid coreshell']];
+const HS=[['Z','Charge Z (e)',1,200,.5,14,''],['T','Temperature (K)',273.15,373.15,.05,318.16,''],['cs','Added salt (M)',0,.5,.0005,0,''],['eps','Dielectric constant',1,100,.01,71.08,'']];
+$('hmsl').innerHTML=HS.map(([id,n,a,b,st,v])=>`<div><div class="lab"><span>${n}</span><input type="number" class="nb" id="m_${id}_n" step="any" value="${v}"></div><input type="range" id="m_${id}" min="${a}" max="${b}" step="${st}" value="${v}"></div>`).join('');
+$('msl').innerHTML=MS.map(([id,n,a,b,s,v,m])=>`<div data-m="${m}"><div class="lab"><span>${n}</span><input type="number" class="nb" id="m_${id}_n" step="any" value="${v}"></div><input type="range" id="m_${id}" min="${a}" max="${b}" step="${s}" value="${v}"></div>`).join('');
+function mVis(){const t=$('mtype').value;$('hmsl').classList.toggle('hid',$('useS').value!=='hm'||t==='lamellar'||t==='power');document.querySelectorAll('[data-m]').forEach(e=>e.classList.toggle('hid',!e.dataset.m.split(' ').includes(t)))}
+document.addEventListener('input',e=>{const t=e.target;if(t.id&&t.id.startsWith('m_')){if(t.type==='range'&&$(t.id+'_n'))$(t.id+'_n').value=+(+t.value).toPrecision(6);else if(t.classList.contains('nb')){const sl=$(t.id.slice(0,-2));if(sl&&t.value!=='')sl.value=t.value}}},true);
+document.addEventListener('input',e=>{if(e.target.type==='file')return;if(e.target.id==='mtype'||e.target.id==='useS')mVis();rd(sec(e))});
+document.addEventListener('change',e=>{if(e.target.id==='useS')mVis();if(e.target.type==='checkbox'||e.target.tagName==='SELECT')rd(sec(e))});
+$('sample').onchange=e=>sample(e.target.value);
+$('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;const r=parseTxt(await f.text());if(r.q.length<5)return alert('Could not parse ≥5 rows of q, I[, dI].');setData(r.q,r.I,r.d,f.name)};
+$('afile').onchange=async e=>{const f=e.target.files[0];if(!f)return;const r=parseTxt(await f.text());if(r.q.length<5)return;A={phi:r.q,I:r.I};rd()};
+$('gAuto').onclick=()=>{autoGuinier();rd()};$('pFit').onclick=()=>{porodFit();rd()};['po0','po1','pB'].forEach(id=>$(id).addEventListener('input',()=>{PFN=''}));$('aGen').onclick=()=>{genAzim();rd()};
+$('theme').onclick=()=>{const r=document.documentElement,d=css('--bg')==='#0f1a21';r.dataset.theme=d?'light':'dark';rd()};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>rd());
+function show(title,txt){$('ovt').textContent=title;$('ovta').value=txt;$('ov').style.display='flex';$('ovta').select()}
+$('ovx').onclick=()=>$('ov').style.display='none';$('ovc').onclick=()=>{$('ovta').select();try{navigator.clipboard.writeText($('ovta').value)}catch(e){document.execCommand('copy')}};
+
+/* ---------- colourmaps, helpers ---------- */
+const CM={plasma:['#0d0887','#7e03a8','#cc4778','#f89540','#f0f921'],viridis:['#440154','#3b528b','#21908d','#5dc863','#fde725'],magma:['#000004','#51127c','#b73779','#fc8961','#fcfdbf'],coolwarm:['#3b4cc0','#8db0fe','#dddcdc','#f4987a','#b40426'],rainbow:['#6e40aa','#1ac7c2','#aff05b','#feb927','#d93a5b']};
+function cm(n,t){const a=CM[n],p=t*(a.length-1),i=Math.min(Math.floor(p),a.length-2),f=p-i,h=x=>[1,3,5].map(k=>parseInt(x.slice(k,k+2),16)),u=h(a[i]),v=h(a[i+1]);return'rgb('+u.map((c,k)=>Math.round(c+f*(v[k]-c))).join(',')+')'}
+const base=n=>n.replace(/\.[^.]*$/,'');
+function vl(xs,tx,y0,y1){const X=[],Y=[];xs.forEach(x=>{X.push(x,x,null);Y.push(y0,y1,null)});return[{x:X,y:Y,mode:'lines',showlegend:false,hoverinfo:'skip',line:{color:A2(),dash:'dash',width:1.3}},{x:xs,y:xs.map(()=>y1),mode:'text',text:tx,textposition:'top center',showlegend:false,hoverinfo:'skip',textfont:{color:css('--fg'),size:11}}]}
+function lim(s,lg){const m=(s||'').replace(/,/g,' ').split(/\s+/).filter(Boolean).map(Number);return m.length===2&&m.every(isFinite)?(lg?m.map(Math.log10):m):null}
+const yr=()=>{const a=RAW.filter(r=>r.sel).flatMap(r=>r.I.filter(v=>v>0));return a.length?[Math.min(...a)*.7,Math.max(...a)*1.5]:[1e-3,1]};
+
+/* ---------- Data plot ---------- */
+function rData(){if(!D.q.length)return;const v=$('view').value,q=D.q,I=D.I,md={pts:'markers',line:'lines',both:'lines+markers'}[$('dstyle').value],ps={mode:md,line:{color:A1(),width:1.5}};let t=[],l;
+ if(v==='guinier'){const ok=q.map((_,i)=>I[i]>0);t=[pts(q.filter((_,i)=>ok[i]).map(x=>x*x),I.filter((_,i)=>ok[i]).map(Math.log),'active',A1(),ps)];l=lay('q² (Å⁻²)','ln I(q)')}
+ else if(v==='porod'){t=[pts(q,q.map((x,i)=>I[i]*x**4),'I·q⁴',A1(),ps)];l=lay('q (Å⁻¹)','I·q⁴',false,true)}
+ else{RAW.forEach((r,i)=>{if(!r.sel)return;const c=cm('plasma',RAW.length>1?i/(RAW.length-1):.5);t.push({x:r.q,y:r.I,name:base(r.name),mode:md,line:{color:c,width:1.5},marker:{symbol:'circle',size:4,color:css('--panel'),line:{color:c,width:1.2}}})});
+  if(PKF.length){const[a,b]=yr();t.push(...vl(PKF.map(k=>k.c),PKF.map((k,i)=>'P'+(i+1)),a,b))}
+  l=lay('q (Å⁻¹)','I(q) (cm⁻¹)',true,true,{showlegend:true,legend:{orientation:'h',y:-0.22},margin:{l:66,r:30,t:20,b:60}})}
+ draw('pData',t,l);rs('res-data',`Active: ${D.name}<br>N = ${q.length}<br>q: ${q[0].toPrecision(3)} – ${q[q.length-1].toPrecision(3)} Å⁻¹<br>d range: ${(2*PI/q[q.length-1]).toFixed(1)} – ${(2*PI/q[0]).toFixed(0)} Å<br>errors: ${hasErr()?'yes':'no'}<br>datasets loaded: ${RAW.length}`)}
+function interp(x,X,Y){let i=0;if(x<=X[0])return Y[0];if(x>=X[X.length-1])return Y[Y.length-1];while(X[i+1]<x)i++;return Y[i]+(Y[i+1]-Y[i])*(x-X[i])/(X[i+1]-X[i])}
+function lists(){const li=(A,k,act)=>$(k).innerHTML=A.map((r,i)=>`<div class="li${r===act?' on':''}"><input type="checkbox" data-k="${k}" data-i="${i}" ${r.sel?'checked':''}><span data-k="${k}" data-i="${i}">${r.name}</span></div>`).join('')||'<div class="li">none</div>';
+ li(RAW,'rawList',ACT)}
+function upsertFit(p){const nm='Fit_'+base(ACT.name)+'_'+p.type;let f=FITS.find(x=>x.name===nm),nw=!f;if(nw){f={name:nm,sel:true};FITS.push(f)}f.q=D.q.slice();f.I=mrun(D.q,p).map(x=>x.I);if(nw)lists()}
+
+/* ---------- Peak fitting ---------- */
+function fpk(y,dist,prom,hgt,rel){const n=y.length,c=[];for(let i=1;i<n-1;i++)if(y[i]>y[i-1]&&y[i]>=y[i+1]&&y[i]>=hgt){let l=i,lm=y[i];while(l>0&&y[l-1]<=y[i]){l--;lm=Math.min(lm,y[l])}let r=i,rm=y[i];while(r<n-1&&y[r+1]<=y[i]){r++;rm=Math.min(rm,y[r])}if(y[i]-Math.max(lm,rm)>=(rel?prom*y[i]:prom))c.push(i)}
+ c.sort((a,b)=>y[b]-y[a]);const k=[];c.forEach(i=>{if(k.every(j=>Math.abs(i-j)>=dist))k.push(i)});return k.sort((a,b)=>a-b)}
+function nm(f,x0,it=1500){const n=x0.length;let S=[x0.slice()];for(let i=0;i<n;i++){const v=x0.slice();v[i]=v[i]?v[i]*1.1:.01;S.push(v)}let F=S.map(f);
+ for(let k=0;k<it;k++){const o=F.map((_,i)=>i).sort((a,b)=>F[a]-F[b]);S=o.map(i=>S[i]);F=o.map(i=>F[i]);
+  const c=x0.map((_,j)=>S.slice(0,n).reduce((s,v)=>s+v[j],0)/n),mv=t=>c.map((v,j)=>v+t*(S[n][j]-v)),xr=mv(-1),fr=f(xr);
+  if(fr<F[0]){const xe=mv(-2),fe=f(xe);if(fe<fr){S[n]=xe;F[n]=fe}else{S[n]=xr;F[n]=fr}}
+  else if(fr<F[n-1]){S[n]=xr;F[n]=fr}
+  else{const xc=mv(fr<F[n]?-.5:.5),fc=f(xc);if(fc<Math.min(fr,F[n])){S[n]=xc;F[n]=fc}else for(let i=1;i<=n;i++){S[i]=S[i].map((v,j)=>S[0][j]+.5*(v-S[0][j]));F[i]=f(S[i])}}}
+ return S[F.indexOf(Math.min(...F))]}
+const fwOf=(ty,s)=>{if(ty==='Gaussian')return 2.35482*s;if(ty==='Lorentzian')return 2*s;const fl=2*s,fg=2.35482*s;return .5346*fl+Math.sqrt(.2166*fl*fl+fg*fg)};
+function pkf(ty,x,A,c,s){const d=x-c;if(ty==='Gaussian')return A/(s*Math.sqrt(2*PI))*Math.exp(-d*d/(2*s*s));if(ty==='Lorentzian')return A/PI*s/(d*d+s*s);
+ const fv=fwOf(ty,s),r=2*s/fv,e=1.36603*r-.47719*r*r+.11116*r**3;return A*(e*2/(PI*fv)/(1+4*d*d/(fv*fv))+(1-e)*Math.sqrt(4*Math.LN2/PI)/fv*Math.exp(-4*Math.LN2*d*d/(fv*fv)))}
+function pkExtract(){const ty=$('ptype').value,deg=$('pbg').value==='Linear'?2:3,xl=g('pxl'),q0=g('pq0'),q1=g('pq1'),hm=g('phm');
+ const ix=D.q.map((_,i)=>i).filter(i=>D.q[i]>=q0&&D.q[i]<=q1&&D.I[i]>0),q=ix.map(i=>D.q[i]),I=ix.map(i=>D.I[i]);PKF=[];
+ fpk(I,8,0.25,hm,1).forEach(pi=>{const c0=q[pi];if(c0-q0<xl*.25||q1-c0<xl*.25)return;const sel=q.map((_,i)=>i).filter(i=>Math.abs(q[i]-c0)<=xl);if(sel.length<5)return;
+  const xs=sel.map(i=>q[i]),ys=sel.map(i=>I[i]),h0=I[pi],s0=Math.max((xs[xs.length-1]-xs[0])/10,1e-4),lim=.75*xl,bk=(x,b)=>b[0]+b[1]*(x-c0)+(deg>2?b[2]*(x-c0)**2:0);
+  const f=p=>{if(p[2]<=0||Math.abs(p[1]-c0)>lim)return 1e30;let e=0;xs.forEach((x,i)=>{const d=pkf(ty,x,p[0],p[1],p[2])+bk(x,p.slice(3))-ys[i];e+=d*d});return e};
+  let p=nm(f,[h0*s0*2.5,c0,s0,Math.min(...ys),0,...(deg>2?[0]:[])]);p=nm(f,p);if(!(p[0]>0)||f(p)>=1e30)return;
+  const h=Math.max(...xs.map(x=>pkf(ty,x,p[0],p[1],p[2]))),o={a:p[0],c:p[1],s:p[2],fw:fwOf(ty,p[2]),h},d=PKF.findIndex(k=>Math.abs(k.c-p[1])<.003);if(d>=0){if(o.a>PKF[d].a)PKF[d]=o}else PKF.push(o)});
+ PKF.sort((a,b)=>a.c-b.c);if(PKF.length)$('cq1').value=+PKF[0].c.toFixed(4);rd();}
+function rPeaks(){const t=[{x:D.q,y:D.I,mode:'lines',name:'data',line:{color:A1(),width:1.5}}];let h='Set the fit options, then press <b>Extract and fit peaks</b>.',lat='Appears after the peaks have been fitted.';
+ if(PKF.length){t.push(...vl(PKF.map(k=>k.c),PKF.map((k,i)=>'P'+(i+1)),Math.min(...D.I)*.8,Math.max(...D.I)*1.2));const sc=latScore(PKF.map(k=>({q:k.c})),.03),b=sc[0];
+  h='<table><tr><th>#</th><th>Amp.</th><th>Centre</th><th>FWHM</th><th>Height</th><th>Index</th><th>d (Å)</th></tr>'+PKF.map((k,i)=>`<tr><td>${i+1}</td><td>${k.a.toPrecision(4)}</td><td>${k.c.toFixed(4)}</td><td>${k.fw.toFixed(4)}</td><td>${k.h.toPrecision(4)}</td><td>${(k.c/PKF[0].c).toFixed(2)}</td><td>${(2*PI/k.c).toFixed(1)}</td></tr>`).join('')+'</table>';lat=(PKF.length<2?'<span style="color:var(--mut)">Only one peak found, so the lattice cannot be identified from peak ratios.</span><br><br>':'')+'<table><tr><th>Lattice</th><th>Matched</th><th>Missing</th><th>Score</th></tr>'+sc.map(x=>`<tr style="${x===b?'font-weight:700;color:var(--acc)':''}"><td>${x===b?'▶ ':''}${x.nm}</td><td>${x.m}/${PKF.length}</td><td>${x.miss}</td><td>${(100*x.score).toFixed(0)}%</td></tr>`).join('')+'</table><div style="color:var(--mut);margin-top:8px;font-size:12px">Matched = peaks that fall on an allowed reflection (±3%). Missing = allowed reflections below the last peak with no peak. A lattice scores lower for both unmatched peaks and missing reflections.</div>'}
+ draw('pPeaks',t,lay('q (Å⁻¹)','I(q) (cm⁻¹)',true,true));rs('res-peaks',h);rs('res-lat',lat)}
+
+/* ---------- Crystal structure browser ---------- */
+const S2=Math.sqrt,STR={'Lamellar (Lα)':{r:[1,2,3,4,5,6],l:['100','200','300','400','500','600']},'Hexagonal (H1)':{r:[1,S2(3),2,S2(7),3,S2(12)],l:['100','110','200','210','300','220']},'Tetragonal (P4mm)':{r:[1,S2(2),2,S2(5),S2(8),3],l:['100','110','200','210','220','300']},'Cubic (Primitive)':{r:[1,S2(2),S2(3),2,S2(5),S2(6)],l:['110','100','111','200','210','211']},'Cubic (Im3m - BCC)':{r:[1,S2(2),S2(3),2,S2(5),S2(6)],l:['110','200','211','220','310','222']},'Cubic (Fm3m - FCC)':{r:[S2(3),2,S2(8),S2(11),S2(12),4],l:['111','200','220','311','222','400']},'Cubic (Pn3m - Gyroid)':{r:[S2(2),S2(3),2,S2(6),S2(8),3],l:['110','111','200','211','222','310']},'Cubic (Ia3d - Diamond)':{r:[S2(3),S2(8),S2(11),4,S2(19),S2(24)],l:['111','220','311','400','331','422']}};
+$('cs').innerHTML=Object.keys(STR).map(k=>`<option>${k}</option>`).join('');$('cs').selectedIndex=0;
+function rCrys(){const st=STR[$('cs').value],q1=g('cq1'),xs=st.r.map(r=>r*q1),a=Math.min(...D.I)*.7,b=Math.max(...D.I)*1.5;
+ const t=[{x:D.q,y:D.I,mode:'lines',name:'Raw: '+D.name,line:{color:css('--fg'),width:1.2}},...vl(xs,st.l,a,b)];
+ draw('pCrys',t,lay('q (Å⁻¹)','I(q) (cm⁻¹)',true,true,{yaxis:{type:'log',title:'I(q) (cm⁻¹)',range:[Math.log10(a),Math.log10(b)],gridcolor:css('--line')}}));
+ rs('res-crys',st.r.map((r,i)=>`${st.l[i]}: q = ${(r*q1).toFixed(4)} Å⁻¹, d = ${(2*PI/(r*q1)).toFixed(1)} Å`).join('<br>'))}
+
+/* ---------- Guess model ---------- */
+const GO={gl:['Plateau / Flat I(0) (Dilute / Non-interacting)','Large cylindrical assemblies','Large sheet-like assemblies','Large assemblies with fuzzy interfaces','Large assemblies with sharp interfaces','Porod law violation / Complex interface'],gm:['Featureless / Smooth decay','Oscillations / Secondary minima present','Broad correlation peak (Structure factor)','Crystalline peaks (Lamellar, Hexagonal, Cubic, etc.)'],gh:['Other / Flat background dominated','Rod / Cylinder / Flexible chain','Bilayer / Sheet / Plate-like','Surface Fractal / Rough interface','Smooth interface / 3D object','Porod Law Violation / Complex Interface'],gx:['Lamellar','Hexagonal','Tetragonal','Simple Cubic','Body Centered Cubic','Face Centered Cubic','Gyroid','Diamond','Unknown Crystalline Structure','No Crystalline Peaks Detected']};
+/* Hover help for the Guess model fields: each field has a general description, and each option has its own explanation.
+   The select's tooltip shows the field description followed by the explanation of the option currently chosen. */
+const GT={
+ gSharp:'Sharp-peak limit. Every peak above q = 0.01 Å⁻¹ is measured by its relative width Δq/q (full width at half prominence divided by q). Peaks narrower than this limit are treated as Bragg (crystalline) peaks and indexed; wider peaks are treated as a structure-factor correlation peak or a form-factor oscillation. Default 0.1 (10%). Lower it if broad features are being mistaken for Bragg peaks; raise it if genuine Bragg peaks are being missed.',
+ gl:'Low-q region (q = 0.006–0.01 Å⁻¹). Describes how I(q) behaves at the lowest q, read from the log-log slope. It tells you whether there is a flat Guinier plateau (small discrete particles) or a power-law upturn from large assemblies. Press Analyse dataset to fill this in automatically.',
+ gm:'Mid-q region (q = 0.01–0.09 Å⁻¹). Describes the features between the low-q behaviour and the high-q tail: whether the curve is smooth, has form-factor oscillations, a broad structure-factor peak, or sharp Bragg peaks.',
+ gh:'High-q region (q above 0.09 Å⁻¹). Describes the Porod slope, i.e. the exponent n in I(q) ∝ q⁻ⁿ at high q, which reflects the shape and roughness of the interfaces. Oscillations are skipped and a flat background is removed before the slope is read.',
+ gx:'Crystalline behaviour. The lattice type, identified by comparing the ratios of the sharp peak positions to q₁ with the expected ratios for each structure. Only used when the mid-q region is set to crystalline peaks. Press Analyse dataset to detect and index peaks automatically.'};
+const GOT={
+ gl:['Low-q slope about 0 to −0.9. I(q) is flat as q → 0 (Guinier plateau), so the objects are discrete and well separated, with no large aggregates or strong interactions at low q.','Low-q slope about −0.9 to −1.5 (near q⁻¹). Typical of long, rod-like or cylindrical assemblies, or worm-like micelles.','Low-q slope about −1.5 to −2.5 (near q⁻²). Typical of flat, sheet-like or lamellar assemblies, or of Gaussian-coil-like (mass fractal) structure.','Low-q slope about −2.5 to −3.8 (near q⁻³). Typical of large assemblies with rough or fuzzy interfaces (surface fractals) or mass-fractal aggregates.','Low-q slope about −3.8 to −4.2 (near q⁻⁴). Porod behaviour at low q: large objects with smooth, sharp interfaces, so the Guinier region lies below the measured q range.','Low-q slope steeper than about −4.2. A slope steeper than q⁻⁴ is unusual and may be physical (e.g. delayed phase separation) or an artefact of data reduction or background subtraction.'],
+ gm:['No peaks or minima found in the mid-q window. I(q) decays smoothly.','Broad bumps or secondary minima that sit well below the low-q intensity (about 0.5 decades or more). These are form-factor oscillations from particles of a well-defined size and shape, such as spheres or core-shell particles.','A broad peak (wider than the sharp-peak limit) that sits close to the low-q intensity. This is a structure-factor correlation peak from interacting particles, at roughly q ≈ 2π/(interparticle spacing).','One or more narrow peaks (narrower than the sharp-peak limit) indexed as a lattice. These are Bragg peaks from an ordered mesophase, so choose the lattice in the crystalline field below.'],
+ gh:['Slope about 0 to −0.9, or the tail has levelled off. The high-q region is dominated by flat (incoherent) background, so no reliable Porod slope can be read.','Slope about −0.9 to −1.5. Elongated objects such as rods, cylinders or stiff, flexible chains.','Slope about −1.5 to −2.5 (near q⁻²). Flat objects such as bilayers, sheets or plates, or Gaussian-chain scattering.','Slope about −2.5 to −3.9. A rough or fractal interface (surface fractal), where the exponent equals 6 − Ds.','Slope about −3.9 to −4.4 (near q⁻⁴). Porod law: a smooth, sharp interface around a compact 3D object.','Slope steeper than about −5.5. This violates Porod law and may indicate a diffuse interface, delayed phase separation, or an issue with the data reduction or background subtraction.'],
+ gx:['Peak positions in the ratio 1 : 2 : 3 : 4 … (q₁, 2q₁, 3q₁ …). A 1D stack of layers.','Peak positions in the ratio 1 : √3 : 2 : √7 : 3 … Cylinders packed on a 2D hexagonal lattice.','Peak positions in the ratio 1 : √2 : 2 : √5 … A 2D square (tetragonal) lattice.','Peak positions in the ratio 1 : √2 : √3 : 2 : √5 : √6 … (100, 110, 111, 200, 210, 211). Simple cubic lattice.','Peak positions in the ratio √2 : √4 : √6 … (110, 200, 211, 220 …). Body-centred cubic (Im3m) lattice.','Peak positions in the ratio √3 : √4 : √8 : √11 … (111, 200, 220, 311 …). Face-centred cubic (Fm3m) lattice.','Peak positions in the ratio √2 : √3 : √4 : √6 : √8 … (110, 111, 200, 211, 220 …). Cubic bicontinuous phase, treated here as the gyroid-type phase.','Peak positions in the ratio √3 : √8 : √11 : √16 : √19 … (111, 220, 311, 400, 331 …). Diamond-type cubic phase.','Sharp peaks were detected, but their positions do not match any of the lattices in the list. Use the Peak indexing and Crystal structure browser sections, and compare with the literature.','No sharp (Bragg) peaks were found, so no crystalline order is indicated.']};
+Object.keys(GO).forEach(k=>$(k).innerHTML=GO[k].map((o,i)=>`<option value="${i}" title="${GOT[k][i].replace(/"/g,'&quot;')}">${o}</option>`).join(''));
+function guessTips(){$('gSharp').title=GT.gSharp;$('gSharp').previousElementSibling.title=GT.gSharp;
+ ['gl','gm','gh','gx'].forEach(k=>{const s=$(k),o=GOT[k][+s.value],t=GT[k]+'\n\nSelected: '+GO[k][+s.value]+'\n'+o;s.title=t;s.previousElementSibling.title=GT[k]})}
+/* ---- Port of GuessQ guessing_window.py: scipy/numpy helpers ---- */
+const gMean=a=>a.reduce((s,v)=>s+v,0)/a.length;
+function gPoly1(x,y){const mx=gMean(x),my=gMean(y);let sxx=0,sxy=0;for(let i=0;i<x.length;i++){sxx+=(x[i]-mx)**2;sxy+=(x[i]-mx)*(y[i]-my)}const m=sxy/sxx;return[m,my-m*mx]}
+function gSolve(A,m){for(let i=0;i<m;i++){let p=i;for(let r=i+1;r<m;r++)if(Math.abs(A[r][i])>Math.abs(A[p][i]))p=r;[A[i],A[p]]=[A[p],A[i]];for(let r=i+1;r<m;r++){const f=A[r][i]/(A[i][i]||1e-30);for(let c=i;c<=m;c++)A[r][c]-=f*A[i][c]}}
+ const x=new Array(m).fill(0);for(let i=m-1;i>=0;i--){let s=A[i][m];for(let c=i+1;c<m;c++)s-=A[i][c]*x[c];x[i]=s/(A[i][i]||1e-30)}return x}
+function gLsq(ts,ys,order){const m=order+1,A=Array.from({length:m},()=>new Array(m+1).fill(0));
+ for(let k=0;k<ts.length;k++){const pw=[1];for(let j=1;j<2*m;j++)pw.push(pw[j-1]*ts[k]);for(let a=0;a<m;a++){for(let b=0;b<m;b++)A[a][b]+=pw[a+b];A[a][m]+=pw[a]*ys[k]}}return gSolve(A,m)}
+/* scipy.signal.savgol_filter, mode='interp' */
+function gSavgol(y,w,order){const n=y.length,h=(w-1)/2,out=new Array(n),ts=Array.from({length:w},(_,k)=>k-h);
+ const fit=s=>gLsq(ts,y.slice(s,s+w),order),ev=(c,t)=>c.reduce((s,v,j)=>s+v*t**j,0);
+ const c0=fit(0),c1=fit(n-w);for(let i=0;i<n;i++){if(i<h)out[i]=ev(c0,i-h);else if(i>=n-h)out[i]=ev(c1,i-(n-w)-h);else out[i]=gLsq(ts,y.slice(i-h,i+h+1),order)[0]}return out}
+function gProm(x,p){let lm=x[p],lb=p,i=p;while(i>=0&&x[i]<=x[p]){if(x[i]<lm){lm=x[i];lb=i}i--}let rm=x[p],rb=p;i=p;while(i<x.length&&x[i]<=x[p]){if(x[i]<rm){rm=x[i];rb=i}i++}return{pr:x[p]-Math.max(lm,rm),lb,rb}}
+/* scipy.signal.find_peaks: height, distance, prominence applied in scipy's order */
+function gFind(x,o){o=o||{};const n=x.length;let pk=[];
+ for(let i=1;i<n-1;i++){if(x[i-1]<x[i]){let a=i+1;while(a<n-1&&x[a]===x[i])a++;if(x[a]<x[i]){pk.push(Math.floor((i+a-1)/2));i=a}}}
+ if(o.height!==undefined)pk=pk.filter(p=>x[p]>=o.height);
+ if(o.distance>1&&pk.length>1){const N=pk.length,keep=new Array(N).fill(1),ord=pk.map((_,i)=>i).sort((a,b)=>x[pk[a]]-x[pk[b]]);
+  for(let t=N-1;t>=0;t--){const j=ord[t];if(!keep[j])continue;let k=j-1;while(k>=0&&pk[j]-pk[k]<o.distance){keep[k]=0;k--}k=j+1;while(k<N&&pk[k]-pk[j]<o.distance){keep[k]=0;k++}}pk=pk.filter((_,i)=>keep[i])}
+ if(o.prominence!==undefined)pk=pk.filter(p=>gProm(x,p).pr>=o.prominence);return pk}
+/* scipy.signal.peak_widths (rel_height) */
+function gWidth(x,p,rel){const{pr,lb,rb}=gProm(x,p),h=x[p]-pr*rel;let i=p;while(i>lb&&x[i]>h)i--;let l=i;if(h>x[i])l+=(h-x[i])/(x[i+1]-x[i]);i=p;while(i<rb&&x[i]>h)i++;let r=i;if(h>x[i])r-=(h-x[i])/(x[i-1]-x[i]);return r-l}
+const gPct=(a,p)=>{const s=a.slice().sort((u,v)=>u-v),k=p/100*(s.length-1),f=Math.floor(k),c=Math.min(f+1,s.length-1);return s[f]+(s[c]-s[f])*(k-f)};
+const gClose=(a,b)=>a.every((v,i)=>Math.abs(v-b[i])<=1e-8+0.1*Math.abs(b[i]));
+
+/* ---- Shared high-q background + Porod slope estimator ----
+   Fits I = K q^-n + B for any model, with no per-model branching. B is found by minimising a
+   chi-square-like cost evaluated in LINEAR space over EVERY point in the window, so a large B
+   cannot win simply by pushing points out of the fit; (K,n) then come from an unweighted log-log
+   fit of I-B over the points that stand clear of the noise. Every exit is bounds-checked, so the
+   caller never receives a non-finite slope or background. */
+function porodSlopeFit(qs,Is,relNoise){
+ const N=qs.length,bad={n:0,B:0,K:0,nPts:0,decades:0,r2:0,flat:true,lowConf:true,ok:false};
+ if(N<4)return bad;
+ const rn=(relNoise>0&&isFinite(relNoise))?Math.min(Math.max(relNoise,.01),.5):.05;
+ const lqs=qs.map(Math.log10),Imin=Math.min(...Is);
+ const shape=B=>{const xs=[],ys=[];
+  for(let i=0;i<N;i++){const s=Is[i]-B;if(s>3*rn*Math.max(Is[i],1e-300)){xs.push(lqs[i]);ys.push(Math.log10(s))}}
+  if(xs.length<4)return null;const[m,b]=gPoly1(xs,ys);if(!isFinite(m)||!isFinite(b))return null;
+  const K=Math.pow(10,b);if(!isFinite(K)||K<=0)return null;
+  return{n:-m,K,xs,ys,nPts:xs.length,decades:xs[xs.length-1]-xs[0]}};
+ const cost=B=>{const sh=shape(B);if(!sh)return{e:Infinity,sh:null};let e=0;
+  for(let i=0;i<N;i++){const md=sh.K*Math.pow(qs[i],-sh.n)+B,d=(Is[i]-md)/(rn*Math.max(Is[i],1e-300));e+=d*d}
+  return{e:isFinite(e)?e/N:Infinity,sh}};
+ const Bmax=Math.max(0,Imin*1.02);let best={e:Infinity,B:0,sh:null};
+ const probe=B=>{const c=cost(B);if(c.e<best.e)best={e:c.e,B,sh:c.sh}};
+ /* a tail that has levelled off (first and second half of the last ~20% agree within 15%) is flat background:
+    take B straight from it. The search below would otherwise trade B against the slope, because the points where
+    the signal has fallen to the background level carry no information, and settle on a B that is too low and a slope that is too shallow. */
+ let plateau=false;{const kt=Math.max(6,Math.round(N*.2));
+  if(N>=2*kt){const h2=kt>>1,m1=gMean(Is.slice(N-kt,N-h2)),m2=gMean(Is.slice(N-h2)),r=m1/m2;
+   if(r<1.15&&r>.87){const pl=gMean(Is.slice(N-kt)),c=cost(pl);if(c.sh){best={e:c.e,B:pl,sh:c.sh};plateau=true;for(let k=1;k<=30;k++)probe(pl*(1-.2*k/30))}}}}
+ if(!plateau){probe(0);for(let k=1;k<=80;k++)probe(Bmax*k/80)}
+ if(!plateau&&best.sh&&Bmax>0){const st=Bmax/80,gr=(Math.sqrt(5)-1)/2;let lo=Math.max(0,best.B-st),up=Math.min(Bmax,best.B+st);
+  let c=up-gr*(up-lo),d=lo+gr*(up-lo),fc=cost(c).e,fd=cost(d).e;
+  for(let it=0;it<40&&up-lo>Bmax*1e-5;it++){if(fc<fd){up=d;d=c;fd=fc;c=up-gr*(up-lo);fc=cost(c).e}else{lo=c;c=d;fc=fd;d=lo+gr*(up-lo);fd=cost(d).e}}
+  probe((lo+up)/2)}
+ const sh=best.sh;if(!sh||!isFinite(sh.n))return bad;
+ const my=gMean(sh.ys),mx=gMean(sh.xs);let ssr=0,sst=0;
+ sh.ys.forEach((v,i)=>{ssr+=(v-(my-sh.n*(sh.xs[i]-mx)))**2;sst+=(v-my)**2});
+ const r2=sst>0?Math.max(0,Math.min(1,1-ssr/sst)):0,ok=isFinite(sh.n)&&sh.n>-.5&&sh.n<8;
+ return{n:ok?sh.n:0,B:isFinite(best.B)?best.B:0,K:sh.K,nPts:sh.nPts,decades:sh.decades,r2,
+  flat:!ok||sh.nPts<4||sh.n<.5,lowConf:sh.decades<.25||sh.nPts<6||r2<.5,ok}}
+
+/* ---- Feature extraction (GuessQ rules, with the fixes noted in the page text) ---- */
+const gInterp=(a,ip)=>{const i=Math.max(0,Math.min(a.length-2,Math.floor(ip)));return a[i]+(a[i+1]-a[i])*(ip-i)};
+function gWidthIp(x,p,rel){const{pr,lb,rb}=gProm(x,p),h=x[p]-pr*rel;let i=p;while(i>lb&&x[i]>h)i--;let l=i;if(h>x[i])l+=(h-x[i])/(x[i+1]-x[i]);i=p;while(i<rb&&x[i]>h)i++;let r=i;if(h>x[i])r-=(h-x[i])/(x[i-1]-x[i]);return{l,r,pr}}
+function guessAnalyse(qIn,IIn,opt){opt=opt||{};const SHARP=opt.sharp>0?opt.sharp:.1,DROP=.5,PROM=.1;
+ const ix=qIn.map((_,i)=>i).filter(i=>qIn[i]>0&&IIn[i]>0).sort((a,b)=>qIn[a]-qIn[b]),q=ix.map(i=>qIn[i]),I=ix.map(i=>IIn[i]);
+ if(q.length<10)return null;const lq=q.map(Math.log10),lI=I.map(Math.log10),lowT=0.01,hiT=0.09;
+ const pick=f=>q.map((_,i)=>i).filter(i=>f(q[i])),iL=pick(v=>0.006<v&&v<lowT),iH=pick(v=>v>hiT),iA=pick(v=>v>=lowT),info={SHARP};
+ /* low-q slope (unchanged) */
+ let lowSlope=0;const lqL=iL.map(i=>lq[i]),lIL=iL.map(i=>lI[i]);info.nLow=iL.length;
+ if(lqL.length>3){const[m,b]=gPoly1(lqL,lIL);let ssr=0,sst=0;const my=gMean(lIL);lIL.forEach((v,i)=>{ssr+=(v-(m*lqL[i]+b))**2;sst+=(v-my)**2});const r2=sst>0?1-ssr/sst:0;
+  const nd=Math.max(1,Math.trunc(lIL.length*.5)),hasPk=gFind(lIL,{distance:nd}).length>0,hasTr=gFind(lIL.map(v=>-v),{distance:nd}).length>0;info.lowR2=r2;
+  if(r2<.8||hasPk||hasTr)lowSlope=0;
+  else{let w=Math.max(5,Math.trunc(lIL.length*.4));if(w%2===0)w++;if(w>lIL.length)w=lIL.length%2!==0?lIL.length:lIL.length-1;let s=m;
+   if(w>=5&&w>2){try{s=gPoly1(lqL,gSavgol(lIL,w,2))[0]}catch(e){s=m}}
+   lowSlope=Math.abs(s)<.15?0:-s}}
+ let li=lowSlope<=.9?0:lowSlope<=1.5?1:lowSlope<=2.5?2:lowSlope<=3.8?3:lowSlope<=4.2?4:5;info.lowSlope=lowSlope;
+ /* every peak at q >= 0.01: width is measured in linear q at half prominence, as dq/q */
+ const qA=iA.map(i=>q[i]),lA=iA.map(i=>lI[i]),lin=iA.map(i=>I[i]),pks=[];
+ /* noise level from the scatter of second differences of log I; a peak must stand 6 sigma clear of it */
+ const d2=[];for(let i=1;i<lA.length-1;i++)d2.push(Math.abs(lA[i-1]-2*lA[i]+lA[i+1]));d2.sort((a,b)=>a-b);
+ const sigma=d2.length?1.4826*d2[Math.floor(d2.length/2)]/Math.sqrt(6):0,PR=Math.max(PROM,6*sigma);info.sigma=sigma;info.prom=PR;
+ if(qA.length>5){const bg=gPct(lA,15);gFind(lA,{distance:Math.max(1,Math.trunc(lA.length*.03)),prominence:PR}).forEach(p=>{
+   const w=gWidthIp(lin,p,.5),dq=gInterp(qA,w.r)-gInterp(qA,w.l),runMax=Math.max(...lI.slice(0,iA[p]+1).slice(0,iA[p])),drop=runMax-lA[p];
+   pks.push({q:qA[p],I:I[iA[p]],ratio:dq/qA[p],wIdx:w.r-w.l,prom:gProm(lA,p).pr,drop,sharp:dq/qA[p]<SHARP,above:lA[p]>=bg+.25,mid:qA[p]<=hiT})})
+  /* broad bumps (form-factor oscillations of polydisperse particles, plus background) can be only 0.05-0.1 decades high, which is
+     inside the point-to-point noise. Look for them on a smoothed curve, where the same bump is many sigma clear. Only
+     features wider than the sharp-peak limit are added, so Bragg-peak detection is unaffected. */
+  if(qA.length>=15){const w0=Math.min(9,qA.length%2?qA.length:qA.length-1),sm=gSavgol(lA,w0,2),rs=lA.map((v,i)=>Math.abs(v-sm[i])).sort((a,b)=>a-b),ss=1.4826*rs[Math.floor(rs.length/2)],PRs=Math.max(.03,2.2*ss),lsm=sm.map(v=>Math.pow(10,v));
+   gFind(sm,{distance:Math.max(1,Math.trunc(sm.length*.03)),prominence:PRs}).forEach(p=>{if(pks.some(k=>Math.abs(k.q/qA[p]-1)<.05))return;
+    if(!(lA[p]>=bg+.25))return;const w=gWidthIp(lsm,p,.5),dq=gInterp(qA,w.r)-gInterp(qA,w.l),ratio=dq/qA[p];if(!(ratio>=SHARP))return;
+    const drop=Math.max(...lI.slice(0,iA[p]))-lA[p];
+    pks.push({q:qA[p],I:I[iA[p]],ratio,wIdx:w.r-w.l,prom:gProm(sm,p).pr,drop,sharp:false,above:lA[p]>=bg+.25,mid:qA[p]<=hiT,smooth:true})})}}
+ info.broad=pks.filter(p=>!p.sharp);
+ /* high-q slope: skip any form-factor oscillation, fit I = K q^-n + B (B = flat background), and call the region
+    background dominated when the tail has levelled off, since no Porod slope can be read from it then */
+ const lastOsc=Math.max(0,...pks.filter(p=>!p.sharp&&p.drop>=DROP&&p.q>hiT).map(p=>p.q));
+ info.lastOsc=lastOsc;
+ /* trim past the last form-factor oscillation, but only while enough range survives to read a slope from */
+ let iHs=iH;
+ if(lastOsc>0){const t=iH.filter(i=>q[i]>lastOsc*1.05);
+  if(t.length>=10&&lq[t[t.length-1]]-lq[t[0]]>=.3)iHs=t;else info.trimSkipped=true}
+ const hf=porodSlopeFit(iHs.map(i=>q[i]),iHs.map(i=>I[i]),Math.LN10*info.sigma);
+ let hs=hf.n,flat=hf.flat,Bh=hf.B;
+ info.nHigh=hf.nPts||iHs.length;info.highSlope=hs;info.highFlat=flat;info.highB=Bh;
+ info.highR2=hf.r2;info.highDec=hf.decades;info.highLowConf=hf.lowConf;
+ /* a short or noisy Porod range is reported with a caveat, not discarded as "background dominated" */
+ if(!flat&&hf.lowConf)info.highNote=`only ${hf.nPts} points over ${hf.decades.toFixed(2)} decades stand clear of the background (R² = ${hf.r2.toFixed(2)}), so this slope is indicative only`;
+ if(lastOsc>0&&hs>=4.4){hs=4;info.highNote='slope steepened by a form-factor minimum; taken as 4'}
+ else if(hs>=4.4&&hs<5.5)info.highNote=`slope ${hs.toFixed(2)} is steeper than 4, but over a finite window residual form-factor decay routinely does this to a smooth interface, so it is read as Porod rather than a violation`;
+ /* Porod bin runs 3.7-5.5. Porod's law gives exactly 4 for a smooth sharp interface; real data rarely
+    returns 4.00, and a finite window, residual form-factor decay or slight background over-subtraction
+    push the measured exponent to 4.5-5 with no diffuse interface present. A rough interface needs a
+    slope clearly below ~3.7, and a genuine Porod violation (diffuse interface) needs about 5.5 or steeper. */
+ let hi=flat?0:hs<=.9?0:hs<=1.5?1:hs<=2.5?2:hs<3.7?3:hs<5.5?4:5;
+ /* crystalline lattice from sharp peaks only (a form-factor oscillation or S(q) peak is never a Bragg peak) */
+ let xp=pks.filter(p=>p.sharp&&p.above);const S=Math.sqrt;
+ /* lattice-guided search for weak higher orders: each lattice predicts where the next reflections fall, and those positions are
+    checked for a bump measured against the local noise, so faint orders are found without lowering the global threshold */
+ const FULL=[[0,[1,2,3,4,5,6]],[1,[1,S(3),2,S(7),3,S(12)]],[2,[1,S(2),2,S(5),S(8),3]],[3,[1,S(2),S(3),2,S(5),S(6)]],[5,[1,2/S(3),S(8/3),S(11/3),2,S(16/3)]],[6,[1,S(1.5),S(2),S(3),2,S(4.5)]],[7,[1,S(8/3),S(11/3),4/S(3),S(19/3),S(8)]]];
+ const weakAt=v=>{const win=[],lo=[],hi=[];for(let k=0;k<qA.length;k++){const f=qA[k]/v;if(Math.abs(f-1)<=.04)win.push(k);else if(f>=.84&&f<=.93)lo.push(k);else if(f>=1.07&&f<=1.16)hi.push(k)}
+   if(win.length<2||lo.length<2||hi.length<2)return null;
+   const near=[];for(let k=0;k<qA.length;k++)if(Math.abs(qA[k]/v-1)<=.2)near.push(k);const d=[];for(let t=1;t<near.length-1;t++)d.push(Math.abs(lA[near[t]-1]-2*lA[near[t]]+lA[near[t]+1]));d.sort((a,b)=>a-b);
+   const sl=d.length>4?1.4826*d[Math.floor(d.length/2)]/Math.sqrt(6):info.sigma,base=gMean(lo.concat(hi).map(k=>lA[k])),top=win.reduce((a,k)=>lA[k]>lA[a]?k:a,win[0]),ex=lA[top]-base;
+   if(top===win[0]||top===win[win.length-1])return null;
+   if(ex<Math.max(.04,4*sl)||win.filter(k=>lA[k]>base+2*sl).length<2)return null;return{q:qA[top],I:lin[top],ratio:0,dqq:0,weak:true}};
+ if(xp.length>=1&&qA.length>20){const q1=xp[0].q,qmax=qA[qA.length-1];let bw=null;
+  FULL.forEach(([k,r])=>{const preds=r.map(x=>q1*x).filter(v=>v<=qmax);if(!xp.every(p=>preds.some(v=>Math.abs(p.q/v-1)<.05)))return;
+   const found=[];let top=-1;preds.forEach((v,j)=>{if(xp.some(p=>Math.abs(p.q/v-1)<.05)){top=j;return}const w=weakAt(v);if(w){found.push(w);top=j}});
+   const need=xp.length>=2?1:2,score=(xp.length+found.length)/(top+1);if(found.length>=need&&score>=.6&&(!bw||score>bw.score))bw={k,found,score}});
+  if(bw){xp=xp.concat(bw.found).sort((a,b)=>a.q-b.q);info.weakLattice=bw.k}}
+ xp=xp.slice().sort((a,b)=>a.q-b.q).reduce((m,p)=>{const l=m[m.length-1];if(l&&p.q/l.q-1<.04){if(p.I>l.I)m[m.length-1]=p}else m.push(p);return m},[]);
+ const qp=xp.map(p=>p.q),idx=qp.map(v=>v/qp[0]),i3=idx.slice(0,3);let xi=9,lat=false;
+ const T=[[1,[1,S(3),2]],[2,[1,S(2),2]],[3,[1,S(2),S(3)]],[4,[S(2),S(4),S(6)]],[5,[S(3),S(4),S(8)]],[6,[S(2),S(3),S(4)]],[7,[S(3),S(8),S(11)]]];
+ if(xp.length>=3){if(gClose(i3,[1,2,3])||(idx[1]/idx[0]>1.8&&idx[1]/idx[0]<2.2)){xi=0;lat=true}
+  else{let best=null;T.forEach(([k,r])=>{const e=Math.max(...i3.map((v,i)=>Math.abs(v/(r[i]/r[0])-1)));if(e<=.1&&(!best||e<best.e))best={k,e}});if(best){xi=best.k;lat=true}else xi=8}}
+ else if(xp.length>1)xi=8;
+ info.peaks=xp.map(p=>({q:p.q,I:p.I,ratio:p.q/qp[0],dqq:p.ratio,weak:!!p.weak}));
+ /* mid-q class: crystalline (3) / broad correlation peak (2) / oscillations (1) / featureless (0) */
+ const midP=pks.filter(p=>p.mid),sharpMid=midP.filter(p=>p.sharp),broadMid=midP.filter(p=>!p.sharp).sort((a,b)=>b.prom-a.prom),broadHi=pks.filter(p=>!p.mid&&!p.sharp&&p.drop>=DROP);
+ let mi=0;info.midText='no peak in the mid-q window';
+ if(lat){mi=3;info.midText='sharp Bragg peaks indexed as a lattice'}
+ else if(sharpMid.length){mi=3;info.midText=`sharp peak at q = ${sharpMid[0].q.toFixed(4)} (Δq/q = ${sharpMid[0].ratio.toFixed(3)})`}
+ else if(broadMid.length){const p=broadMid[0];if(p.drop<DROP){mi=2;info.midText=`broad correlation peak at q = ${p.q.toFixed(4)} (Δq/q = ${p.ratio.toFixed(2)}, ${p.drop.toFixed(2)} decades below the low-q maximum)`}
+  else{mi=1;info.midText=`broad bump at q = ${p.q.toFixed(4)} (Δq/q = ${p.ratio.toFixed(2)}), ${p.drop.toFixed(2)} decades below the low-q maximum, so a form-factor oscillation`}}
+ else if(broadHi.length){mi=1;info.midText=`form-factor oscillation above the mid-q window (q = ${broadHi[0].q.toFixed(4)})`}
+ if(mi===3&&xi===9)xi=8;
+ /* sustained intermediate power law (plateau, then a long q^-1 or q^-2 stretch): a rod or a sheet, which the fixed low-q window can miss */
+ {const w=Math.max(8,Math.round(q.length*(info.sigma>.03?.14:.08))),cs=[],ss=[];for(let i=0;i+w<q.length;i++){if(q[i]<.006)continue;const xs=lq.slice(i,i+w+1),ys=lI.slice(i,i+w+1);cs.push(gMean(xs));ss.push(-gPoly1(xs,ys)[0])}
+  const span=(a,b)=>{let best=0,st=null;for(let k=0;k<cs.length;k++){if(ss[k]>=a&&ss[k]<=b){if(st===null)st=cs[k];best=Math.max(best,cs[k]-st)}else st=null}return best},sr=span(.75,1.7),sh=span(1.75,2.5);info.rodSpan=sr;info.sheetSpan=sh;
+  if(li===0&&mi<2&&sr>=.35&&sr>=sh){li=1;info.lowNote=`slope stays near −1 for ${sr.toFixed(2)} decades of q (rod-like); the fixed low-q window alone read a plateau`}
+  else if(li===0&&mi<2&&sh>=.35){li=2;info.lowNote=`slope stays near −2 for ${sh.toFixed(2)} decades of q (sheet-like); the fixed low-q window alone read a plateau`}}
+ if(li===1&&info.lowNote&&hi===2){hi=0;info.highNote='slope near 2 read as background-affected, since a rod regime was found at lower q'}
+ return{li,mi,hi,xi,info}}
+
+let GP=null;
+function rGuess(){const q=D.q,t=[];if(q.length){t.push({x:q,y:D.I,mode:'lines+markers',name:D.name,line:{color:A1(),width:1.2},marker:{size:3,color:A1()}});
+  if(GP&&GP.name===D.name){const pk=GP.res.info.peaks;if(pk.length)t.push({x:pk.map(p=>p.q),y:pk.map(p=>p.I),mode:'markers',name:'sharp (Bragg) peaks',marker:{size:9,color:'#d62728',symbol:'circle-open',line:{width:2,color:'#d62728'}}});
+   if(GP.res.info.broad.length)t.push({x:GP.res.info.broad.map(p=>p.q),y:GP.res.info.broad.map(p=>p.I),mode:'markers',name:'broad peaks',marker:{size:9,color:'#e08a00',symbol:'diamond-open',line:{width:2,color:'#e08a00'}}});const a=Math.min(...D.I)*.7,b=Math.max(...D.I)*1.5;t.push({x:[.01,.01],y:[a,b],mode:'lines',name:'low-q / mid-q threshold',line:{color:A1(),dash:'dash',width:1},opacity:.6})}
+  draw('pGuess',t,lay('q (Å⁻¹)','I(q) (cm⁻¹)',true,true,{showlegend:true,legend:{orientation:'h',yref:'paper',yanchor:'top',y:-.38,x:0,font:{size:10}},margin:{l:60,r:16,t:8,b:46}}))}
+ const gi=$('gInfo');if(gi){if(GP&&GP.name===D.name){const r=GP.res.info,f=v=>(+v).toFixed(2);gi.innerHTML=`Low-q slope: ${f(r.lowSlope)} (${r.nLow} pts${r.lowR2!==undefined?', R² '+r.lowR2.toFixed(2):''})${r.lowNote?'<br>→ '+r.lowNote:''}<br>Mid-q: ${r.midText}<br>High-q: ${r.highFlat?'background dominated (nothing stands clear of B), ':''}slope ${f(r.highSlope)}${r.highB>0?' after removing B = '+r.highB.toPrecision(2)+' cm⁻¹':''} (${r.nHigh} pts${r.highR2!==undefined?', R² '+r.highR2.toFixed(2):''}${r.highDec!==undefined?', '+r.highDec.toFixed(2)+' decades':''})${r.highNote?'<br>→ '+r.highNote:''}<br>Sharp peaks: ${r.peaks.length?r.peaks.map(p=>p.q.toFixed(4)+' (×'+p.ratio.toFixed(2)+(p.weak?', weak, found from lattice':'')+')').join(', '):'none'}${r.broad.length?'<br>Broad peaks: '+r.broad.map(p=>p.q.toFixed(4)+' (Δq/q '+p.ratio.toFixed(2)+')').join(', '):''}`}else gi.innerHTML='Press <b>Analyse dataset</b> to detect the features automatically, or choose them by hand.'}
+ sugg()}
+$('gAn').onclick=()=>{if(!D.q.length)return;const r=guessAnalyse(D.q,D.I,{sharp:+$('gSharp').value});if(!r){$('gInfo').textContent='Need at least 10 positive points.';return}GP={name:D.name,res:r};$('gl').value=r.li;$('gm').value=r.mi;$('gh').value=r.hi;$('gx').value=r.xi;rd('guess')};
+
+/* ---- Port of suggest_model (same rules and wording) ---- */
+function sugg(){guessTips();const L=GO.gl[+$('gl').value],M=GO.gm[+$('gm').value],H=GO.gh[+$('gh').value],X=GO.gx[+$('gx').value],o=[],has=(s,k)=>s.includes(k),
+ add=(m,r,a)=>o.push([m,r,a]),XR={Lamellar:['Lamellar Crystalline Structure','The peak indexing of 1, 2, 3 (q₁, q₂, q₃) indicates a lamellar crystalline structure.','The simplest analysis is to use the peak indexer here, but for more detailed analysis consider using a lamellar form factor with a structure factor.'],
+  Hexagonal:['Hexagonal Crystalline Structure','The peak indexing of 1, √3, 2 (q₁, q₂, q₃) indicates a hexagonal crystalline structure.','The simplest analysis is to use the peak indexer here.'],
+  Tetragonal:['Tetragonal Crystalline Structure','The peak indexing of 1, √2, 2 (q₁, q₂, q₃) indicates a tetragonal crystalline structure.','The simplest analysis is to use the peak indexer here.'],
+  Simple:['Simple Cubic Crystalline Structure','The peak indexing of 1, √2, √3 (q₁, q₂, q₃) indicates a simple cubic crystalline structure. This could also be a body-centred cubic face, it will depend on the Miller indices of the phase.','The simplest analysis is to use the peak indexer here.'],
+  Body:['Body Centered Crystalline Structure','The peak indexing of √2, √4, √6 (q₁, q₂, q₃) indicates a body centred cubic crystalline structure. This could also be a simple cubic face, it will depend on the Miller indices of the phase.','The simplest analysis is to use the peak indexer here.'],
+  Face:['Face Centered Crystalline Structure','The peak indexing of √3, √4, √8 (q₁, q₂, q₃) indicates a face centred cubic crystalline structure.','The simplest analysis is to use the peak indexer here.'],
+  Gyroid:['Gyroid Crystalline Structure','The peak indexing of √2, √3, √4 (q₁, q₂, q₃) indicates a gyroid crystalline structure.','The simplest analysis is to use the peak indexer here.'],
+  Diamond:['Diamond Crystalline Structure','The peak indexing of √3, √8, √11 (q₁, q₂, q₃) indicates a diamond crystalline structure.','The simplest analysis is to use the peak indexer here.'],
+  Unknown:['Unknown Crystalline Structure','The peak indexing is not sufficient to determine the specific crystalline structure, but peaks have been detected.','The simplest analysis is to use the peak indexer here, and then align with literature.']};
+ if(has(L,'sharp')&&has(M,'Featureless / Smooth decay')&&has(H,'Other'))add('Empirical Power Law / Unified Fit Model','The scattering curve exhibits a continuous power-law decay across q without clear form-factor plateaus, indicating an empirical power-law approach is most suitable.','Try using an empirical power law model, but please don\'t overinterpret the data! This can be found using SasView');
+ if(has(L,'sharp')&&has(M,'Broad')&&has(H,'Smooth'))add('Sphere / Core-Shell Form Factor P(q) with a Structure Factor S(q) and a low-q power law contribution','The low q upturn suggests the presence of large aggregates, or large assemblies. The broad correlation peak suggests interparticle interactions of smaller assemblies, potentially spherical.','Try using a combination of a low-q power law, a spherical or core-shell sphere form factor, and a structure factor. For uncharged particles use the hardsphere structure factor, but for charged particles use the Hayter MSA structure factor.');
+ if(has(L,'sharp')&&has(M,'Oscillations')&&(has(H,'Smooth')||has(H,'Other')||has(H,'Surface Fractal')))add('Sphere / Core-Shell Form Factor P(q) and a low-q power law contribution','The low q upturn suggests the presence of large aggregates, or large assemblies. The peak presence suggests smaller discrete assemblies, potentially spherical.','Try using a combination of a low-q power law and a spherical or core-shell sphere form factor.');
+ if(has(L,'Plateau')&&has(M,'Oscillations')&&(has(H,'Smooth')||has(H,'Other')||has(H,'Surface Fractal')))add('Sphere / Core-Shell Form Factor P(q)','The peak presence suggests smaller discrete assemblies, potentially spherical.','Try using either the sphere or core-shell sphere form factor to model the data.');
+ if(has(L,'Plateau')&&has(M,'Broad')&&has(H,'Smooth'))add('Sphere / Core-Shell Form Factor P(q) with a Structure Factor S(q)','The peak presence suggests interparticle interactions of smaller assemblies, potentially spherical.','Try using either the sphere or core-shell sphere form factor with a structure factor.');
+ if(has(M,'Crystalline')){const k=Object.keys(XR).find(k=>has(X,k));if(k)add(...XR[k])}
+ if(has(L,'cylindrical')||has(H,'Rod / Cylinder / Flexible chain'))add('Cylinder / Rod Model or Flexible Cylinder','A high-q slope between -1 and -2 typically indicates anisotropic, elongated structures like rod or cylinders.','Try using a cylinder form factor.');
+ if(has(L,'sheet')||has(H,'Bilayer'))add('Bilayer / Sheet / Plate-like Model','A flat low-q plateau transitioning into a Guinier region and a high-q Porod slope ≈ -2 is the classic signature of sheet-like or plate-like structures.','Try using a bilayer or sheet form factor.');
+ if(has(L,'fuzzy')||(has(H,'Surface Fractal')&&!has(M,'Broad')))add('Surface Fractal / Rough Interface Model','A high-q slope between -3 and -4 typically indicates a rough or fractal interface, suggesting surface fractal structures.','Try using a surface fractal model.');
+ if(has(H,'Violation')||(has(L,'violation')&&!has(M,'Broad')))add('Non-typical Porod exponent','A high-q slope exceeding -4 is an unusual phenomenon, it can be physical - for instance delayed phase separation, but can also be indication of issues in data reduction.','If phase separation is possible, check if the data can be time sliced, to see if the power law evolves with time. If phase separation is unlikely, have a look at the data reduction again, particularly the subtraction.');
+ $('recs').innerHTML=o.map((r,i)=>`<b>${i+1}. ${r[0]}</b><br>${r[1]}<br><span style="color:#25bb00">Advice: ${r[2]}</span><br><br>`).join('')||'No standard model matches this combination of features. Try changing one selection, or use the Model section to compare a sphere, cylinder, ellipsoid or power law directly with your data.'}
+
+/* ---------- wiring for new UI ---------- */
+function show(t,x){$('ovt').textContent=t;$('ovimg').classList.add('hid');$('ovta').classList.remove('hid');$('ovta').value=x;$('ov').style.display='flex';$('ovta').select()}
+const mvI=(A,a,d)=>{const i=A.indexOf(a),j=i+d;if(a&&j>=0&&j<A.length)[A[i],A[j]]=[A[j],A[i]]};
+['input','change','click'].forEach(ev=>document.addEventListener(ev,e=>{if(e.target.matches&&e.target.matches('input,select,button')&&e.target.closest('#model'))TOUCH=1},true));
+document.addEventListener('click',e=>{const s=e.target.closest('span[data-k]');if(!s)return;const i=+s.dataset.i;if(s.dataset.k==='rawList'){const r=RAW[i];setData(r.q,r.I,r.dI,r.name)}else{ACTF=FITS[i];lists()}});
+document.addEventListener('change',e=>{const c=e.target;if(c.dataset&&c.dataset.k&&c.type==='checkbox'){(c.dataset.k==='rawList'?RAW:FITS)[+c.dataset.i].sel=c.checked;rData()}});
+
+$('rawRm').onclick=()=>{if(RAW.length<2)return alert('Keep at least one raw dataset.');RAW.splice(RAW.indexOf(ACT),1);const n=RAW[0];setData(n.q,n.I,n.dI,n.name)};
+$('rawUp').onclick=()=>{mvI(RAW,ACT,-1);lists();rData()};$('rawDn').onclick=()=>{mvI(RAW,ACT,1);lists();rData()};
+$('pRun').onclick=pkExtract;$('cq1p').onclick=()=>{if(PKF.length){$('cq1').value=+PKF[0].c.toFixed(4);rd('crys')}};
+$('cs').onchange=()=>rd('crys');
+/* ================= 2D data: loading ================= */
+let T2L=[],T2=null,T2E=null,T2ID=0,T2S=[];
+const rgbaOf=(h,a)=>{const m=/^#?([0-9a-f]{6})$/i.exec((h||'').trim());if(!m)return h;const n=parseInt(m[1],16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`};
+const secCol=id=>({circ:'#7a8794',par:A2(),perp:A1(),cus:'#7a9a5a'})[id];
+
+/* HDF5 via h5wasm: read every numeric dataset (<= 8M values) into memory, then close the file */
+function h5attr(it,k){try{const a=it.attrs&&it.attrs[k];return a?String(a.value):''}catch(e){return ''}}
+function h5walk(grp,pre,out){let keys=[];try{keys=grp.keys()}catch(e){return}
+ for(const k of keys){let it=null;try{it=grp.get(k)}catch(e){}if(!it)continue;const p=pre+'/'+k;
+  if(it.shape!==undefined&&it.shape!==null){const sh=Array.from(it.shape),sz=sh.reduce((a,b)=>a*b,1);
+   if(sz>0&&sz<=8e6){let v;try{v=it.value}catch(e){continue}let arr=null;
+    if(typeof v==='number')arr=Float64Array.of(v);
+    else if(ArrayBuffer.isView(v)&&!(v instanceof DataView))arr=Float64Array.from(v,x=>Number(x));
+    else if(Array.isArray(v)&&v.length&&v.every(x=>typeof x==='number'))arr=Float64Array.from(v);
+    if(arr)out[p]={shape:sh,v:arr,units:h5attr(it,'units')}}}
+  else if(typeof it.keys==='function')h5walk(it,p,out)}}
+async function h5lib(){if(typeof h5wasm!=='undefined')return h5wasm;
+ if(!h5lib.p)h5lib.p=import('https://cdn.jsdelivr.net/npm/h5wasm@latest/dist/esm/hdf5_hl.js').then(m=>m.default||m);return h5lib.p}
+async function loadH5(file){let H;try{H=await h5lib()}catch(e){throw new Error('The HDF5 reader did not load (it needs access to cdn.jsdelivr.net).')}
+ const Mod=await H.ready,FS=Mod.FS,fn='/in_'+Date.now()+'.h5';
+ FS.writeFile(fn,new Uint8Array(await file.arrayBuffer()));let f=null;const out={};
+ try{f=new H.File(fn,'r');h5walk(f,'',out)}finally{try{f&&f.close()}catch(e){}try{FS.unlink(fn)}catch(e){}}
+ if(!Object.keys(out).length)throw new Error('No numeric datasets found in the file.');return out}
+
+function autoMap(ds){const P=Object.keys(ds),bs=p=>p.split('/').pop().toLowerCase(),dir=p=>p.slice(0,p.lastIndexOf('/')),sz=p=>ds[p].v.length;
+ let Ic=P.filter(p=>bs(p)==='i'&&sz(p)>=16);
+ if(!Ic.length)Ic=P.filter(p=>bs(p)==='values'&&ds[p].shape.length>=2&&sz(p)>=16);
+ if(!Ic.length)Ic=P.filter(p=>ds[p].shape.length===2&&Math.min(...ds[p].shape)>=8);
+ if(!Ic.length)return null;Ic.sort((a,b)=>sz(b)-sz(a));const I=Ic[0],d=dir(I);
+ const near=nms=>{const c=P.filter(p=>dir(p)===d&&nms.includes(bs(p))&&p!==I);return c[0]||P.filter(p=>nms.includes(bs(p))&&p!==I)[0]||''};
+ return{I,E:near(['idev','errors','di','e','sigma','error']),X:near(['qx','q_x','axis1']),Y:near(['qy','q_y','axis2'])}}
+
+/* scattered or rectilinear pixel list -> regular grid */
+function gridify(x,y,I,E){const n=x.length,r7=v=>+v.toPrecision(7);
+ const ux=[...new Set(Array.from(x,r7))].sort((a,b)=>a-b),uy=[...new Set(Array.from(y,r7))].sort((a,b)=>a-b);
+ if(ux.length<=2048&&uy.length<=2048&&ux.length*uy.length<=6e6&&ux.length*uy.length<=n*1.5){
+  const nx=ux.length,ny=uy.length,mx=new Map(ux.map((v,i)=>[v,i])),my=new Map(uy.map((v,i)=>[v,i])),Z=new Float64Array(nx*ny).fill(NaN),ZE=E?new Float64Array(nx*ny).fill(NaN):null;
+  for(let k=0;k<n;k++){const j=my.get(r7(y[k]))*nx+mx.get(r7(x[k]));Z[j]=I[k];if(E)ZE[j]=E[k]}
+  return{nx,ny,qx:Float64Array.from(ux),qy:Float64Array.from(uy),I:Z,E:ZE}}
+ let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;for(let k=0;k<n;k++){if(x[k]<x0)x0=x[k];if(x[k]>x1)x1=x[k];if(y[k]<y0)y0=y[k];if(y[k]>y1)y1=y[k]}
+ const N=Math.max(32,Math.min(256,Math.round(Math.sqrt(n)))),s=new Float64Array(N*N),e=new Float64Array(N*N),c=new Int32Array(N*N);
+ for(let k=0;k<n;k++){if(!isFinite(I[k]))continue;const i=Math.min(N-1,Math.floor((x[k]-x0)/(x1-x0||1)*N)),j=Math.min(N-1,Math.floor((y[k]-y0)/(y1-y0||1)*N)),b=j*N+i;s[b]+=I[k];if(E)e[b]+=E[k]*E[k];c[b]++}
+ const Z=new Float64Array(N*N),ZE=E?new Float64Array(N*N):null;for(let b=0;b<N*N;b++){Z[b]=c[b]?s[b]/c[b]:NaN;if(E)ZE[b]=c[b]?Math.sqrt(e[b])/c[b]:NaN}
+ return{nx:N,ny:N,qx:Float64Array.from({length:N},(_,i)=>x0+(i+.5)*(x1-x0)/N),qy:Float64Array.from({length:N},(_,i)=>y0+(i+.5)*(y1-y0)/N),I:Z,E:ZE}}
+
+/* sort axes ascending and precompute radius / azimuth / validity per pixel */
+function t2Final(name,nx,ny,qx,qy,I,E,def){
+ const ox=Array.from({length:nx},(_,i)=>i).sort((a,b)=>qx[a]-qx[b]),oy=Array.from({length:ny},(_,i)=>i).sort((a,b)=>qy[a]-qy[b]);
+ if(!(ox.every((v,i)=>v===i)&&oy.every((v,i)=>v===i))){const I2=new Float64Array(nx*ny),E2=E?new Float64Array(nx*ny):null;
+  for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){I2[j*nx+i]=I[oy[j]*nx+ox[i]];if(E)E2[j*nx+i]=E[oy[j]*nx+ox[i]]}
+  I=I2;E=E2;qx=Float64Array.from(ox,i=>qx[i]);qy=Float64Array.from(oy,i=>qy[i])}
+ const n=nx*ny,r=new Float64Array(n),ph=new Float64Array(n),ok=new Uint8Array(n);let rmax=0,cnt=0;
+ for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){const k=j*nx+i,x=qx[i],y=qy[j];r[k]=Math.hypot(x,y);let p=Math.atan2(y,x)*180/PI;if(p<0)p+=360;ph[k]=p;const v=I[k];
+  if(isFinite(v)&&!(v===0&&E&&E[k]===0)){ok[k]=1;cnt++;if(r[k]>rmax)rmax=r[k]}}
+ let rin=Math.min(Math.abs(qx[0]),Math.abs(qx[nx-1]),Math.abs(qy[0]),Math.abs(qy[ny-1]));if(!(rin>0.2*rmax))rin=rmax;
+ return{id:++T2ID,name,nx,ny,qx,qy,I,E,r,ph,ok,n,rmax,rin,cnt,qmask:0,def:def||null,init:false}}
+
+function t2Build(ds,m,name,sc,tr){
+ const Id=ds[m.I],Xd=ds[m.X],Yd=ds[m.Y],Ed=m.E?ds[m.E]:null;if(!Id)throw new Error('Choose the intensity dataset.');if(!Xd||!Yd)throw new Error('Choose the Qx and Qy datasets.');
+ const S=sc*(/(1\/nm|nm\^?-1)/i.test(Xd.units||'')?0.1:1),E=Ed&&Ed.v.length===Id.v.length?Ed.v:null,N=Id.v.length;
+ let sh=Id.shape.filter(v=>v!==1);if(!sh.length)sh=[1];
+ const cent=(a,len)=>a.length===len+1?Float64Array.from({length:len},(_,i)=>(a[i]+a[i+1])/2):a,okc=(a,len)=>a.length===len||a.length===len+1;
+ if(Xd.v.length===N&&Yd.v.length===N&&N>1){const xs=[],ys=[],Is=[],Es=E?[]:null;
+  for(let k=0;k<N;k++){if(isFinite(Xd.v[k])&&isFinite(Yd.v[k])){xs.push(Xd.v[k]*S);ys.push(Yd.v[k]*S);Is.push(Id.v[k]);if(E)Es.push(E[k])}}
+  const G=gridify(xs,ys,Is,Es);return t2Final(name,G.nx,G.ny,G.qx,G.qy,G.I,G.E)}
+ if(sh.length!==2)throw new Error('Intensity has shape ['+Id.shape.join(',')+']; expected a 2D array or Qx, Qy lists with one value per pixel.');
+ const[a,b]=sh,X=Xd.v,Y=Yd.v,std=okc(X,b)&&okc(Y,a),sw=okc(X,a)&&okc(Y,b);
+ if(!std&&!sw)throw new Error('Axis lengths ('+X.length+', '+Y.length+') do not match the intensity shape ['+a+', '+b+'].');
+ const useSw=sw&&(!std||tr);let nx,ny,qx,qy,I=Id.v,Ee=E;
+ if(!useSw){nx=b;ny=a;qx=cent(X,b);qy=cent(Y,a)}
+ else{nx=a;ny=b;qx=cent(X,a);qy=cent(Y,b);const I2=new Float64Array(N),E2=E?new Float64Array(N):null;
+  for(let ix=0;ix<nx;ix++)for(let iy=0;iy<ny;iy++){I2[iy*nx+ix]=I[ix*b+iy];if(E)E2[iy*nx+ix]=E[ix*b+iy]}I=I2;Ee=E2}
+ return t2Final(name,nx,ny,Float64Array.from(qx,v=>v*S),Float64Array.from(qy,v=>v*S),I,Ee)}
+
+function parseQxyI(t){const x=[],y=[],I=[],E=[];let hasE=true;t.split(/\r?\n/).forEach(l=>{l=l.trim();if(!l||/^[#%!]/.test(l))return;const c=l.split(/[\s,;]+/).map(Number);
+ if(c.length>=3&&c.slice(0,3).every(isFinite)){x.push(c[0]);y.push(c[1]);I.push(c[2]);if(isFinite(c[3]))E.push(c[3]);else hasE=false}});return{x,y,I,E:hasE&&E.length===I.length?E:null}}
+
+/* ================= 2D data: slicers ================= */
+function annulus(T,q0,q1,nb){const s=new Float64Array(nb),e=new Float64Array(nb),c=new Int32Array(nb);
+ for(let k=0;k<T.n;k++){if(!T.ok[k])continue;const r=T.r[k];if(r<q0||r>=q1||r<T.qmask)continue;const b=Math.min(nb-1,Math.floor(T.ph[k]/360*nb));s[b]+=T.I[k];if(T.E)e[b]+=T.E[k]*T.E[k];c[b]++}
+ const phi=[],I=[],dI=[];let np=0;for(let b=0;b<nb;b++)if(c[b]){phi.push((b+.5)*360/nb);I.push(s[b]/c[b]);dI.push(T.E?Math.sqrt(e[b])/c[b]:0);np+=c[b]}
+ return{phi,I,dI,np}}
+function sector(T,phi0,w,sym,q0,q1,nb,lg){const s=new Float64Array(nb),sr=new Float64Array(nb),e=new Float64Array(nb),c=new Int32Array(nb),full=w>=180,lo=Math.max(q0,T.qmask,1e-9),L=Math.log(q1/lo);let np=0;
+ if(!(q1>lo))return{q:[],I:[],dI:[],np:0};
+ for(let k=0;k<T.n;k++){if(!T.ok[k])continue;const r=T.r[k];if(r<lo||r>=q1)continue;
+  if(!full){const d=Math.abs(((T.ph[k]-phi0)%360+540)%360-180);if(!(d<=w||(sym&&180-d<=w)))continue}
+  const b=Math.min(nb-1,Math.floor(lg?Math.log(r/lo)/L*nb:(r-lo)/(q1-lo)*nb));s[b]+=T.I[k];sr[b]+=r;if(T.E)e[b]+=T.E[k]*T.E[k];c[b]++;np++}
+ const q=[],I=[],dI=[];for(let b=0;b<nb;b++){const ctr=lg?lo*Math.exp((b+.5)/nb*L):lo+(b+.5)*(q1-lo)/nb;q.push(c[b]?sr[b]/c[b]:ctr);I.push(c[b]?s[b]/c[b]:NaN);dI.push(c[b]&&T.E?Math.sqrt(e[b])/c[b]:0)}
+ return{q,I,dI,np}}
+function axisOf(phi,I){if(phi.length<4)return 0;const mn=Math.min(...I);let c2=0,s2=0;I.forEach((v,i)=>{const r=phi[i]*PI/180;c2+=(v-mn)*Math.cos(2*r);s2+=(v-mn)*Math.sin(2*r)});let p=.5*Math.atan2(s2,c2)*180/PI;if(p<0)p+=180;return p}
+function t2Find(){if(!T2)return;let a0=g('an0'),a1=g('an1');if(a0>a1)[a0,a1]=[a1,a0];const nb=Math.max(8,Math.round(g('anb'))||90),an=annulus(T2,a0,a1,nb);$('sax').value=Math.round(axisOf(an.phi,an.I))%360}
+
+/* ================= 2D data: demo ================= */
+function t2Demo(kind){const n=96,qm=.3,q=Float64Array.from({length:n},(_,i)=>-qm+(i+.5)*2*qm/n),I=new Float64Array(n*n),E=new Float64Array(n*n),ax=g('d2ax'),kp=Math.max(0,g('d2k'));
+ const f=p=>Math.exp(kp*(Math.cos((p-ax)*PI/180)**2-1));
+ if(kind==='cyl'){const R=20,L=150,ns=72,th=[],wt=[];let ws=0;for(let s=0;s<ns;s++){const t=s*180/ns;th.push(t*PI/180);const w=f(t);wt.push(w);ws+=w}
+  for(let j=0;j<n;j++)for(let i=0;i<n;i++){const k=j*n+i,x=q[i],y=q[j],r=Math.hypot(x,y);if(r<.012){I[k]=NaN;E[k]=NaN;continue}const ph=Math.atan2(y,x);let s=0;
+   for(let m=0;m<ns;m++){const d=ph-th[m],ca=Math.cos(d),sa=Math.abs(Math.sin(d)),a1=r*R*sa,a2=r*L*ca/2,ff=(a1<1e-4?1:2*J1(a1)/a1)*(Math.abs(a2)<1e-4?1:Math.sin(a2)/a2);s+=wt[m]*ff*ff}
+   I[k]=20*s/ws+.02}}
+ else{const q1=.1,A=[40,12,4],sg=.005;for(let j=0;j<n;j++)for(let i=0;i<n;i++){const k=j*n+i,x=q[i],y=q[j],r=Math.hypot(x,y);if(r<.012){I[k]=NaN;E[k]=NaN;continue}
+  const ph=Math.atan2(y,x)*180/PI;let v=.02+.03*(.02/r)**2;A.forEach((a,m)=>{v+=a*Math.exp(-((r-(m+1)*q1)**2)/(2*sg*sg))*f(ph)});I[k]=v}}
+ for(let k=0;k<n*n;k++){if(!isFinite(I[k]))continue;const d=.04*I[k]+.002;E[k]=d;I[k]+=d*gauss()}
+ const nm_=kind==='cyl'?`Aligned cylinders (axis ${ax}°, κ=${kp})`:`Aligned lamellar (stack normal ${ax}°, κ=${kp})`;
+ return t2Final(nm_,n,n,q,q,I,E,kind==='cyl'?{a:[.05,.1],s:[.015,.28]}:{a:[.09,.11],s:[.015,.28]})}
+
+/* ================= 2D data: UI ================= */
+function t2List(){$('d2list').innerHTML=T2L.map((e,i)=>`<div class="li${e===T2E?' on':''}" data-t2="${i}"><span data-t2="${i}">${e.name}</span></div>`).join('')||'<div class="li">none</div>'}
+function t2MapUI(){const d=$('d2map');if(!T2E||!T2E.ds){d.style.display='none';return}d.style.display='block';d.open=!T2E.T;
+ const P=Object.keys(T2E.ds),opt=(sel,none)=>(none?'<option value="">(none)</option>':'')+P.map(p=>`<option value="${p}"${p===sel?' selected':''}>${p} [${T2E.ds[p].shape.join('×')}]</option>`).join('');
+ const m=T2E.map||{};$('mI').innerHTML=opt(m.I);$('mE').innerHTML=opt(m.E,1);$('mX').innerHTML=opt(m.X);$('mY').innerHTML=opt(m.Y)}
+function t2Defaults(T){if(T.init)return;T.init=true;const rin=T.rin;['an0','an1'].forEach(id=>{const e=$(id);e.min=0;e.max=rin;e.step=rin/500});
+ const d=T.def;$('an0').value=d?d.a[0]:+(rin*.15).toPrecision(3);$('an1').value=d?d.a[1]:+(rin*.3).toPrecision(3);
+ $('sq0').value=d?d.s[0]:+(rin*.04).toPrecision(2);$('sq1').value=d?d.s[1]:+(rin*.95).toPrecision(3);$('d2qm').value=0;T2=T;t2Find()}
+function t2Act(i){T2E=T2L[i]||null;T2=T2E?T2E.T:null;if(T2)t2Defaults(T2);t2List();t2MapUI();rd('twod')}
+function t2Add(en){T2L.push(en);t2Act(T2L.length-1)}
+async function t2Load(f){const msg=$('d2msg');msg.textContent='Reading '+f.name+'…';
+ try{let en;
+  if(/\.(dat|txt|csv|xyz)$/i.test(f.name)){const r=parseQxyI(await f.text());if(r.I.length<16)throw new Error('Need at least 16 rows of Qx, Qy, I.');const G=gridify(r.x,r.y,r.I,r.E);en={name:f.name,T:t2Final(f.name,G.nx,G.ny,G.qx,G.qy,G.I,G.E)}}
+  else{const ds=await loadH5(f),map=autoMap(ds)||{I:'',E:'',X:'',Y:''};en={name:f.name,ds,map,T:null};
+   try{en.T=t2Build(ds,map,f.name,1,false)}catch(err){msg.textContent='Could not map automatically: '+err.message+' Choose the datasets below and press Apply mapping.';t2Add(en);return}}
+  msg.textContent='';t2Add(en)}
+ catch(err){msg.textContent='Could not read '+f.name+': '+(err.message||err)}}
+$('f2d').onchange=async e=>{const fs=[...e.target.files];e.target.value='';for(const f of fs)await t2Load(f)};
+$('d2gen').onclick=()=>{const T=t2Demo($('d2sample').value);t2Add({name:T.name,T})};
+$('mApply').onclick=()=>{if(!T2E||!T2E.ds)return;const m={I:$('mI').value,E:$('mE').value,X:$('mX').value,Y:$('mY').value};T2E.map=m;
+ try{T2E.T=t2Build(T2E.ds,m,T2E.name,g('d2sc')||1,$('d2tr').checked);$('d2msg').textContent='';T2=T2E.T;t2Defaults(T2)}catch(err){$('d2msg').textContent=err.message;T2E.T=null;T2=null}rd('twod')};
+$('d2rm').onclick=()=>{if(!T2E)return;T2L.splice(T2L.indexOf(T2E),1);t2Act(T2L.length-1)};
+$('d2list').addEventListener('click',e=>{const s=e.target.closest('[data-t2]');if(s)t2Act(+s.dataset.t2)});
+$('sFind').onclick=()=>{t2Find();rd('sector')};
+$('sAdd').onclick=()=>{if(!T2S.length)return;T2S.forEach(s=>{const ix=s.res.q.map((_,i)=>i).filter(i=>isFinite(s.res.I[i])&&s.res.I[i]>0);if(ix.length<5)return;
+ const dI=ix.map(i=>s.res.dI[i]);addRaw(base(T2.name)+' | '+s.name,ix.map(i=>s.res.q[i]),ix.map(i=>s.res.I[i]),dI.every(v=>v>0)?dI:[])});$('d2msg').textContent='Added '+T2S.length+' sector(s) to the dataset list (Data section). Click a name there to analyse it.'};
+function addRaw(name,q,I,dI){let r=RAW.find(x=>x.name===name);if(!r){r={name,sel:true};RAW.push(r)}Object.assign(r,{q,I,dI});lists();rData()}
+
+/* ================= 2D data: render ================= */
+function wedge(q0,q1,p0,p1,col,fill){const N=Math.max(8,Math.ceil((p1-p0)/3)),x=[],y=[];
+ for(let i=0;i<=N;i++){const a=(p0+(p1-p0)*i/N)*PI/180;x.push(q1*Math.cos(a));y.push(q1*Math.sin(a))}
+ for(let i=N;i>=0;i--){const a=(p0+(p1-p0)*i/N)*PI/180;x.push(q0*Math.cos(a));y.push(q0*Math.sin(a))}x.push(x[0]);y.push(y[0]);
+ return{x,y,mode:'lines',fill:'toself',fillcolor:fill,line:{color:col,width:2},showlegend:false,hoverinfo:'skip',type:'scatter'}}
+function t2Heat(T){const lg=$('d2log').checked,key=[T.id,lg,T.qmask].join();
+ if(!T.zc||T.zc.key!==key){const z=[],flat=[];for(let j=0;j<T.ny;j++){const row=new Array(T.nx);for(let i=0;i<T.nx;i++){const k=j*T.nx+i,v=T.I[k];if(T.ok[k]&&T.r[k]>=T.qmask&&(!lg||v>0)){const u=lg?Math.log10(v):v;row[i]=u;flat.push(u)}else row[i]=null}z.push(row)}
+  flat.sort((a,b)=>a-b);T.zc={key,z,lo:flat.length?flat[Math.floor(flat.length*.01)]:0,hi:flat.length?flat[Math.min(flat.length-1,Math.floor(flat.length*.998))]:1}}
+ const cs=CM[$('d2cm').value].map((c,i,a)=>[i/(a.length-1),c]);
+ return{type:'heatmap',x:T.qx,y:T.qy,z:T.zc.z,colorscale:cs,zmin:T.zc.lo,zmax:T.zc.hi,zsmooth:false,colorbar:{title:{text:lg?'log₁₀ I':'I',side:'right'},thickness:12,len:.9},hovertemplate:'Qx %{x:.4f}<br>Qy %{y:.4f}<br>%{z:.3g}<extra></extra>'}}
+function t2ImgLay(){const l=lay('Qx (Å⁻¹)','Qy (Å⁻¹)',false,false,{showlegend:false,margin:{l:62,r:10,t:10,b:50}});l.yaxis.scaleanchor='x';l.xaxis.constrain='domain';l.yaxis.constrain='domain';return l}
+const t2Ring=r=>{const x=[],y=[];for(let i=0;i<=120;i++){const a=i/120*2*PI;x.push(r*Math.cos(a));y.push(r*Math.sin(a))}return{x,y}};
+function t2Clear(){['p2D','pPhi','p2Ds','pSect','pRat'].forEach(id=>{try{Plotly.purge(id)}catch(e){}})}
+
+/* annulus section */
+function rTwod(){const T=T2;
+ if(!T){rs('res-2d','No 2D dataset loaded. Upload a reduced .h5/.nxs file or load an example.');t2Clear();return}
+ T.qmask=Math.max(0,gv('d2qm')||0);let a0=g('an0'),a1=g('an1');if(a0>a1)[a0,a1]=[a1,a0];const nb=Math.max(8,Math.min(720,Math.round(g('anb'))||90)),an=annulus(T,a0,a1,nb);
+ const tr=[t2Heat(T)],o=t2Ring(a1),n_=t2Ring(Math.max(a0,1e-9));
+ tr.push({x:o.x.concat(n_.x.slice().reverse()),y:o.y.concat(n_.y.slice().reverse()),mode:'lines',fill:'toself',fillcolor:'rgba(255,255,255,0.2)',line:{color:'#ffffff',width:1.5,dash:'dash'},showlegend:false,hoverinfo:'skip',type:'scatter'});
+ draw('p2D',tr,t2ImgLay());
+ const lp=lay('φ (°)','I(φ) (cm⁻¹)',false,false,{showlegend:false,margin:{l:66,r:20,t:10,b:50}});lp.xaxis.range=[0,360];lp.xaxis.dtick=45;
+ draw('pPhi',[pts(an.phi,an.I,'I(φ)',A1(),{mode:'lines+markers',line:{color:A1(),width:1}})],lp);
+ rs('res-2d',`${T.name}<br>grid ${T.nx} × ${T.ny}, valid pixels ${T.cnt}<br>|q| up to ${T.rmax.toPrecision(3)} Å⁻¹ (inscribed ${T.rin.toPrecision(3)})<br>Annulus ${a0.toPrecision(3)} – ${a1.toPrecision(3)} Å⁻¹: ${an.np} pixels, ${an.phi.length} φ bins<br>Intensity maximum at φ ≈ ${axisOf(an.phi,an.I).toFixed(1)}° (mod 180°)`);
+ if($('d2link').checked&&an.phi.length>=5){A={phi:an.phi,I:an.I};rAzim()}
+ rSect()}
+
+/* sector section */
+function rSect(){const T=T2;
+ if(!T){rs('res-sect','Load a 2D dataset in the section above.');return}
+ T.qmask=Math.max(0,gv('d2qm')||0);
+ const w=g('sw2'),sym=$('ssym').checked,sq0=Math.max(g('sq0'),T.qmask),sq1=g('sq1'),snb=Math.max(5,Math.min(400,Math.round(g('snb'))||40)),slog=$('slog').checked,ax=g('sax'),cu=g('scu');
+ const defs=[{id:'circ',name:'Circular average',phi:0,w:180},{id:'par',name:`φ₀ = ${ax}°`,phi:ax,w},{id:'perp',name:`φ₀+90° = ${(ax+90)%360}°`,phi:ax+90,w},{id:'cus',name:`custom ${cu}°`,phi:cu,w}];
+ defs.forEach(s=>{s.on=$('sk_'+s.id).checked;s.col=secCol(s.id);s.res=sector(T,s.phi,s.w,sym,sq0,sq1,snb,slog)});T2S=defs.filter(s=>s.on);
+ const tr=[t2Heat(T)];
+ defs.forEach(s=>{if(!s.on)return;if(s.id==='circ'){[sq0,sq1].forEach(r=>{const c=t2Ring(r);tr.push({x:c.x,y:c.y,mode:'lines',line:{color:s.col,width:1.5,dash:'dot'},showlegend:false,hoverinfo:'skip',type:'scatter'})});return}
+  (sym?[0,180]:[0]).forEach(o=>tr.push(wedge(sq0,sq1,s.phi+o-s.w,s.phi+o+s.w,s.col,rgbaOf(s.col,.28))))});
+ draw('p2Ds',tr,t2ImgLay());
+ const st=[];defs.forEach(s=>{if(!s.on)return;const ix=s.res.q.map((_,i)=>i).filter(i=>isFinite(s.res.I[i])&&s.res.I[i]>0);
+  st.push({x:ix.map(i=>s.res.q[i]),y:ix.map(i=>s.res.I[i]),name:s.name,mode:'lines+markers',line:{color:s.col,width:1.5},marker:{size:4,color:s.col}})});
+ draw('pSect',st,lay('q (Å⁻¹)','I(q) (cm⁻¹)',true,true,{legend:{orientation:'h',y:-.25},margin:{l:66,r:20,t:10,b:70}}));
+ const P=defs[1].res,Q=defs[2].res,rx=[],ry=[],af=$('srt').value==='af';
+ for(let i=0;i<P.q.length;i++){const a=P.I[i],b=Q.I[i];if(isFinite(a)&&isFinite(b)&&a>0&&b>0){rx.push(P.q[i]);ry.push(af?(a-b)/(a+b):a/b)}}
+ const lr=lay('q (Å⁻¹)',af?'(I∥ − I⊥)/(I∥ + I⊥)':'I(φ₀) / I(φ₀+90°)',true,!af,{showlegend:false,margin:{l:66,r:20,t:10,b:50}});
+ lr.shapes=[{type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:af?0:1,y1:af?0:1,line:{color:css('--mut'),width:1,dash:'dot'}}];
+ draw('pRat',[pts(rx,ry,'ratio',A2(),{mode:'lines+markers',line:{color:A2(),width:1.5}})],lr);
+ const mean=r=>{const v=r.I.filter(isFinite);return v.length?v.reduce((a,b)=>a+b,0)/v.length:NaN};
+ let h=`${T.name}<br>Sectors: q ${sq0.toPrecision(3)} – ${sq1.toPrecision(3)} Å⁻¹, half-width ${w}°${sym?', symmetric':''}`;
+ defs.filter(s=>s.on).forEach(s=>{h+=`<br>&nbsp;&nbsp;${s.name}: ${s.res.np} pixels, mean I = ${mean(s.res).toPrecision(4)}`});
+ rs('res-sect',h)}
+{const a=RF.azim;delete RF.azim;RF.twod=rTwod;RF.sector=rSect;RF.azim=a}
+/* ================= 1D file loading: canSAS XML and NXcanSAS / Mantid HDF5 ================= */
+function xml1D(text,fname){const out=[],ents=text.split(/<(?:\w+:)?SASentry\b/).slice(1),nm=s=>s.replace(/\.[^.]*$/,'');
+ ents.forEach((en,ei)=>{(en.split(/<(?:\w+:)?SASdata\b/).slice(1)).forEach((sd,di)=>{
+  const body=sd.split(/<\/(?:\w+:)?SASdata>/)[0],q=[],I=[],dI=[];let hasE=true;
+  (body.match(/<(?:\w+:)?Idata\b[\s\S]*?<\/(?:\w+:)?Idata>/g)||[]).forEach(row=>{
+   const get=t=>{const m=new RegExp('<(?:\\w+:)?'+t+'\\b([^>]*)>([^<]*)</(?:\\w+:)?'+t+'>').exec(row);if(!m)return null;const u=/unit\s*=\s*"([^"]*)"/.exec(m[1]);return{v:parseFloat(m[2]),u:u?u[1]:''}};
+   const Q=get('Q'),Iv=get('I'),E=get('Idev');if(!Q||!Iv||!isFinite(Q.v)||!isFinite(Iv.v))return;
+   q.push(Q.v*(/nm/i.test(Q.u)?.1:1));I.push(Iv.v);if(E&&isFinite(E.v))dI.push(E.v);else hasE=false});
+  if(q.length>=5)out.push({name:nm(fname)+(ents.length>1||di?` [${ei+1}${di?'.'+(di+1):''}]`:''),q,I,dI:hasE&&dI.length===q.length?dI:[]})})});
+ if(!out.length)throw new Error('No I(Q) data (Idata rows) found in the XML file.');return out}
+function h5to1D(ds,fname){const P=Object.keys(ds),bs=p=>p.split('/').pop().toLowerCase(),dir=p=>p.slice(0,p.lastIndexOf('/')),nm=fname.replace(/\.[^.]*$/,''),res=[];
+ const qs=p=>/(1\/nm|nm\^?-1)/i.test(ds[p].units||'')?.1:1;
+ /* NXcanSAS 1D: .../sasdata/I with sibling Q (and Idev) */
+ P.filter(p=>bs(p)==='i'&&ds[p].shape.filter(n=>n!==1).length<=1&&ds[p].v.length>=5).forEach(p=>{const d=dir(p),n=ds[p].v.length,qp=P.find(x=>dir(x)===d&&bs(x)==='q'&&ds[x].v.length===n);if(!qp)return;
+  const ep=P.find(x=>dir(x)===d&&bs(x)==='idev'&&ds[x].v.length===n),s=qs(qp),ent=d.split('/').filter(Boolean)[0]||'';
+  res.push({name:nm+(P.filter(x=>bs(x)==='i').length>1?' ['+ent+']':''),q:Array.from(ds[qp].v,v=>v*s),I:Array.from(ds[p].v),dI:ep?Array.from(ds[ep].v):[]})});
+ if(res.length)return res;
+ /* Mantid workspace saved with SaveNexus: workspace/values [spectra, bins], axis1 = Q (centres or edges) */
+ P.filter(p=>bs(p)==='values'&&ds[p].shape.length===2).forEach(p=>{const d=dir(p),[ns,nb]=ds[p].shape,ap=P.find(x=>dir(x)===d&&bs(x)==='axis1');if(!ap||!(ds[ap].v.length===nb||ds[ap].v.length===nb+1))return;
+  if(ns>50)return;const ep=P.find(x=>dir(x)===d&&bs(x)==='errors'&&ds[x].v.length===ds[p].v.length),ax=ds[ap].v,s=qs(ap);
+  const qc=ax.length===nb+1?Array.from({length:nb},(_,i)=>(ax[i]+ax[i+1])/2):Array.from(ax);
+  for(let k=0;k<ns;k++)res.push({name:nm+(ns>1?` [spectrum ${k+1}]`:''),q:qc.map(v=>v*s),I:Array.from(ds[p].v.subarray(k*nb,(k+1)*nb)),dI:ep?Array.from(ds[ep].v.subarray(k*nb,(k+1)*nb)):[]})});
+ if(res.length)return res;
+ if(autoMap(ds))throw new Error('This HDF5 file looks like 2D data. Load it in the 2D annulus section instead.');
+ throw new Error('Could not find I(Q) in the HDF5 file (looked for NXcanSAS sasdata/I with Q, and Mantid workspace/values with axis1).')}
+async function load1D(f){const n=f.name,ext=n.toLowerCase().split('.').pop();let sets;
+ if(ext==='xml')sets=xml1D(await f.text(),n);
+ else if(['h5','hdf5','hdf','nxs','nx5'].includes(ext))sets=h5to1D(await loadH5(f),n);
+ else{const r=parseTxt(await f.text());if(r.q.length<5)throw new Error('Could not parse at least 5 rows of q, I[, dI].');sets=[{name:n,q:r.q,I:r.I,dI:r.d}]}
+ sets.forEach(s=>setData(s.q,s.I,s.dI,s.name));return sets.length}
+$('file').onchange=async e=>{const fs=[...e.target.files];e.target.value='';for(const f of fs){try{await load1D(f)}catch(err){alert('Could not read '+f.name+': '+(err.message||err))}}};
+
+/* ================= Learning sections: form factors and structure factors ================= */
+const fnum=id=>{const n=$(id+'_n');return n&&n.value!==''&&isFinite(+n.value)?+n.value:+$(id).value};
+const sliderHTML=(pre,[id,n,a,b,s,v])=>`<div><div class="lab"><span>${n}</span><input type="number" class="nb" id="${pre}_${id}_n" step="any" value="${v}"></div><input type="range" id="${pre}_${id}" min="${a}" max="${b}" step="${s}" value="${v}"></div>`;
+document.addEventListener('input',e=>{const t=e.target;if(!t.id||!/^(ff|sf)_/.test(t.id))return;
+ if(t.type==='range'&&$(t.id+'_n'))$(t.id+'_n').value=+(+t.value).toPrecision(6);
+ else if(t.classList.contains('nb')){const sl=$(t.id.slice(0,-2));if(sl&&t.value!=='')sl.value=t.value}},true);
+
+/* ---- Form factors ---- */
+const FFS={
+ sphere:{nm:'sphere',pars:[['R','Radius R (Å)',5,300,.5,50]],
+  txt:'<b>Sphere.</b> Initially, for a sphere, you’ll notice a Guinier plateau at low-q (as long as the size of the particle falls within the available q-range). This is where, as discussed <a href="#guinier">earlier</a>, the data are modelled well by the Guinier equation, and the region is known as the Guinier region. After that, depending on the polydispersity, a series of oscillations whose first minimum sits at qR ≈ 4.49, and at high-q, you would expect to see a smooth decay close to q⁻⁴. <I style="color: var(--acc);"><strong>Give it a go</strong>: Double the radius and see the oscillations move to half the original q-position, after this, increase the polydispersity and see how the minima smear out.</i>'},
+ coreshell:{nm:'core-shell sphere',pars:[['rc','Core radius (Å)',5,200,.5,30],['th','Shell thickness (Å)',1,100,.5,10],['sldc','SLD core',-1,7,.01,1],['sldsh','SLD shell',-1,7,.01,3],['sldso','SLD solvent',-1,7,.01,0]],
+  txt:'<b>Core-shell sphere.</b> You can introduce further complexity to the sphere model by creating a second length scale, or a shell. This could be, for instance, a surfactant micelle where the headgroups can be considered as a shell and the tails as a core. The presence of this second length scale change were the minima fall, and the contrast between core, shell, and solvent decides which structure dominates the scattering profile.  <I style="color: var(--acc);"><strong>Give it a go</strong>: First pin a sphere with a radius of 50 A and a polydispersity of 8%. Then, create a core-shell sphere with a radius 50 Å, a shell thickness 10 Å, and a polydispersity of 8%. You can see how the two curves differ, but if you then set the solvent SLD to equal the shell SLD, then the two curves should fall onto one another. If you were then to set the solvent SLD to equal the core SLD, then you get the form factor of the shell alone. <strong>This is how contrast variation is so powerful in SANS!</strong></i>'},
+ cylinder:{nm:'cylinder',pars:[['R','Radius R (Å)',5,150,.5,20],['L','Length L (Å)',10,1500,5,250]],
+  txt:'<b>Cylinder.</b> Since a cylinder has two length scales—its length and its cross-sectional radius—you will notice two distinct crossovers in the 1D profile! After the Guinier region, you get a smooth decay with a q⁻¹ slope (the classic signature of a rod!) at the first crossover, followed by oscillations and a final q⁻⁴ decay at the second crossover. <I style="color: var(--acc);"><strong>Give it a go</strong>: Vary the length of the cylinder, see how the q⁻¹ slope shifts position. Notice that even if the length is set equal to the radius, the data still does not look like a sphere form factor—that is because the flat ends of a cylinder are defined differently than a sphere!</i>'},
+ ellipsoid:{nm:'ellipsoid',pars:[['Rp','Polar radius Rp (Å)',5,500,.5,60],['Re','Equatorial radius Re (Å)',5,200,.5,20]],
+  txt:'<b>Ellipsoid.</b> An ellipsoid has an interesting morphology, it can be more cigar like or <i style="color: var(--acc);">prolate</i> (where the polar radius is larger than the equatorial radius – R<sub>p</sub> > R<sub>e</sub>) or more disc-like or <i style="color: var(--acc);">oblate</i> (where R<sub>e</sub> > R<sub>p</sub>). The decay is not a clean q⁻⁴ slope, nor is it like the cylinder with a q⁻¹ crossing over to a q⁻⁴. <I style="color: var(--acc);"><strong>Give it a go</strong>: First pin a sphere with a radius of 50 Å and a polydispersity of 8%. Then, set R<sub>e</sub> = R<sub>p</sub> = 50 Å, and see it fall onto the sphere form factor. Vary each of the two radii to observe how the curve changes.</i>'},
+ lamellar:{nm:'lamellar sheet',pars:[['d','Thickness δ (Å)',5,300,1,40]],
+  txt:'<b>Lamellar sheet.</b> For an infinite sheet, the scattering follows an I(q) &propto; P<sub>CS</sub>(q)/q<sup>2</sup> profile! Below about 1/&delta;, the curve drops with a q⁻² slope—the classic signature of a flat, two-dimensional object. Above that point, the cross-section oscillates with minima at q = 2&pi;n/&delta;, meaning you can read the sheet thickness directly from that first minimum. Because we are treating the lateral size as infinite here, that q⁻² slope runs all the way down to the lowest q. (Of course, a real sheet with finite dimensions would eventually level off into a plateau once you get below about 1/lateral size!) <I style="color: var(--acc);"><strong>Give it a go</strong>: Pin a sphere and a cylinder form factor to compare with the lamellar sheet. Notice how the decay of the three vary, demonstrating how just by looking at the data, you could have an initial guess at the morphology!</i>'}};
+const PHI='Φ(x) = 3[sin x − x cos x] / x³';
+const FFEQ={
+ sphere:`<div class="eq">P(q) = [ Φ(qR) ]²</div><div class="eq">${PHI}</div><div class="nt">R is the sphere radius. Φ(x) is the amplitude of a uniform sphere, equal to 1 at q = 0. The first zero of Φ is at x ≈ 4.49, which sets the first minimum. I(q) = φ·V·Δρ²·P(q).</div>`,
+ coreshell:`<div class="eq">P(q) = [ V<sub>c</sub>(ρ<sub>c</sub> − ρ<sub>sh</sub>) Φ(qr<sub>c</sub>) + V<sub>s</sub>(ρ<sub>sh</sub> − ρ<sub>solv</sub>) Φ(qR<sub>s</sub>) ]² / V<sub>s</sub></div><div class="eq">R<sub>s</sub> = r<sub>c</sub> + t, &nbsp; ${PHI}</div><div class="nt">r<sub>c</sub> is the core radius, t the shell thickness, R<sub>s</sub> the outer radius, and V<sub>c</sub>, V<sub>s</sub> the core and outer volumes. ρ<sub>c</sub>, ρ<sub>sh</sub>, ρ<sub>solv</sub> are the core, shell and solvent SLDs.</div>`,
+ cylinder:`<div class="eq">P(q) = ∫<sub>0</sub><sup>π/2</sup> [ 2J<sub>1</sub>(qR sin α) / (qR sin α) · sin(qL cos α / 2) / (qL cos α / 2) ]² sin α dα</div><div class="nt">R is the radius, L the length, α the angle between the cylinder axis and q, and J<sub>1</sub> the first-order Bessel function. The integral averages over all orientations.</div>`,
+ ellipsoid:`<div class="eq">P(q) = ∫<sub>0</sub><sup>1</sup> Φ²( q r(u) ) du</div><div class="eq">r(u) = √[ R<sub>e</sub>²(1 − u²) + R<sub>p</sub>²u² ], &nbsp; ${PHI}</div><div class="nt">R<sub>p</sub> is the polar radius, R<sub>e</sub> the equatorial radius, and u = cos α, where α is the angle between the polar axis and q. The integral averages over all orientations. R<sub>p</sub> = R<sub>e</sub> gives a sphere.</div>`,
+ lamellar:`<div class="eq">P(q) ∝ (1 / q²) · [ sin(qδ/2) / (qδ/2) ]²</div><div class="nt">δ is the sheet thickness. The sheet is treated as infinitely wide, so the 1/q² term (slope −2) comes from its flat shape. The bracketed term is the cross-section of the thickness, with minima at q = 2πn/δ.</div>`};
+const FFPOLY='<div class="nt">With polydispersity, P(q) is averaged over a Gaussian distribution of sizes, weighted by volume.</div>';
+let FFPIN=[],FFMY=null;
+let FFB='';
+function ffBuild(){const t=$('ffshape').value;if(FFB===t)return;FFB=t;$('ffsl').innerHTML=FFS[t].pars.concat([['pd','Polydispersity ΔR/R',0,.4,.01,0]]).map(x=>sliderHTML('ff',x)).join('')}
+function ffParams(){const t=$('ffshape').value,p={type:t,R:20,Rp:60,Re:20,rc:30,th:10,L:250,d:40,sld:1,sldsh:3,sldso:0,pd:0,sf:'',vf:0,scale:1,bkg:0,pw:4};
+ FFS[t].pars.forEach(([id])=>{p[id==='sldc'?'sld':id]=fnum('ff_'+id)});p.pd=fnum('ff_pd');return p}
+/* the ellipsoid uses a finer orientation grid than the Model section, so high-q ripples from the quadrature do not show up in the slope plot */
+function ffEll(p,q){const N=p.pd>0?10:0;let num=0,den=0;for(let k=-N;k<=N;k++){const t=N?3*k/N:0,w=Math.exp(-t*t/2),s=1+p.pd*t;if(s<=0)continue;const Rp=p.Rp*s,Re=p.Re*s,V=4/3*PI*Rp*Re*Re;let a=0;const n=400;for(let i=0;i<n;i++){const u=(i+.5)/n;a+=j1x(q*Math.sqrt(Re*Re*(1-u*u)+Rp*Rp*u*u))**2}num+=w*V*V*a/n;den+=w*V}const dr=p.sld-p.sldso;return num/den*dr*dr*1e-4}
+const ffP=(p,q)=>{if(p.type==='ellipsoid')return ffEll(p,q);const v=modelI(q,p,true).I;return p.type==='lamellar'?v/(q*q):v};
+function ffSketch(p){const t=p.type,W=260,H=150,cx=W/2,cy=60,LY=H-8,fl=(o,s)=>`style="fill:var(--acc);fill-opacity:${o};stroke:var(--acc);stroke-width:${s||1.5}"`,tx=(x,y,s)=>`<text x="${x}" y="${y}" text-anchor="middle" style="fill:var(--mut);font-size:12px">${s}</text>`;let g='';
+ if(t==='sphere'){g=`<circle cx="${cx}" cy="${cy}" r="46" ${fl(.35)}/><line x1="${cx}" y1="${cy}" x2="${cx+46}" y2="${cy}" style="stroke:var(--fg);stroke-width:1.2"/>`+tx(cx,LY,'R = '+p.R+' Å')}
+ else if(t==='coreshell'){const ri=46*p.rc/(p.rc+p.th);g=`<circle cx="${cx}" cy="${cy}" r="46" ${fl(.25)}/><circle cx="${cx}" cy="${cy}" r="${ri}" ${fl(.8)}/>`+tx(cx,LY,'core '+p.rc+' Å, shell '+p.th+' Å')}
+ else if(t==='cylinder'){const sc=Math.min(200/p.L,80/(2*p.R)),w=p.L*sc,h=Math.max(8,2*p.R*sc),e=Math.min(h/4,14);g=`<rect x="${cx-w/2}" y="${cy-h/2}" width="${w}" height="${h}" ${fl(.35)}/><ellipse cx="${cx+w/2}" cy="${cy}" rx="${e}" ry="${h/2}" ${fl(.6)}/><ellipse cx="${cx-w/2}" cy="${cy}" rx="${e}" ry="${h/2}" ${fl(.15)}/>`+tx(cx,LY,'L = '+p.L+' Å, R = '+p.R+' Å')}
+ else if(t==='ellipsoid'){const sc=Math.min(115/p.Rp,50/p.Re);g=`<ellipse cx="${cx}" cy="${cy}" rx="${p.Rp*sc}" ry="${p.Re*sc}" ${fl(.35)}/>`+tx(cx,LY,'Rp = '+p.Rp+' Å, Re = '+p.Re+' Å')}
+ else{const th=Math.max(4,Math.min(16,p.d/300*40)),gp=12,tot=4*th+3*gp,y0=cy-tot/2-6;for(let i=0;i<4;i++)g+=`<rect x="${cx-90}" y="${y0+i*(th+gp)}" width="180" height="${th}" ${fl(.45)}/>`;g+=tx(cx,LY,'thickness δ = '+p.d+' Å')}
+ return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t} sketch">${g}</svg>`}
+const ffLabel=p=>p.type+' '+FFS[p.type].pars.slice(0,2).map(x=>x[0]+'='+(p[x[0]==='sldc'?'sld':x[0]])).join(', ');
+function rFF(){ffBuild();const p=ffParams(),t=p.type,qs=logsp(.002,.5,300),raw=qs.map(q=>ffP(p,q)),nrm=$('ffnorm').checked,
+ P0=t==='lamellar'?raw[0]:ffP(p,1e-5),sc=nrm&&P0>0?1/P0:1,y=raw.map(v=>v*sc),ly=y.map(v=>Math.log10(Math.max(v,1e-300)));
+ let Rg=null;if(t!=='lamellar'){const Rm=t==='sphere'?p.R:t==='coreshell'?p.rc+p.th:t==='cylinder'?Math.hypot(p.R,p.L/2):Math.max(p.Rp,p.Re),qg=.05/Rm,r=ffP(p,qg)/P0;Rg=Math.sqrt(Math.max(0,3*(1-r)))/qg}
+ const qlim=t==='lamellar'?25/p.d:t==='ellipsoid'?15/Math.min(p.Rp,p.Re):t==='coreshell'?15/(p.rc+p.th):15/p.R;
+ const mins=gFind(ly.map(v=>-v),{distance:3,prominence:.12}).map(i=>qs[i]).filter(q=>q<qlim);
+ const tr=[];FFPIN.forEach(s=>tr.push({x:qs,y:s.y,name:'pinned: '+s.label,mode:'lines',line:{color:'#9aa5b1',width:1.5,dash:'dash'}}));
+ if(FFMY){const m=FFMY,r=m.qs.map(q=>ffP(m.p,q)),P0m=m.p.type==='lamellar'?r[0]:ffP(m.p,1e-5);tr.push({x:m.qs,y:r.map((v,i)=>v/P0m*m.noise[i]),name:'mystery data',mode:'markers',marker:{size:5,color:A1()}})}
+ tr.push({x:qs,y,name:FFS[t].nm,mode:'lines',line:{color:A2(),width:2.5}});
+ const lo=Math.min(...y)*.7,hi=Math.max(...y)*1.6,xs=[],tl=[];
+ if(Rg&&1.3/Rg>qs[0]&&1.3/Rg<qs[qs.length-1]){xs.push(1.3/Rg);tl.push('qRg = 1.3')}
+ mins.slice(0,2).forEach((q,i)=>{xs.push(q);tl.push('min '+(i+1))});
+ if(xs.length)tr.push(...vl(xs,tl,lo,hi));
+ const xr=[Math.log10(qs[0]),Math.log10(qs[qs.length-1])],lf=lay('q (Å⁻¹)',nrm?'P(q) / P(0)':'I(q) / φ (cm⁻¹)',true,true,{legend:{orientation:'h',y:-.25},margin:{l:66,r:30,t:20,b:70}});lf.xaxis.range=xr;
+ draw('pFF',tr,lf);
+ $('ffsketch').innerHTML=ffSketch(p);$('ffeq').innerHTML=FFEQ[t]+(p.pd>0?FFPOLY:'');
+ /* high-q slope: average the oscillations (running mean in linear I) over the top 30% of q, then fit log-log */
+ const n=y.length,k0=Math.round(n*.7),hx=[],hy=[],hw=PI*qlim/(t==='lamellar'?25:15);
+ for(let i=k0;i<n;i++){let s=0,c=0;for(let j=0;j<n;j++)if(Math.abs(qs[j]-qs[i])<=hw){s+=y[j]*qs[j]**4;c++}if(c&&s>0&&qs[i]+hw<=qs[n-1]*1.0001){hx.push(Math.log10(qs[i]));hy.push(Math.log10(s/c))}}
+ const hs=hx.length>5?gPoly1(hx,hy)[0]-4:NaN;
+ let h=`${FFS[t].nm}${p.pd>0?' (polydisperse, '+Math.round(p.pd*100)+'%)':''}`;
+ if(Rg)h+=`<br>R<sub>g</sub> ≈ ${Rg.toFixed(1)} Å, Guinier limit q = 1.3/R<sub>g</sub> = ${(1.3/Rg).toFixed(4)} Å⁻¹`;else h+=`<br>cross-section R<sub>g</sub> = δ/√12 = ${(p.d/Math.sqrt(12)).toFixed(1)} Å`;
+ if(mins.length){h+=`<br>first minimum at q = ${mins[0].toFixed(4)} Å⁻¹ (2π/q = ${(2*PI/mins[0]).toFixed(1)} Å)`;
+  if(t==='sphere')h+=`<br>size from the minimum: R ≈ 4.49/q = ${(4.493/mins[0]).toFixed(1)} Å`;if(t==='lamellar')h+=`<br>thickness from the minimum: δ = 2π/q = ${(2*PI/mins[0]).toFixed(1)} Å`}
+ else h+='<br>no resolved minima (washed out or beyond the q range)';
+ if(isFinite(hs))h+=`<br>mean slope over the highest 30% of q ≈ ${hs.toFixed(2)}`;
+ if(FFMY){if(nrm){const m=FFMY,P0m=m.p.type==='lamellar'?ffP(m.p,m.qs[0]):ffP(m.p,1e-5);let c=0;
+   m.qs.forEach((q,i)=>{const tv=ffP(m.p,q)/P0m,d=tv*m.noise[i],md=ffP(p,q)*sc;c+=((d-md)/(.04*tv))**2});
+   const x2=c/m.qs.length,col=x2<1.5?'#2e8b57':x2<5?'var(--acc2)':'#c0392b';
+   h=`<b>Challenge: χ²<sub>red</sub> = <span style="color:${col}">${x2<100?x2.toFixed(2):x2.toExponential(1)}</span></b> (${m.qs.length} points, 4% error per point)<br><span style="color:var(--mut)">≈ 1 is a good match; much larger means the model is still off.</span><br><br>`+h}
+  else h=`<b>Challenge: tick "Normalise" to get χ²</b><br><br>`+h}
+ rs('ffres',h);$('ffinfo').innerHTML=FFS[t].txt;
+ const msg=FFMY&&!nrm?'Tick "Normalise" to compare with the mystery data.':(FFMY?(FFMY.shown?'Answer: '+ffAnswer(FFMY.p):'The markers are a noisy, normalised curve from a hidden shape. Pick a shape and tune it until your line overlays the points, then press Reveal.'):'');
+ $('ffmsg').textContent=msg}
+function ffAnswer(p){return FFS[p.type].nm+', '+FFS[p.type].pars.filter(x=>!/^sld/.test(x[0])).map(x=>x[0]+' = '+(+p[x[0]].toFixed(1))+' Å').join(', ')+', polydispersity '+Math.round(p.pd*100)+'%'}
+['input','change'].forEach(ev=>$('ffshape').addEventListener(ev,ffBuild));
+$('ffPin').onclick=()=>{const p=ffParams(),qs=logsp(.002,.5,300),raw=qs.map(q=>ffP(p,q)),P0=p.type==='lamellar'?raw[0]:ffP(p,1e-5),sc=$('ffnorm').checked&&P0>0?1/P0:1;FFPIN.push({label:ffLabel(p),y:raw.map(v=>v*sc)});if(FFPIN.length>3)FFPIN.shift();rd('formfac')};
+$('ffClr').onclick=()=>{FFPIN=[];FFMY=null;rd('formfac')};
+$('ffMys').onclick=()=>{const T=['sphere','coreshell','cylinder','ellipsoid','lamellar'],t=T[Math.floor(Math.random()*5)],r=Math.random,
+ p={type:t,R:20+r()*40,Rp:50+r()*60,Re:15+r()*20,rc:20+r()*30,th:5+r()*15,L:150+r()*350,d:25+r()*60,sld:1,sldsh:3,sldso:0,pd:.08,sf:'',vf:0,scale:1,bkg:0,pw:4};if(t==='cylinder')p.R=12+r()*20;
+ const qs=logsp(.002,.5,120);FFMY={p,qs,noise:qs.map(()=>1+.04*gauss()),shown:false};$('ffnorm').checked=true;rd('formfac')};
+$('ffRev').onclick=()=>{if(FFMY)FFMY.shown=true;rd('formfac')};
+
+/* ---- Structure factors ---- */
+let SFPIN=[];
+$('sfsl').innerHTML=[['R','Particle radius R (Å)',10,150,.5,40],['phi','Volume fraction φ',0,.5,.001,.2],['pd','Polydispersity of P(q)',0,.3,.01,0]].map(x=>sliderHTML('sf',x)).join('');
+$('sfhm').innerHTML=[['Z','Charge Z (e)',1,200,.5,15],['T','Temperature (K)',273.15,373.15,.05,298.15],['cs','Added salt (M)',0,.5,.0005,0],['eps','Dielectric constant',1,100,.01,78.5]].map(x=>sliderHTML('sf',x)).join('');
+let SFM='hs';
+function sfModelSwitch(){const m=$('sfmodel').value;if(m===SFM)return;SFM=m;const hm=m==='hm';$('sfhm').classList.toggle('hid',!hm);const v=hm?.05:.2;$('sf_phi').value=v;$('sf_phi_n').value=v}
+['input','change'].forEach(ev=>$('sfmodel').addEventListener(ev,sfModelSwitch));
+function rSF(){sfModelSwitch();const m=$('sfmodel').value,R=fnum('sf_R'),phi=fnum('sf_phi'),pd=fnum('sf_pd'),hm=m==='hm'&&phi>0,
+ hp=hm?hmGet(R,phi,fnum('sf_Z'),fnum('sf_T'),fnum('sf_cs'),fnum('sf_eps')):null,S1=q=>phi<=0?1:m==='hs'?hsS(q,R,phi):hp.Sq(q);
+ const qmax=Math.max(.05,Math.min(1,14/R)),ql=Array.from({length:400},(_,i)=>.0005+(qmax-.0005)*i/399),S=ql.map(S1);
+ let ip=0;S.forEach((v,i)=>{if(v>S[ip])ip=i});const peak=ip<ql.length-4&&S[ip]>1.03,qp=ql[ip],a=Math.cbrt(4/3*PI*R**3/Math.max(phi,1e-9));
+ const tr=[];SFPIN.forEach(s=>tr.push({x:s.q,y:s.S,name:'pinned: '+s.label,mode:'lines',line:{color:'#9aa5b1',width:1.5,dash:'dash'}}));
+ tr.push({x:ql,y:S,name:'S(q)',mode:'lines',line:{color:A2(),width:2.5}});
+ if(peak)tr.push({x:[qp],y:[S[ip]],mode:'markers+text',text:['q*'],textposition:'top center',showlegend:false,marker:{size:8,color:A2()},textfont:{color:css('--fg'),size:12}});
+ const l1=lay('q (Å⁻¹)','S(q)',false,false,{legend:{orientation:'h',y:-.22},margin:{l:66,r:30,t:14,b:64}});
+ l1.shapes=[{type:'line',xref:'paper',x0:0,x1:1,yref:'y',y0:1,y1:1,line:{color:css('--mut'),width:1,dash:'dot'}}];draw('pSF',tr,l1);
+ const pp={type:'sphere',R,pd,sld:1,sldso:0,sf:'',vf:0,scale:1,bkg:0,pw:4},q2=logsp(.002,Math.max(qmax,.3),240),P0=modelI(1e-5,pp,true).I,P=q2.map(q=>modelI(q,pp,true).I/P0),IS=q2.map((q,i)=>P[i]*S1(q));
+ draw('pSFI',[{x:q2,y:P,name:'P(q) alone (S = 1)',mode:'lines',line:{color:A1(),width:1.8,dash:'dot'}},{x:q2,y:IS,name:'I(q) = P(q)·S(q)',mode:'lines',line:{color:A2(),width:2.5}}],lay('q (Å⁻¹)','I(q) / I(0) for S = 1',true,true,{legend:{orientation:'h',y:-.22},margin:{l:66,r:30,t:14,b:64}}));
+ let h=`S(0) ≈ ${S[0].toFixed(3)}${m==='hs'&&phi>0?` (Percus-Yevick limit ${((1-phi)**4/(1+2*phi)**2).toFixed(3)})`:''}<br>`;
+ h+=peak?`S<sub>max</sub> = ${S[ip].toFixed(2)} at q* = ${qp.toFixed(4)} Å⁻¹<br>d = 2π/q* = ${(2*PI/qp).toFixed(1)} Å (contact distance 2R = ${(2*R).toFixed(0)} Å)<br>q*·2R = ${(qp*2*R).toFixed(2)}`:'no interaction peak: S(q) rises smoothly towards 1';
+ h+=`<br>mean spacing (n<sup>−1/3</sup>) = ${phi>0?a.toFixed(1):'∞'} Å`;
+ if(hp)h+=`<br>Debye length = ${hp.kinv.toFixed(1)} Å, κσ = ${hp.k.toFixed(2)}<br>RMSA diameter rescale = ${hp.s.toFixed(3)}${hp.unconv?'<br><span style="color:var(--acc2)">S(q) solver did not fully converge (very strong coupling); treat with caution.</span>':''}`;
+ rs('sfres',h);
+ let w;if(phi<=0)w='<b>No particles.</b> With φ = 0 there is no interaction, so S(q) = 1 everywhere.';
+ else if(phi<.02)w='<b>Dilute.</b> The particles barely see each other, so S(q) ≈ 1 and the sphere P(q) describes the data on its own. This is the regime where a Guinier or form-factor fit is safe.';
+ else if(S[0]<.5)w='<b>Strongly ordered.</b> S(0) is well below 1, meaning strong repulsion has made the sample very incompressible. The low-q intensity is suppressed relative to P(q), so a Guinier fit would give the wrong size.';
+ else w='<b>Weakly interacting.</b> S(q) is a modest dip at low q and a small correlation peak. This is enough to distort a Guinier analysis, so fit with the structure factor included.';
+ $('sfinfo').innerHTML=w+(m==='hm'?' For charged spheres the charge and added salt set the range and strength of the repulsion. The range is the Debye length shown on the left.':' Hard spheres only repel at contact, so the structure is set by the volume fraction alone.')}
+$('sfPin').onclick=()=>{const m=$('sfmodel').value,R=fnum('sf_R'),phi=fnum('sf_phi'),hm=m==='hm'&&phi>0,hp=hm?hmGet(R,phi,fnum('sf_Z'),fnum('sf_T'),fnum('sf_cs'),fnum('sf_eps')):null,qmax=Math.max(.05,Math.min(1,14/R)),ql=Array.from({length:400},(_,i)=>.0005+(qmax-.0005)*i/399);
+ SFPIN.push({q:ql,S:ql.map(q=>phi<=0?1:m==='hs'?hsS(q,R,phi):hp.Sq(q)),label:(m==='hs'?'HS':'charged')+' φ='+phi+', R='+R+(hm?', Z='+fnum('sf_Z')+', salt='+fnum('sf_cs'):'')});if(SFPIN.length>3)SFPIN.shift();rd('structfac')};
+$('sfClr').onclick=()=>{SFPIN=[];rd('structfac')};
+RF.formfac=rFF;RF.structfac=rSF;ffBuild();
+
+mVis();sample('sph');sugg();{const T=t2Demo('cyl');t2Add({name:T.name,T})}
+</script>
+</body></html>
+
+</body></html>
