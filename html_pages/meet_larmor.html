@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="../device-redirect.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meet Larmor</title>
+<meta name="author" content="Lauren Matthews">
+<meta name="copyright" content="(c) 2026 Lauren Matthews">
+<link rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+<!--
+  ISIS SANS 101
+  Copyright (c) 2026 Lauren Matthews.
+  Developed with the assistance of Claude (Anthropic).
+  Text and figures: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+    https://creativecommons.org/licenses/by-sa/4.0/
+  Source code: MIT License (see LICENSE.txt at the site root).
+  Third-party material is excluded from these licences; see the credits page.
+-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+
+:root{--bg:#f6f8fa;--panel:#fff;--ink:#14212b;--mute:#5a6b78;--line:#d3dce3;--accent:#0b6e79;--accent2:#c2410c;--soft:#e2f0f1;--grid:#e6ebef;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1a21;--panel:#162531;--ink:#e6edf2;--mute:#9bb0bd;--line:#2a3d4b;--accent:#4cc3cf;--accent2:#fb923c;--soft:#173844;--grid:#223441;color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0f1a21;--panel:#162531;--ink:#e6edf2;--mute:#9bb0bd;--line:#2a3d4b;--accent:#4cc3cf;--accent2:#fb923c;--soft:#173844;--grid:#223441;color-scheme:dark}
+nav button.themebtn{margin-left:auto;flex:none;align-self:center;display:flex;align-items:center;gap:8px;white-space:nowrap;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:.9rem;line-height:1.3;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+nav button.themebtn:hover{border-color:var(--accent)}
+*{box-sizing:border-box}
+html{scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+header,main,nav .in{max-width:1000px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);z-index:5}
+nav .in{display:flex;gap:18px;overflow-x:auto;white-space:nowrap}
+nav a{padding:14px 0;color:var(--mute);text-decoration:none;font-size:14px;font-weight:500}
+nav a:hover,nav a:focus-visible{color:var(--accent)}
+h1,h2{font-family:Newsreader,Georgia,serif;font-weight:600;line-height:1.2}
+h1{font-size:clamp(30px,5vw,46px);margin:40px 0 10px}
+h2{font-size:28px;margin:0 0 6px}
+.lede{color:var(--mute);max-width:none;margin:0 0 30px}
+section{padding:36px 0;border-top:1px solid var(--line)}
+section>p{max-width:none;color:var(--mute);margin:0 0 18px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:20px}
+@media(max-width:760px){.row{grid-template-columns:1fr}}
+canvas{width:100%;height:auto;display:block;touch-action:none}
+label{display:flex;align-items:center;gap:8px;margin:6px 0;cursor:pointer;font-size:15px}
+input[type=checkbox]{accent-color:var(--accent);width:17px;height:17px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+input[type=number]{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink);font:inherit}
+button,select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:7px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.steps button[aria-selected=true]{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
+.note{font-size:14px;color:var(--mute);margin-top:10px}
+.key{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:5px}
+.out{font-size:22px;font-family:Newsreader,serif;font-weight:600}
+.warn{color:var(--accent2);font-weight:500}
+.bar{height:8px;background:var(--grid);border-radius:4px;overflow:hidden;margin:8px 0 14px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+code{background:var(--soft);padding:1px 5px;border-radius:3px;font-size:.9em}
+.tabs{display:flex;margin-bottom:14px;border-bottom:1px solid var(--line)}
+.tabs button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;padding:9px 18px;font-weight:500;color:var(--mute);margin-bottom:-1px}
+.tabs button[aria-selected=true]{border-bottom-color:var(--accent);color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:8px;font-size:14px;color:var(--ink)}
+.legend>span{display:inline-flex;align-items:center}
+.legend .key{width:26px;height:3px}
+#cMap,#cMap2{width:200px;max-width:100%;border-radius:4px}
+#maps{gap:12px;flex-wrap:wrap;margin-top:10px}
+#maps figure{margin:0}
+#maps figcaption{margin-top:4px}
+footer{padding:30px 0 50px;color:var(--mute);font-size:14px}
+
+.sch{position:relative;min-width:900px;padding:30px 14px 8px;--ic:68px}
+.nodes{position:relative;display:flex;justify-content:space-between;gap:6px}
+.nd{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;background:none;border:0;padding:0 2px 8px;cursor:pointer;border-radius:8px;color:var(--ink)}
+.nd b{font-size:13px;line-height:1.25;margin-top:10px;font-weight:600}
+.nd small{font-size:11.5px;color:var(--mute);line-height:1.3;margin-top:2px}
+.ic{position:relative;width:var(--ic);height:var(--ic);border-radius:50%;background:var(--panel);border:2px solid var(--line);display:block;transition:border-color .2s,background .2s,transform .2s}
+.nd:hover .ic{border-color:var(--accent);transform:translateY(-2px)}
+.nd[aria-pressed=true] .ic{border-color:var(--accent);background:var(--soft);box-shadow:0 0 0 4px var(--soft)}
+.nd[aria-pressed=true] b{color:var(--accent)}
+.em{position:absolute;left:0;right:0;top:9px;font-size:22px;line-height:1;text-align:center}
+.no{position:absolute;left:0;right:0;bottom:9px;font-size:11px;line-height:1;text-align:center;color:var(--mute);font-weight:600}
+/* the beam runs straight through the centre of every component */
+/* .beam{position:absolute;left:0;right:0;top:calc(30px + var(--ic)/2 - 3px);height:6px;border-radius:3px;pointer-events:none;z-index:2;
+  background:linear-gradient(90deg,var(--accent2),var(--accent));box-shadow:0 0 10px var(--accent2),0 0 22px color-mix(in srgb,var(--accent) 45%,transparent)}
+.beam::after{content:"";position:absolute;inset:0;border-radius:3px;background:linear-gradient(90deg,transparent 0,rgba(255,255,255,.85) 50%,transparent 100%);background-size:90px 100%;animation:flow 1.3s linear infinite}
+.beam::before{content:"";position:absolute;left:-2px;top:-3px;width:12px;height:12px;border-radius:50%;background:var(--accent2);box-shadow:0 0 10px var(--accent2)} */
+.beam {position: absolute;left: 0;right: 0;top: calc(36px + var(--ic) / 2 - 1.5px);height: 3px;border-radius: 2px;pointer-events: none;z-index: 2;opacity: 0.4;background: linear-gradient(90deg, var(--accent2), var(--accent));box-shadow: 0 0 6px var(--accent2), 0 0 14px color-mix(in srgb, var(--accent) 30%, transparent);}
+.beam::after {content: "";position: absolute;inset: 0;border-radius: 2px;background: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.45) 50%, transparent 100%);background-size: 90px 100%;animation: flow 5s linear infinite;}
+.beam::before {content: "";position: absolute;left: -2px;top: -2.5px;width: 8px;height: 8px;border-radius: 50%;background: var(--accent2);opacity: 0.8;box-shadow: 0 0 6px var(--accent2);}
+.dir {display: flex;align-items: center;gap: 10px;}
+.mini-beam {position: relative;width: 45px; height: 3px; border-radius: 1.5px; opacity: 0.4; background: linear-gradient(90deg, var(--accent2), var(--accent)); box-shadow: 0 0 6px var(--accent2), 0 0 14px color-mix(in srgb, var(--accent) 30%, transparent); overflow: hidden;}
+.mini-beam::after {content: "";position: absolute;inset: 0;background: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.45) 50%, transparent 100%);background-size: 30px 100%;animation: flow 5s linear infinite;}
+.flight-path-header {display: flex;align-items: center;gap: 10px;width: 100%;margin-bottom: 12px;font-weight: 100;color: var(--ink);}
+@keyframes flow{from{background-position:-90px 0}to{background-position:calc(100% + 90px) 0}}
+@media (prefers-reduced-motion:reduce){.beam::after{animation:none;background:none}}
+.dir{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:14px;color:var(--mute)}
+.insp{margin-top:16px}
+.insp .hd{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.insp h3{margin:0;font-size:18px}
+.insp h4{margin:14px 0 4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.insp h4:first-child{margin-top:0}
+.insp p{margin:0;max-width:none}
+.fn{background:var(--soft);border-radius:6px;padding:10px 12px;margin:0}
+.spec{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.spec:last-child{border-bottom:0}
+.spec span{color:var(--mute)}.spec b{text-align:right;font-weight:600}
+.pn{display:flex;gap:6px}
+figure{margin:0}
+.photo img{width:100%;height:auto;border-radius:6px;display:block;background:var(--grid)}
+video{width:100%;border-radius:6px;background:#0b1620;display:block}
+.sw{overflow-x:auto}
+.dgfig{margin:0 0 20px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px 10px}
+.dgmeta{display:flex;flex-wrap:wrap;gap:6px 22px;justify-content:space-between;align-items:center;margin-top:6px;padding-top:8px;border-top:1px solid var(--line)}
+.dgfig figcaption{margin:0;text-align:left;flex:1 1 320px}
+.dgk{display:flex;gap:16px;font-size:13px;color:var(--mute)}
+.dgk span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.dgk i{display:inline-block;width:22px;height:4px;border-radius:2px}
+svg.dg{width:100%;height:auto;display:block}
+.dg text{font:12px "IBM Plex Sans",system-ui,sans-serif;fill:var(--mute)}
+.dg text.tk{fill:var(--ink);font-weight:600}
+.dg .gpl{stroke:var(--line);fill:none;stroke-width:.6;opacity:.55}
+.dg .htb{fill:var(--grid)}
+.dg .htl{stroke:var(--mute);stroke-width:1.6;opacity:.7}
+.dg .axis{stroke:var(--mute);stroke-width:1;stroke-dasharray:2 6;opacity:.55}
+.dg .ld{stroke:var(--mute);stroke-width:1;fill:none}
+.dg .ldot{fill:var(--mute)}
+.dg .bm{stroke:var(--accent2);fill:none;stroke-width:3;stroke-linecap:round}
+.dg .bc{stroke:var(--accent);fill:none;stroke-width:3;stroke-linecap:round}
+.dg .bm2{stroke:var(--accent2);fill:none;stroke-width:1.8;stroke-linecap:round}
+.dg .bc2{stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round}
+.dg .mgp{stroke:url(#mg);fill:none;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.dg .ds{stroke-dasharray:6 5}
+.dg .fd{opacity:.4}
+.dg .mt{fill:url(#mt);stroke:var(--mute);stroke-width:1.2}
+.dg .hat{fill:url(#ht);stroke:var(--mute);stroke-width:1.2}
+.dg .vac{fill:var(--soft);stroke:var(--accent);stroke-width:1.5}
+.dg .cav{fill:var(--bg);stroke:var(--mute);stroke-width:1.2}
+.dg .smp{fill:var(--soft);stroke:var(--accent);stroke-width:2}
+.dg .env{fill:none;stroke:var(--mute);stroke-width:1.4;stroke-dasharray:5 4}
+.dg .clad{fill:none;stroke:var(--accent2);stroke-width:1.6}
+.dg .mol{fill:var(--panel);stroke:var(--accent);stroke-width:1.3}
+.dg .cone{fill:var(--accent);opacity:.12}
+.dg .bfo{fill:var(--accent2);opacity:.2}
+.dg .bfc{fill:var(--accent);opacity:.16}
+.dg .ring{fill:none;stroke:var(--accent);stroke-linecap:round}
+.dg .ar{fill:var(--accent2)}
+.dg .ac{fill:var(--accent)}
+.dgright{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.dgbtn{padding:5px 12px;font-size:13px}
+.dgbtn[aria-pressed=true]{border-color:var(--accent);color:var(--accent)}
+.dgctl{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;margin-top:10px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;font-size:14px}
+.dgctl:empty{display:none}
+.dgctl label.dgsl{margin:0;flex:1 1 240px;gap:10px;cursor:default}
+.dgctl label.dgsl span{white-space:nowrap}
+.dgctl input[type=range]{flex:1;min-width:100px}
+.dgval{font-weight:600;min-width:64px;text-align:right;font-variant-numeric:tabular-nums}
+.dgout{flex:1 1 100%;color:var(--mute)}
+.dgout b{color:var(--ink)}
+.dg .fw{stroke:var(--bg);stroke-width:3;stroke-dasharray:4 16;opacity:.45;fill:none}
+.dg .dt{fill:var(--accent2);stroke:var(--bg);stroke-width:1.5}
+.dg .dc{fill:var(--accent);stroke:var(--bg);stroke-width:1.5}
+.dg .sblk{transition:transform .7s ease}
+.dg.open .sblk{transform:translateY(-72px)}
+.dg .bafter{opacity:.25;transition:opacity .7s}
+.dg.open .bafter{opacity:1}
+.dg .topen{opacity:0;transition:opacity .5s}
+.dg.open .topen{opacity:1}
+.dg .tclosed{transition:opacity .5s}
+.dg.open .tclosed{opacity:0}
+
+.dg .ldk{stroke:var(--ink);stroke-width:2.4;fill:none;stroke-linecap:round}
+.dg .ak{fill:var(--ink)}
+</style>
+</head>
+<body>
+<nav><div class="in">
+<a href="#about">About</a><a href="#sample">Sample area</a><a href="#schematic">Schematic</a><a href="#video">Video guide</a>
+<button id="theme" class="themebtn" type="button" aria-label="Switch between light and dark mode"><span id="themeIcon" aria-hidden="true">🌙</span><span id="themeLabel">Dark mode</span></button></div></nav>
+<header>
+<h1>Meet Larmor</h1>
+<p class="lede">ISIS SANS Instruments Explorer. Follow the neutron beam from source to detector and see how each component helps produce high-quality small-angle neutron scattering data.</p>
+</header>
+<main>
+
+<section id="about">
+<h2>Larmor: high-throughput SANS and spin-echo SANS</h2>
+<p>Explore the <a href="https://www.isis.stfc.ac.uk/instruments/larmor/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-weight:600">Larmor</a> instrument, from source to detector, and understand how each component contributes to generating our neutron scattering data. Larmor can work as a high-throughput small-angle neutron scattering (SANS) instrument, or use the Larmor precession of polarised neutrons for spin-echo SANS (SESANS), reaching much larger length scales. Click on the components to find out more information about them, and see our short video guide with one of our instrument scientists.</p>
+</section>
+
+<section id="sample">
+<h2>The sample area</h2>
+<div class="box"><div class="row" style="align-items:center">
+<div><p style="margin:0">Larmor is a time-of-flight instrument with a large sample area that can host a wide range of sample environments and hardware. The sample-to-detector distance is fixed at 4 m. Switching between SANS and SESANS modes takes around 2 to 3 hours, so changing mode within an experiment is not encouraged.</p></div>
+<figure class="photo"><img src="../images/larmor_sample_area.png" alt="Photograph of the Larmor sample area"></figure>
+</div></div>
+</section>
+
+<section id="schematic">
+<h2>Larmor schematic</h2>
+<p>The neutron beam travels left to right, straight through the centre of every component. Click a component, or use the arrow keys, to see what it does.</p>
+<div class="box">
+<div class="flight-path-header"><span>Neutron flight path</span><div class="mini-beam" aria-hidden="true"></div>
+</div>
+<div class="sw"><div class="sch" id="sch" role="group" aria-label="Larmor components from source to detector">
+<div class="beam" aria-hidden="true"></div>
+<div class="nodes">
+<button class="nd" id="node-source" data-k="source" aria-pressed="false"><span class="ic"><span class="em" aria-hidden="true">☢️</span><span class="no">01</span></span><b>Target Station</b><small>Generate Neutrons</small></button>
+<button class="nd" id="node-moderator" data-k="moderator" aria-pressed="false"><span class="ic"><span class="em" aria-hidden="true">❄️</span><span class="no">02</span></span><b>Liquid H₂ Moderator</b><small>Thermalise Neutrons</small></button>
+<button class="nd" id="node-polariser" data-k="polariser" aria-pressed="false"><span class="ic"><span class="em" aria-hidden="true">🧲</span><span class="no">03</span></span><b>V-Cavity Polariser</b><small>Select Spin State</small></button>
+<button class="nd" id="node-chopper" data-k="chopper" aria-pressed="false"><span class="ic"><span class="em" aria-hidden="true">⏳</span><span class="no">04</span></span><b>Choppers</b><small>ToF Structuring</small></button>
+<button class="nd" id="node-flipper" data-k="flipper" aria-pressed="false"><span class="ic"><span class="em" aria-hidden="true">🔃</span><span class="no">05</span></span><b>RF Gradient Flipper</b><small>Reverse Spin</small></button>
+<button class="nd" id="node-apertures" data-k="apertures" aria-pressed="false"><span class="ic"><span class="em" aria-hidden="true">🎯</span><span class="no">06</span></span><b>Beam Apertures</b><small>Beam Shaping</small></button>
+<button class="nd" id="node-precession" data-k="precession" aria-pressed="false"><span class="ic"><span class="em" aria-hidden="true">🌀</span><span class="no">07</span></span><b>Spin-Echo Precession</b><small>Encode Angle in Spin</small></button>
+<button class="nd" id="node-sample" data-k="sample" aria-pressed="false"><span class="ic"><span class="em" aria-hidden="true">🧪</span><span class="no">08</span></span><b>Sample Area</b><small>Measurement Zone</small></button>
+<button class="nd" id="node-detector" data-k="detector" aria-pressed="false"><span class="ic"><span class="em" aria-hidden="true">📊</span><span class="no">09</span></span><b>Analyser &amp; Detectors</b><small>Detect Neutrons</small></button>
+</div></div>
+<div class="insp" aria-live="polite">
+<div class="hd"><div><h3 id="dTitle"></h3><span class="note" id="dStage" style="margin:0"></span></div>
+<div class="pn"><button id="prev" aria-label="Previous component">&larr; Previous</button><button id="next" aria-label="Next component">Next &rarr;</button></div></div>
+<figure class="dgfig"><div id="dDiag" role="img" aria-labelledby="dCap"></div><div class="dgctl" id="dCtl"></div><div class="dgmeta"><figcaption class="note" id="dCap"></figcaption><div class="dgright"><div class="dgk" aria-hidden="true"><span><i style="background:var(--accent2)"></i>Fast neutrons</span><span><i style="background:var(--accent)"></i>Cold neutrons</span></div><button id="dgPlay" class="dgbtn" type="button" aria-pressed="false">Pause motion</button></div></div></figure>
+<div class="row">
+<div><h4>Physical description</h4><p id="dDesc"></p></div>
+<div><h4>Technical specifications</h4><div id="dSpecs"></div></div>
+</div>
+<h4>Function</h4><p class="fn" id="dRole"></p></div>
+</div>
+</section>
+
+<section id="video">
+<h2>Not satisfied? Meet Larmor directly from our instrument scientists</h2>
+<p>Meet Dr Scientist in the video who will tell you more about Larmor and the types of science that we typically see on Larmor.</p>
+<div class="box"><video controls preload="metadata" playsinline>
+<source src="../videos/Crystals.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video></div>
+</section>
+
+</main>
+<footer><div style="max-width:1000px;margin:0 auto;padding:0 20px">&copy; 2026 Lauren Matthews. Developed with the assistance of Claude (Anthropic). Text and figures licensed under <a style="color:inherit" rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; source code under the <a style="color:inherit" href="../LICENSE.txt">MIT License</a>. Third-party material is excluded; see <a style="color:inherit" href="credits.html">Credits</a>. Instrument photograph courtesy of the ISIS Neutron and Muon Source.</div></footer>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var componentData = {
+ source: {
+  title: "Target Station - Neutrons by spallation",
+  stage: "Stage 01 of 09",
+  description: "ISIS is a neutron spallation source where high-energy protons (800 MeV) strike a heavy metal target (tungsten), causing the ejection of neutrons from atomic nuclei. Larmor is one of the three SANS instruments that view Target Station 2 (TS2), alongside SANS2D and Zoom.",
+  role: "Generates a high flux of fast neutrons (> 1 MeV) for subsequent moderation and scattering experiments.",
+  specs: [
+   { label: "Neutron Energy", value: "> 1 MeV" },
+   { label: "Flux Type", value: "Pulsed (Spallation)" },
+   { label: "Primary Material", value: "Tantalum-clad tungsten" }
+  ]
+ },
+ moderator: {
+  title: "Liquid H₂ Moderator - Cooling fast neutrons to probe structure",
+  stage: "Stage 02 of 09",
+  description: "Fast neutrons have too much energy and too short a wavelength to probe nanoscale structure. The TS2 moderator surrounds the neutron source with liquid hydrogen, where repeated collisions slow the neutrons until they are cold. An upgrade of the TS2 hydrogen moderator gave around 20% more flux on Larmor, SANS2D and Zoom.",
+  role: "Cools fast neutrons to the wavelengths used on Larmor, 0.9 to 13 Å.",
+  specs: [
+   { label: "Temperature", value: "~ 20 K" },
+   { label: "Moderator Media", value: "Liquid H₂" },
+   { label: "Unpolarised Band", value: "0.9 – 13.0 Å (or 0.5 – 12.5 Å)" }
+  ]
+ },
+ polariser: {
+  title: "V-Cavity Polariser - Selecting one neutron spin state",
+  stage: "Stage 03 of 09",
+  description: "Neutrons carry a spin, like a tiny compass needle. A supermirror V cavity lets one spin state reflect along the cavity while absorbing the other, so the beam that leaves is polarised. Larmor has two interchangeable polarisers, each giving access to a different wavelength range, and an optional polarised ³He cell can be installed for fully polarised SANS.",
+  role: "Produces the spin-polarised beam needed for polarised SANS and for all spin-echo (Larmor precession) measurements.",
+  specs: [
+   { label: "Polariser 1", value: "1.9 – ~10.0 Å" },
+   { label: "Polariser 2", value: "3.0 – 13.0 Å" },
+   { label: "Optional", value: "Polarised ³He cell" }
+  ]
+ },
+ chopper: {
+  title: "Choppers - Defining the neutron wavelength band",
+  stage: "Stage 04 of 09",
+  description: "ISIS delivers pulses at 10 Hz to TS2. Choppers along the guide open for a short window and block the rest, so slow neutrons from one pulse cannot be overtaken by fast neutrons of the next. Because fast neutrons reach the detector first, arrival time (time of flight) tells us each neutron's wavelength. Larmor sits a long way from the source, which gives a wide band with good wavelength resolution.",
+  role: "Cuts out unwanted wavelengths to prevent frame overlap, enabling time-of-flight SANS and wavelength-resolved spin-echo.",
+  specs: [
+   { label: "Technique", value: "Time-of-Flight" },
+   { label: "Pulse Rate", value: "10 Hz" },
+   { label: "Source to Detector", value: "~ 28 m" }
+  ]
+ },
+ flipper: {
+  title: "RF Gradient Spin Flipper - Reversing the neutron spin",
+  stage: "Stage 05 of 09",
+  description: "A radio-frequency (RF) field combined with a magnetic field gradient turns the neutron spin through 180°. The same type of flipper is used to switch spin states in polarised SANS and, in spin-echo mode, as part of the precession set-up. Operating frequencies of 0.5, 1.0 and 2.0 MHz are routinely available.",
+  role: "Switches the neutron spin between up and down, and prepares the beam for spin-echo measurements.",
+  specs: [
+   { label: "Flipper Type", value: "RF gradient" },
+   { label: "Frequencies", value: "0.5 / 1.0 / 2.0 MHz" },
+   { label: "Fields", value: "17.14 / 34.28 / 68.56 mT" }
+  ]
+ },
+ apertures: {
+  title: "Apertures - Giving the beam a defined shape",
+  stage: "Stage 06 of 09",
+  description: "The final collimation is set by sample apertures, neutron-absorbing slits that define the size of the beam hitting the sample. Smaller apertures give a more tightly defined beam and lower background, but let through fewer neutrons. Smaller apertures than the standard ones are available by arrangement with the instrument scientists.",
+  role: "Defines the size and divergence of the beam at the sample, trading flux for resolution.",
+  specs: [
+   { label: "Maximum Beam", value: "15 × 15 mm²" },
+   { label: "Typical Beam", value: "8 × 8 mm²" },
+   { label: "Material", value: "Neutron-absorbing jaws" }
+  ]
+ },
+ precession: {
+  title: "Spin-Echo Precession Regions - Encoding scattering angle in spin",
+  stage: "Stage 07 of 09",
+  description: "In spin-echo SANS (SESANS), the polarised beam passes through two magnetic regions with oppositely directed fields and tilted boundaries, one before and one after the sample. Neutron spins turn (precess) in the first region and turn back in the second. If the neutron is not scattered, the spins return exactly to where they began; scattering leaves a measurable loss of polarisation. This reaches much larger length scales than ordinary SANS. Because it relies on a polarised beam, the method is not compatible with magnetic samples.",
+  role: "Labels each neutron's path with its spin so that length scales from about 100 nm to 38 µm can be measured with a high count rate.",
+  specs: [
+   { label: "Spin-Echo Length", value: "~ 100 nm – 38 µm" },
+   { label: "Pole-Shoe Angle", value: "25° – 90°" },
+   { label: "Mode Change", value: "2 – 3 hours" }
+  ]
+ },
+ sample: {
+  title: "Sample Area - A large, flexible measurement zone",
+  stage: "Stage 08 of 09",
+  description: "Larmor has an unusually large sample area that can host a wide range of sample environments and associated hardware. The sample-to-detector distance is fixed at 4 m. Larmor recently reached 35 mK, the lowest temperature on an ISIS SANS instrument. Samples for soft matter are typically held in quartz cells.",
+  role: "Holds the sample in the beam under controlled conditions, such as temperature, while it scatters neutrons.",
+  specs: [
+   { label: "Sample to Detector", value: "4 m (fixed)" },
+   { label: "Lowest Temperature", value: "35 mK" },
+   { label: "Sample Cells", value: "Quartz cells; many environments" }
+  ]
+ },
+ detector: {
+  title: "Analyser & Detectors - Counting what comes out",
+  stage: "Stage 09 of 09",
+  description: "In SANS mode, scattered neutrons are counted by an array of 80 position-sensitive ³He tubes. In SESANS mode the beam instead passes through a supermirror analyser to a small, very high count-rate detector, which has recently been upgraded to a scintillator detector. A one-dimensional wide-angle bank can also be installed to measure diffraction.",
+  role: "Records where and when scattered neutrons arrive (SANS), or how much polarisation survives (SESANS).",
+  specs: [
+   { label: "SANS Detector", value: "80 × 600 mm ³He tubes, 4.4 m from sample" },
+   { label: "SESANS Detector", value: "38 × 50 mm² high count rate" },
+   { label: "Q Range (SANS)", value: "0.0035 – 0.7 Å⁻¹ (1.0 Å⁻¹ offset)" }
+  ]
+ }
+};
+/* Schematic diagrams: one inline SVG per component, drawn on a common beam axis (y = 120).
+   Orange = fast / early neutrons, teal = cold / later neutrons. Motion is SMIL (pausable as a whole). */
+var DEFS='<defs>'+
+ '<pattern id="gp" width="20" height="20" patternUnits="userSpaceOnUse"><path class="gpl" d="M20 0H0V20"/></pattern>'+
+ '<pattern id="ht" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect class="htb" width="7" height="7"/><line class="htl" x1="0" y1="0" x2="0" y2="7"/></pattern>'+
+ '<linearGradient id="mt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--panel)"/><stop offset="1" style="stop-color:var(--line)"/></linearGradient>'+
+ '<linearGradient id="mg" gradientUnits="userSpaceOnUse" x1="240" y1="0" x2="470" y2="0"><stop offset="0" style="stop-color:var(--accent2)"/><stop offset="1" style="stop-color:var(--accent)"/></linearGradient>'+
+ '<marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0 0L10 5L0 10z"/></marker>'+
+ '<marker id="ak" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ak" d="M0 0L10 5L0 10z"/></marker>'+
+ '<marker id="ac" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ac" d="M0 0L10 5L0 10z"/></marker></defs>';
+function H(cls){return '<svg viewBox="0 0 760 240" class="dg'+(cls?' '+cls:'')+'" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+DEFS+
+ '<rect x="0" y="0" width="760" height="240" fill="url(#gp)"/><line class="axis" x1="8" y1="120" x2="752" y2="120"/>'}
+var END='</svg>';
+function T(x,y,s,a,c){return '<text x="'+x+'" y="'+y+'" text-anchor="'+(a||'middle')+'"'+(c?' class="'+c+'"':'')+'>'+s+'</text>'}
+function L(x1,y1,x2,y2,c,m){return '<line class="'+c+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'"'+(m?' marker-end="url(#'+m+')"':'')+'/>'}
+function R(x,y,w,h,c,r){return '<rect class="'+c+'" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'"'+(r?' rx="'+r+'"':'')+'/>'}
+/* neutron dot coloured by p: 100 = fast (orange) ... 0 = cold (teal) */
+function D(x,y,p,r){return '<circle cx="'+x+'" cy="'+y+'" r="'+(r||3.5)+'" style="fill:color-mix(in srgb,var(--accent2) '+p+'%,var(--accent))"/>'}
+function wave(x0,x1,y,a,wl,c){var d='M'+x0+' '+y;for(var x=x0;x<=x1;x+=2){d+=' L'+x+' '+(y-a*Math.sin((x-x0)/wl*6.2832)).toFixed(1)}return '<path class="'+c+'" d="'+d+'"/>'}
+/* animated helpers */
+function F(x1,x2,y){return '<line class="fw" x1="'+x1+'" y1="'+y+'" x2="'+x2+'" y2="'+y+'"><animate attributeName="stroke-dashoffset" from="0" to="-20" dur="0.8s" repeatCount="indefinite"/></line>'}
+function MV(path,dur,cls,begin,extra,r){return '<circle r="'+(r||5)+'" class="'+cls+'"><animateMotion dur="'+dur+'s" begin="'+(begin||0)+'s" repeatCount="indefinite" path="'+path+'"'+(extra||'')+'/></circle>'}
+function rnd(i){var s=Math.sin(i*12.9898)*43758.5453;return s-Math.floor(s)}
+/* callout: leader from (px,py) to (tx,ty); label lines split by "|", first line bold */
+function C(px,py,tx,ty,label,side){var Ls=label.split('|'),lh=14,n=Ls.length,x=tx,y,a='middle',o=L(px,py,tx,ty,'ld')+'<circle class="ldot" cx="'+px+'" cy="'+py+'" r="2.5"/>';
+ if(side==='r'){x=tx+6;a='start';y=ty+4-(n-1)*lh/2}
+ else if(side==='l'){x=tx-6;a='end';y=ty+4-(n-1)*lh/2}
+ else if(side==='t'){y=ty-6-(n-1)*lh}
+ else{y=ty+15}
+ Ls.forEach(function(s,i){o+=T(x,y+i*lh,s,a,i?'':'tk')});return o}
+
+var detGrid='';for(var gi=0;gi<=160;gi+=16){detGrid+=L(566,40+gi,584,40+gi,'ld')}
+var fan='',mols='',bendPlates='',protons='',chopA='',chopB='',flashes='';
+[-150,-120,-90,-60,-30,30,60,90,120,150].forEach(function(a){var c=Math.cos(a*Math.PI/180),s=Math.sin(a*Math.PI/180);
+ fan+=L((340+28*c).toFixed(1),(120+28*s).toFixed(1),(340+44*c).toFixed(1),(120+44*s).toFixed(1),'bm2')+D((340+46*c).toFixed(1),(120+46*s).toFixed(1),100,3)});
+for(var n=-1;n<=6;n++){protons+='<circle cx="'+(28+32*n)+'" cy="120" r="4" style="fill:var(--ink)"/>'}
+for(var i=0;i<=44;i++){var dot=D(44+i*4,(120+(rnd(i)-.5)*28).toFixed(1),Math.round(i/44*100),3.2);chopA+=dot;if(i>=14&&i<=30)chopB+=dot}
+[[262,70],[296,172],[330,66],[372,176],[410,72],[438,168],[290,104],[420,128],[322,150]].forEach(function(p){mols+='<circle class="mol" cx="'+p[0]+'" cy="'+p[1]+'" r="5"/><circle class="mol" cx="'+(p[0]+8)+'" cy="'+p[1]+'" r="5"/>'});
+[-30,-10,10,30].forEach(function(d){bendPlates+='<path class="ld" style="stroke:var(--ink);stroke-width:2.2" d="M110 '+(120+d)+' Q430 '+(120+d)+' 650 '+(192+d)+'"/>'});
+[[18,20],[18,110],[18,250],[32,70],[32,200],[32,320],[46,150],[46,290],[46,10]].forEach(function(p,k){var a=p[1]*Math.PI/180;
+ flashes+='<circle cx="'+(685+p[0]*Math.cos(a)).toFixed(1)+'" cy="'+(120+p[0]*Math.sin(a)).toFixed(1)+'" r="3.5" class="dc" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="1.8s" begin="'+(k*0.2).toFixed(1)+'s" repeatCount="indefinite"/></circle>'});
+var MPATH='M82 120 L240 120 L278 86 L316 150 L352 100 L386 140 L420 112 L448 126 L470 120 L730 120';
+var CPATH='M20 120 L80 120 L150 76 L230 164 L310 76 L390 164 L470 76 L550 164 L630 76 L680 120 L740 120';
+
+/* ---- helpers shared by the ZOOM and LARMOR pages ---- */
+function MVF(path,dur,cls,begin,r){return '<circle r="'+(r||4)+'" class="'+cls+'"><animateMotion dur="'+dur+'s" begin="'+(begin||0)+'s" repeatCount="indefinite" path="'+path+'"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.55;.8;1" dur="'+dur+'s" begin="'+(begin||0)+'s" repeatCount="indefinite"/></circle>'}
+/* spin arrow on the beam axis: up = orange, down = teal */
+function SA(x,up){return up?L(x,142,x,100,'ldk','ak'):L(x,98,x,140,'ldk','ak')}
+/* tilted spin arrow (angle in degrees from "up") */
+function SAT(x,deg){var a=deg*Math.PI/180;return L(x,120,(x+26*Math.sin(a)).toFixed(1),(120-26*Math.cos(a)).toFixed(1),'ldk','ak')}
+
+/* chopper: left of the disc all wavelengths, right of it only the selected band */
+function chopSvg(a,b,t1,t2){return H()+
+ '<defs><clipPath id="cpl"><rect x="0" y="0" width="270" height="240"/></clipPath><clipPath id="cpr"><rect x="290" y="0" width="470" height="240"/></clipPath></defs>'+
+ '<g clip-path="url(#cpl)"><g><animateTransform attributeName="transform" type="translate" from="0 0" to="540 0" dur="6s" repeatCount="indefinite"/>'+chopA+'</g></g>'+
+ '<g clip-path="url(#cpr)"><g><animateTransform attributeName="transform" type="translate" from="0 0" to="540 0" dur="6s" repeatCount="indefinite"/>'+chopB+'</g></g>'+
+ R(274,40,12,66,'mt')+R(274,134,12,66,'mt')+
+ '<text x="280" y="32" text-anchor="middle" style="font-size:20px">\u21bb</text>'+
+ C(130,100,130,72,a,'t')+C(470,100,470,72,b,'t')+
+ T(280,218,t1,'middle','tk')+T(280,232,t2)+END}
+
+/* V-cavity polariser: one spin state is reflected along the cavity, the other is absorbed */
+function polSvg(band){
+ var refl='M30 120 L262 120 L318 104 L372 132 L424 114 L470 123 L486 120 L730 120';
+ return H()+
+ R(262,38,226,40,'hat',3)+R(262,162,226,40,'hat',3)+
+ '<path class="ld" style="stroke:var(--ink);stroke-width:2.6" d="M262 96 L486 116"/><path class="ld" style="stroke:var(--ink);stroke-width:2.6" d="M262 144 L486 124"/>'+
+ L(30,120,262,120,'bc2 ds fd')+L(486,120,730,120,'bc2 ds fd')+
+ MV(refl,3.6,'dc',0,'',4)+MV(refl,3.6,'dc',-1.8,'',4)+
+ MVF('M30 120 L262 120 L340 104 L380 62',3.6,'dc',-0.9,4)+MVF('M30 120 L262 120 L340 136 L380 178',3.6,'dc',-2.7,4)+
+ SA(560,true)+SA(640,true)+SA(690,true)+
+ T(70,106,'\u2191\u2193','middle','tk')+T(150,106,'\u2191\u2193','middle','tk')+
+ C(110,124,110,170,'Unpolarised beam|spin up + spin down','b')+
+ C(625,124,625,170,'Polarised beam|'+band,'b')+
+ C(375,40,375,28,'Neutron-absorbing walls','t')+
+ C(374,134,374,226,'Supermirror V cavity','b')+END}
+
+/* spin flipper: toggle reverses the spin; rf=true draws an RF field, otherwise a field-gradient sheet */
+function flipSvg(v,t1,t2,rf,callin){var on=!!v.on,s=H()+L(30,120,730,120,'bc2 ds fd')+F(30,730,120)+
+ R(300,56,130,128,'env',6)+R(312,62,106,24,'hat',2)+R(312,154,106,24,'hat',2);
+ s+=rf?wave(314,416,120,10,17,'bc2'):L(365,88,365,152,'ld ds');
+ [100,170,240].forEach(function(x){s+=SA(x,true)});
+ [500,570,640].forEach(function(x){s+=SA(x,!on)});
+ s+=C(170,146,170,160,callin,'b')+C(570,146,570,160,on?'Spin reversed (down)':'Spin unchanged (up)','b')+
+ T(365,208,t1,'middle','tk')+T(365,222,t2);
+ return s+END}
+
+/* aperture pair with a slider on the second one */
+function apSvg(v,mn,mx,note){var g2=3+(v.mm-mn)/(mx-mn)*37,ge=Math.min(g2,22);
+ return H()+'<polygon class="bfc" points="40,50 250,98 520,'+(120-ge).toFixed(1)+' 700,'+(120-ge).toFixed(1)+' 700,'+(120+ge).toFixed(1)+' 520,'+(120+ge).toFixed(1)+' 250,142 40,190"/>'+
+ L(40,120,712,120,'bc2','ac')+F(40,700,120)+
+ R(241,28,18,70,'hat')+R(241,142,18,70,'hat')+R(511,28,18,(120-g2-28).toFixed(1),'hat')+R(511,(120+g2).toFixed(1),18,(92-g2).toFixed(1),'hat')+
+ T(250,18,'Aperture 1','middle','tk')+T(520,18,'Aperture 2','middle','tk')+T(250,228,note)+T(520,228,'Neutron-absorbing jaws')+
+ C(120,68,120,40,'Diverging beam','t')+C(640,120-ge,640,66,'Defined beam|at the sample','t')+END}
+
+var diagrams={
+source:{cap:"800 MeV protons strike a tantalum-clad tungsten target inside heavy shielding, knocking out fast neutrons that leave through the beam channel.",svg:H()+
+ '<defs><clipPath id="cp"><rect x="0" y="0" width="246" height="240"/></clipPath></defs>'+
+ R(250,40,180,160,'hat',6)+R(285,75,110,90,'cav')+R(250,114,38,12,'cav')+R(392,114,40,12,'cav')+
+ '<g><animate attributeName="opacity" values=".3;1;.3" dur="0.9s" repeatCount="indefinite"/>'+fan+'</g>'+
+ R(322,102,36,36,'mt',2)+R(318,98,44,44,'clad',3)+
+ '<g clip-path="url(#cp)"><g><animateTransform attributeName="transform" type="translate" from="0 0" to="32 0" dur="0.9s" repeatCount="indefinite"/>'+protons+'</g></g>'+
+ '<polygon points="250,120 240,114 240,126" style="fill:var(--ink)"/>'+
+ L(432,120,712,120,'bm','ar')+F(432,700,120)+
+ C(110,120,110,72,'Proton pulses|800 MeV','t')+C(340,98,340,24,'Tantalum-clad tungsten target','t')+
+ C(580,120,580,72,'Fast neutrons|> 1 MeV','t')+T(340,222,'Target Station shielding','middle')+END},
+moderator:{cap:"Each collision with a hydrogen molecule takes energy from the neutron, so it slows down. It changes from fast (orange) to cold (teal) as it goes.",svg:H()+
+ R(36,98,44,44,'mt',2)+T(58,160,'Target')+
+ wave(82,236,120,8,12,'bm2')+
+ R(240,45,230,150,'vac',16)+mols+
+ '<polyline class="mgp" points="240,120 278,86 316,150 352,100 386,140 420,112 448,126 470,120"/>'+
+ wave(472,700,120,9,52,'bc2')+L(700,120,732,120,'bc','ac')+
+ (function(){var P='M82 120 L240 120 L278 86 L316 150 L352 100 L386 140 L420 112 L448 126 L470 120 L730 120',kp='0;.2091;.2766;.3751;.4566;.5261;.5843;.6258;.6560;1',kt='0;.0433;.0713;.1223;.1756;.2332;.2936;.3451;.3892;1',tr=[[0,5.5,1]],o='',i;
+ for(i=0;i<tr.length;i++){(function(d,r,v){['dt','dc'].forEach(function(c){o+='<circle r="'+r+'" class="'+c+'" opacity="0"><animateMotion dur="8s" begin="'+d+'s" repeatCount="indefinite" path="'+P+'" keyPoints="'+kp+'" keyTimes="'+kt+'" calcMode="linear"/><animate attributeName="opacity" values="'+(c==='dt'?v+';'+v+';0;0':'0;0;'+v+';'+v)+'" keyTimes="0;.0433;.3892;1" dur="8s" begin="'+d+'s" repeatCount="indefinite"/></circle>'})})(tr[i][0],tr[i][1],tr[i][2])}
+ return o})()+
+ C(150,112,150,60,'Fast neutron|short wavelength','t')+C(600,111,600,60,'Cold neutron|λ = 0.9 – 13 Å','t')+
+ C(355,195,355,198,'Liquid H₂ moderator, ~20 K|~20–30 elastic collisions','b')+END},
+polariser:{cap:"A supermirror V cavity reflects one spin state through and absorbs the other, leaving a polarised beam. Larmor has two polarisers covering different wavelength ranges. Arrows show the spin direction.",svg:polSvg('Polariser 1: 1.9 – ~10 Å|Polariser 2: 3.0 – 13 Å')},
+chopper:{cap:"Choppers open for a short window, cutting each 10 Hz pulse into a packet; fast neutrons arrive first, so arrival time sorts them by wavelength.",svg:chopSvg('Neutron pulse|all wavelengths','Selected band|no frame overlap','Choppers','cut unwanted wavelengths')},
+flipper:{cap:"A radio-frequency field and a field gradient reverse the neutron spin. Switch it on and off to see the spin direction at the sample. (Illustration only.)",
+ ctl:[{id:'on',type:'toggle',label:['Switch flipper on','Switch flipper off']}],
+ out:function(v){return v.on?'Flipper on: the spin is reversed, so the sample sees spin-down neutrons.':'Flipper off: the sample sees spin-up neutrons.'},
+ svg:function(v){return flipSvg(v,'RF gradient spin flipper','radio-frequency field + field gradient',true,'Spin up from the polariser')}},
+apertures:{cap:"Absorbing slits trim the beam, setting its size and divergence at the sample. Drag the slider to change the second aperture; Larmor typically uses 8 × 8 mm².",
+ ctl:[{id:'mm',label:'Aperture 2 opening',min:1,max:15,step:0.5,val:8,unit:' mm'}],
+ out:function(v){return 'Typical beam 8 × 8 mm², up to 15 × 15 mm². Smaller openings give a narrower, less divergent beam, but fewer neutrons.'},
+ svg:function(v){return apSvg(v,1,15,'Up to 15 × 15 mm², typically 8 × 8 mm²')}},
+precession:{cap:"Spins turn through the first magnetic region and turn back in the second, so un-scattered neutrons end up exactly as they started. Drag the slider to tilt the field boundaries.",
+ ctl:[{id:'th',label:'Pole-shoe angle',min:25,max:90,step:1,val:60,unit:'°'}],
+ out:function(v){return 'Pole-shoe angle <b>'+v.th+'°</b>: smaller angles and higher fields lengthen the spin-echo length (∝ λ² B cot θ), reaching up to ~38 µm.'},
+ svg:function(v){var s=Math.min(50/Math.tan(v.th*Math.PI/180),60),i,
+  arr=[[110,0],[205,60],[275,125],[320,170],[385,170],[455,115],[520,55],[600,0],[680,0]],o=H()+
+  L(20,120,730,120,'bc2 ds fd')+F(20,730,120)+
+  '<polygon class="vac" points="'+(150+s)+',56 '+(260+s)+',56 '+(260-s)+',184 '+(150-s)+',184"/>'+
+  '<polygon class="vac" points="'+(440-s)+',56 '+(550-s)+',56 '+(550+s)+',184 '+(440+s)+',184"/>'+
+  R(342,98,16,44,'smp',2);
+  for(i=0;i<arr.length;i++){o+=SAT(arr[i][0],arr[i][1])}
+  o+=C(205,56,205,34,'Precession region 1|spins turn','t')+C(495,56,495,34,'Precession region 2|spins turn back','t')+
+  C(350,144,350,190,'Sample','b')+C(110,92,110,76,'Polarised|beam','t')+C(680,92,680,76,'Spins restored|(unscattered)','t');
+  return o+END}},
+sample:{cap:"Neutrons are scattered through small angles (2θ) by structure in the sample, which sits in a large, flexible sample area. Scattering angle is exaggerated in the drawing.",
+ ctl:[{id:'tt',label:'Scattering angle 2θ',min:0.5,max:10,step:0.1,val:4,unit:'°'},{id:'lam',label:'Wavelength λ',min:0.9,max:13,step:0.05,val:6,unit:' Å'}],
+ out:function(v){var q=4*Math.PI/v.lam*Math.sin(v.tt/2*Math.PI/180),d=2*Math.PI/q/10;return 'q = (4π/λ) sin θ = <b>'+q.toPrecision(3)+' Å⁻¹</b> &nbsp;·&nbsp; probes structures of ~<b>'+d.toPrecision(3)+' nm</b>'},
+ svg:function(v){var a=v.tt*1.8*Math.PI/180,c=Math.cos(a),s=Math.sin(a),x2=(330+270*c).toFixed(1),dy=(270*s).toFixed(1),ex=(330+92*c).toFixed(1),ey=(120-92*s).toFixed(1),
+  up='M330 120 L'+x2+' '+(120-dy),dn='M330 120 L'+x2+' '+(120+Number(dy));
+  return H()+L(30,120,318,120,'bc','ac')+F(30,310,120)+
+ '<polygon class="cone" points="330,120 '+x2+','+(120-dy).toFixed(1)+' '+x2+','+(120+Number(dy)).toFixed(1)+'"/>'+
+ L(338,120,730,120,'bc2 ds fd')+
+ '<path class="bc2 ds" d="'+up+'"/><path class="bc2 ds" d="'+dn+'"/>'+
+ R(290,70,80,100,'env',10)+R(322,92,16,56,'smp',2)+
+ MV(up,2,'dc',0,'',4)+MV(dn,2,'dc',-1,'',4)+MV(up,2,'dc',-1,'',4)+MV(dn,2,'dc',0,'',4)+
+ '<path class="ld" style="stroke:var(--ink);stroke-width:1.4" d="M422 120 A92 92 0 0 0 '+ex+' '+ey+'"/>'+T(436,(120-92*s/2+4).toFixed(1),'2θ','start','tk')+
+ C(330,92,330,36,'Sample|crystals, powders, liquids, gels, films','t')+
+ C(150,120,150,74,'Incident beam','t')+
+ C(330,170,330,200,'Large sample area|cryostat to 35 mK, quartz cells','b')+
+ C(560,Math.max(40,120-(560-330)*Math.tan(a)),600,44,'Scattered neutrons','r')+END}},
+detector:{cap:"In SANS mode the scattered neutrons are counted on the main tube detector; in SESANS mode the beam is analysed and counted on a small, fast detector. An optional wide-angle bank is also shown.",
+ ctl:[{id:'ses',type:'toggle',label:['Show SESANS mode','Show SANS mode']}],
+ out:function(v){return v.ses?'SESANS mode: the polarised beam passes the supermirror analyser and is counted on the small, high count-rate detector.':'SANS mode: scattered neutrons are counted by position and time of flight on the main tube detector.'},
+ svg:function(v){var ses=!!v.ses,gi,i,ys=[60,84,156,180],o=H()+
+  L(20,120,60,120,'bc','ac')+R(62,104,16,32,'smp',2);
+  if(ses){o+=L(78,120,610,120,'bc2')+F(78,610,120)}else{o+=L(78,120,340,120,'bc2')+F(78,340,120)+R(340,106,8,28,'mt');
+   for(i=0;i<4;i++){o+=L(78,120,360,ys[i],'bc2 ds')+MV('M78 120 L360 '+ys[i],2.4,'dc',-0.6*i,'',3.5)}}
+  o+='<g opacity="'+(ses?.3:1)+'">'+R(360,40,18,160,'mt');
+  for(gi=0;gi<=160;gi+=16){o+=L(360,40+gi,378,40+gi,'ld')}
+  o+=C(369,40,369,34,'SANS detector|80 ³He tubes, 4.4 m','t')+'</g>'+
+  '<g opacity="'+(ses?1:.3)+'">'+R(470,92,50,56,'hat',2)+R(620,106,14,28,'mt')+
+  C(627,106,627,70,'SESANS detector|38 × 50 mm²','t')+C(495,148,495,176,'Supermirror analyser|SESANS mode','b')+'</g>'+
+  R(150,186,34,16,'mt')+L(78,120,160,186,'ld ds')+C(184,194,196,214,'Optional wide-angle bank|45° – 135°','r')+
+  C(70,104,70,70,'Sample','t');
+  return o+END}}
+};
+
+/* ---- showing a diagram, its controls and the pause button ---- */
+var playing=!matchMedia("(prefers-reduced-motion: reduce)").matches;
+function svgEl(){return $("dDiag").querySelector("svg")}
+function applyPlay(){var s=svgEl(),b=$("dgPlay");
+  if(s&&s.pauseAnimations){if(playing){s.unpauseAnimations()}else{s.pauseAnimations();try{s.setCurrentTime(1.5)}catch(e){}}}
+  b.textContent=playing?"Pause motion":"Play motion";b.setAttribute("aria-pressed",String(!playing))}
+function paint(k){var d=diagrams[k];$("dDiag").innerHTML=typeof d.svg==="function"?d.svg(d.v):d.svg;applyPlay()}
+function showDiagram(k){var d=diagrams[k],box=$("dCtl");
+  $("dCap").textContent=d.cap;box.innerHTML="";
+  if(d.ctl&&!d.v){d.v={};d.ctl.forEach(function(c){d.v[c.id]=c.type==="toggle"?false:c.val})}
+  paint(k);
+  if(!d.ctl)return;
+  var out=el("div","dgout");out.setAttribute("aria-live","polite");
+  function upd(){out.innerHTML=d.out?d.out(d.v):""}
+  d.ctl.forEach(function(c){
+    if(c.type==="toggle"){
+      var b=el("button","dgbtn");function lab(){b.textContent=c.label[d.v[c.id]?1:0];b.setAttribute("aria-pressed",String(!!d.v[c.id]))}
+      b.type="button";lab();
+      b.onclick=function(){d.v[c.id]=!d.v[c.id];lab();upd();if(d.live)d.live(svgEl(),d.v);else paint(k)};
+      box.appendChild(b)}
+    else{
+      var l=el("label","dgsl"),t=el("span",0,c.label),o=el("output","dgval"),r=document.createElement("input");
+      r.type="range";r.min=c.min;r.max=c.max;r.step=c.step;r.value=d.v[c.id];
+      function show(){o.textContent=Number(d.v[c.id]).toFixed(c.step<1?(c.step<0.1?2:1):0)+c.unit}
+      show();
+      r.oninput=function(){d.v[c.id]=parseFloat(r.value);show();upd();paint(k)};
+      l.appendChild(t);l.appendChild(r);l.appendChild(o);box.appendChild(l)}});
+  box.appendChild(out);upd()}
+$("dgPlay").onclick=function(){playing=!playing;applyPlay()};
+var keys=Object.keys(componentData),cur=0;
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function select(i,focus){
+  cur=(i+keys.length)%keys.length;var k=keys[cur],d=componentData[k];
+  keys.forEach(function(x){var n=$("node-"+x);n.setAttribute("aria-pressed",x===k)});
+  $("dTitle").textContent=d.title;$("dStage").textContent=d.stage;$("dDesc").textContent=d.description;$("dRole").textContent=d.role;
+  var s=$("dSpecs");s.innerHTML="";d.specs.forEach(function(p){var r=el("div","spec");r.appendChild(el("span",0,p.label));r.appendChild(el("b",0,p.value));s.appendChild(r)});
+  showDiagram(k);
+  if(focus)$("node-"+k).focus()}
+keys.forEach(function(k,i){$("node-"+k).onclick=function(){select(i)}});
+$("prev").onclick=function(){select(cur-1)};$("next").onclick=function(){select(cur+1)};
+$("sch").addEventListener("keydown",function(e){if(e.key==="ArrowRight"){e.preventDefault();select(cur+1,true)}else if(e.key==="ArrowLeft"){e.preventDefault();select(cur-1,true)}});
+select(0);
+})();
+</script>
+<script>
+(function(){var r=document.documentElement,m=matchMedia("(prefers-color-scheme: dark)"),b=document.getElementById("theme");
+function dark(){var t=r.dataset.theme;return t?t==="dark":m.matches}
+function label(){var d=dark();document.getElementById("themeIcon").textContent=d?"☀️":"🌙";document.getElementById("themeLabel").textContent=d?"Light mode":"Dark mode"}
+b.onclick=function(){r.dataset.theme=dark()?"light":"dark";label();window.dispatchEvent(new Event("themechange"))};
+m.addEventListener("change",label);label()})();
+</script>
+<script src="nav.js"></script>
+</body>
+</html>

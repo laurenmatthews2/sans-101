@@ -1,21 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="../device-redirect.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ISIS SANS data reduction</title>
+<meta name="author" content="Lauren Matthews">
+<meta name="copyright" content="(c) 2026 Lauren Matthews">
+<link rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+<!--
+  ISIS SANS 101
+  Copyright (c) 2026 Lauren Matthews.
+  Developed with the assistance of Claude (Anthropic).
+  Text and figures: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+    https://creativecommons.org/licenses/by-sa/4.0/
+  Source code: MIT License (see LICENSE.txt at the site root).
+  Third-party material is excluded from these licences; see the credits page.
+-->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
 <style>
 :root{--bg:#f6f8fa;--panel:#fff;--ink:#14212b;--mute:#5a6b78;--line:#d3dce3;--accent:#1156b1;--accent2:#c2410c; --accent3:#509cff ;--soft:#e2f0f1;--grid:#e6ebef;color-scheme:light}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1a21;--panel:#162531;--ink:#e6edf2;--mute:#9bb0bd;--line:#2a3d4b;--accent:#4cc3cf;--accent2:#fb923c;--soft:#173844;--grid:#223441;color-scheme:dark}}
 :root[data-theme=dark]{--bg:#0f1a21;--panel:#162531;--ink:#e6edf2;--mute:#9bb0bd;--line:#2a3d4b;--accent:#4cc3cf;--accent2:#fb923c;--soft:#173844;--grid:#223441;color-scheme:dark}
-nav button.themebtn{margin-left:auto;flex:none;padding:6px 12px;font-size:13px;margin-top:6px;margin-bottom:6px}
+nav button.themebtn{margin-left:auto;flex:none;align-self:center;display:flex;align-items:center;gap:8px;white-space:nowrap;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:.9rem;line-height:1.3;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+nav button.themebtn:hover{border-color:var(--accent)}
 *{box-sizing:border-box}
 html{scroll-padding-top:70px}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
-header,main,nav .in{max-width:1000px;margin:0 auto;padding:0 20px}
+header,main{max-width:1000px;margin:0 auto;padding:0 20px}
+nav .in{max-width:1400px;margin:0 auto;padding:0 20px}
 nav{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);z-index:5}
-nav .in{display:flex;gap:18px;overflow-x:auto;white-space:nowrap}
+nav .in{display:flex;gap:clamp(14px,1.8vw,26px);overflow-x:auto;white-space:nowrap;scrollbar-width:thin}
 nav a{padding:14px 0;color:var(--mute);text-decoration:none;font-size:14px;font-weight:500}
 nav a:hover,nav a:focus-visible{color:var(--accent)}
 h1,h2{font-family:Newsreader,Georgia,serif;font-weight:600;line-height:1.2}
@@ -66,12 +81,27 @@ code{background:var(--soft);padding:1px 5px;border-radius:3px;font-size:.9em}
 .info h3{margin:0 0 4px;font-size:17px}
 .info p{margin:0 0 6px;max-width:none}
 footer{padding:30px 0 50px;color:var(--mute);font-size:14px}
+
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.rplots{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:760px){.rgrid,.rplots{grid-template-columns:1fr}}
+.grp{border:1px solid var(--line);border-radius:6px;padding:12px 14px 6px;background:var(--bg)}
+.grp h3,.pnl h3{margin:0 0 2px;font-size:16px}
+.sub{font-size:13px;color:var(--mute);margin:0 0 6px}
+.ctl{position:relative;margin:10px 0}
+.ctl label{display:block;margin:0 0 2px}
+.ctl label.chk{display:flex}
+.ctl:has(input:disabled){opacity:.45}
+.ctl::after{content:attr(data-tip);position:absolute;left:0;top:100%;z-index:20;width:min(300px,86vw);padding:9px 11px;border-radius:6px;background:var(--ink);color:var(--bg);font-size:13px;line-height:1.45;box-shadow:0 4px 14px rgba(0,0,0,.25);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s;pointer-events:none}
+.ctl:hover:not(:has(select))::after,.ctl:has(label:hover)::after,.ctl:has(input:focus-visible)::after{opacity:1;visibility:visible;transform:none;transition-delay:.3s}
+.tipi{display:inline-block;width:15px;height:15px;border:1px solid var(--mute);border-radius:50%;color:var(--mute);font:normal 11px/13px "IBM Plex Sans",sans-serif;text-align:center;margin-left:6px;vertical-align:1px}
+.pnl .ctl{margin:6px 0 4px}
 </style>
 </head>
 <body>
 <nav><div class="in">
-<a href="#pipeline">Pipeline</a><a href="#tof">Time of flight</a><a href="#corrections">Corrections</a><a href="#detector">Detector and mask</a><a href="#binning">Q binning</a><a href="#multi">Multiple scattering</a><a href="#transmission">Transmission</a><a href="#gui">Mantid GUI</a><a href="#files">File checklist</a>
-<button id="theme" class="themebtn" type="button">Theme</button></div></nav>
+<a href="#pipeline">Pipeline</a><a href="#tof">Time of flight</a><a href="#corrections">Corrections</a><a href="#detector">Detector and mask</a><a href="#binning">Q binning</a><a href="#resolution">Resolution</a><a href="#multi">Multiple scattering</a><a href="#transmission">Transmission</a><a href="#gui">Mantid GUI</a><a href="#files">File checklist</a>
+<button id="theme" class="themebtn" type="button" aria-label="Switch between light and dark mode"><span id="themeIcon" aria-hidden="true">🌙</span><span id="themeLabel">Dark mode</span></button></div></nav>
 <header>
 <h1>Reducing ISIS SANS data</h1>
 <p class="lede">Once you’ve measured your samples, you cannot immediately publish the data and walk away – life is not that good! A series of steps need to be undertaken so that the data are ready to analyse, and this is true whether you use 1D or 2D data. For ISIS or other sources that use multi-wavelength neutrons, this reduction can be further complex. Luckily for you, our software <a href=" https://www.mantidproject.org/" target="_blank" rel="noopener noreferrer" style="color:var(--accent3);font-weight:600">Mantid</a> can do all of these steps, but it definitely helps to understand what is going on behind the hood! <a style="color:var(--accent3);font-weight:600">Here, we aim to show you, with some simulated measurements, what is happening in each step of the reduction process.</a> </p>
@@ -140,8 +170,9 @@ footer{padding:30px 0 50px;color:var(--mute);font-size:14px}
 
 <section id="detector">
 <h2>Detector image, beam centre and mask</h2>
-<p>This is a simulated rear-detector image (log intensity). Drag the cross to move your beam centre, and change the beam-stop mask. The radial average is taken about the cross. A wrong centre smears the sphere oscillations.</p>
-<div class="box"><div class="row">
+<p>This is a simulated rear-detector image (log intensity). Drag the cross to move your beam centre, and change the beam-stop mask. The radial average is taken about the cross. A wrong centre smears the sphere oscillations or the lamellar peaks.</p>
+<div class="box"><label style="display:block;margin-bottom:12px">Sample <select id="dSam"><option value="sph">Sphere form factor</option><option value="lam">Lamellar phase (first peak at 0.03 Å⁻¹)</option></select></label>
+<div class="row">
 <div><canvas id="cDet" width="360" height="360" aria-label="Simulated detector image with draggable beam centre"></canvas>
 <p class="note">White circle: mask. Cross: your centre. Dot: true centre.</p></div>
 <div><canvas id="cDetPlot" width="560" height="300" aria-label="Radial average about the chosen centre"></canvas>
@@ -154,23 +185,62 @@ footer{padding:30px 0 50px;color:var(--mute);font-size:14px}
 <section id="binning">
 <h2>Q binning</h2>
 <p>Radial averaging sorts pixels into Q bins. Fewer, wider bins reduce noise but lose resolution. Log spacing keeps bins wide at high Q, where counts are low.</p>
-<div class="box"><div class="row">
+<div class="box"><label style="display:block;margin-bottom:12px">Sample <select id="bSam"><option value="sph">Sphere form factor</option><option value="lam">Lamellar phase (first peak at 0.03 Å⁻¹)</option></select></label>
+<div class="row">
 <div>
 <label style="display:block">Spacing <select id="bMode"><option value="log">Logarithmic</option><option value="lin">Linear</option></select></label>
 <label style="display:block;margin-top:10px">Number of bins: <b id="bNV">40</b></label>
 <input type="range" id="bN" min="10" max="150" value="40">
 <label style="display:block;margin-top:10px">Counting time: <b id="bTV">1x</b></label>
-<input type="range" id="bT" min="1" max="64" value="1">
+<input type="range" id="bT" min="1" max="128" value="1">
 <p class="note" id="bNote"></p>
 </div>
 <div><canvas id="cBin" width="560" height="340" aria-label="Binned I(Q) with error bars"></canvas></div>
 </div></div>
 </section>
 
+<section id="resolution">
+<h2>Resolution</h2>
+<p>Every point of I(Q) is an average over a small spread of Q, not a single value, because neither the beam direction nor the neutron wavelength is perfectly defined. Three things set the spread. The <b>angle</b> is blurred by the collimation (the source and sample apertures and the collimation length) and by the size of a detector pixel. The <b>wavelength</b> is blurred by the width of the neutron pulse and by the width of the wavelength bins you chose. Gravity also bends the path of slow neutrons, and Mantid can include this. The two main contributions add in quadrature: (&sigma;Q/Q)&sup2; = (&sigma;&theta;/&theta;)&sup2; + (&sigma;&lambda;/&lambda;)&sup2;. The formulae here are simplified for illustration; Mantid uses a fuller calculation, set under Q resolution in the <a href="#gui" style="color:var(--accent3);font-weight:600">Settings tab</a>.</p>
+<p>You can look at two kinds of sample: the smooth sphere form factor used elsewhere on this page, or sharp crystalline peaks from a lamellar phase, which gives a series of sharp, equally spaced peaks at whole-number multiples of the first. Peaks make the effect of resolution much easier to see. You can also tick the X-ray option to compare. A laboratory X-ray instrument has a fixed, nearly single wavelength and a very small beam, so its resolution is far finer than a time-of-flight neutron instrument, which trades resolution for flux, a wide range of Q in one measurement, and neutron-specific contrast and penetration. The comparison shows the same structure, so only the shapes are comparable, not the intensities.</p>
+<div class="box">
+<div class="rgrid">
+<div class="grp"><h3>1. Sample</h3><p class="sub">What is being measured.</p>
+<div class="ctl" data-tip="Sphere: a smooth form factor whose minima are easily filled in by poor resolution. Lamellar: stacked layers give sharp, equally spaced peaks at Q&#8321;, 2Q&#8321;, 3Q&#8321; and so on, which is a much tougher test of resolution."><label for="rSam">Sample type<i class="tipi" aria-hidden="true">i</i></label><select id="rSam"><option value="sph">Sphere form factor</option><option value="cry">Lamellar (crystalline peaks)</option></select></div>
+<div class="ctl" data-tip="Position of the first lamellar peak. The layer spacing is d = 2&pi;/Q&#8321;. Smaller Q&#8321; means a larger repeat distance, and the peak then sits where the angular resolution is poorest."><label for="rA">First peak position, Q&#8321;: <b id="rAV">0.030 Å⁻¹</b><i class="tipi" aria-hidden="true">i</i></label><input type="range" id="rA" min="0.02" max="0.15" step="0.005" value="0.03" aria-label="First peak position"></div>
+</div>
+<div class="grp"><h3>2. X-ray comparison</h3><p class="sub">Optional overlay of the same structure measured with X-rays.</p>
+<div class="ctl" data-tip="Overlays an X-ray measurement of the same structure. X-ray instruments have a fixed, nearly single wavelength and a tiny beam, so their resolution is much finer. Only the shapes can be compared, not the intensities."><label class="chk" for="rX"><input type="checkbox" id="rX"> Compare with X-ray scattering<i class="tipi" aria-hidden="true">i</i></label></div>
+<div class="ctl" data-tip="Cu K&alpha; is 1.54 &Aring; and Mo K&alpha; is 0.71 &Aring;. A longer wavelength reaches lower Q on the same detector. The X-ray also uses your L1 and L2, a 0.3 mm beam, a 0.172 mm pixel and a 0.5% wavelength spread."><label for="rXL">X-ray wavelength: <b id="rXLV">1.54 Å</b><i class="tipi" aria-hidden="true">i</i></label><input type="range" id="rXL" min="0.7" max="2" step="0.01" value="1.54" aria-label="X-ray wavelength"></div>
+</div>
+<div class="grp"><h3>3. Neutron geometry</h3><p class="sub">The beam angle: collimation and detector.</p>
+<div class="ctl" data-tip="Distance from the sample to the detector. A longer L2 shrinks the angular blur from the pixel and apertures but moves the Q range you can see to lower Q. ISIS SANS instruments offer a range of distances."><label for="rL2">Sample to detector distance, L2: <b id="rL2V">4 m</b><i class="tipi" aria-hidden="true">i</i></label><input type="range" id="rL2" min="1" max="12" step="0.5" value="4" aria-label="Sample to detector distance"></div><div class="ctl" data-tip="Distance between the source aperture and the sample aperture. A longer collimation length makes the beam less divergent, which improves resolution but reduces the number of neutrons."><label for="rL1">Collimation length, L1: <b id="rL1V">4 m</b><i class="tipi" aria-hidden="true">i</i></label><input type="range" id="rL1" min="1" max="12" step="0.5" value="4" aria-label="Collimation length"></div><div class="ctl" data-tip="Diameter of the aperture nearest the moderator. A larger aperture lets more neutrons through but makes the beam more divergent."><label for="rD1">Source aperture diameter: <b id="rD1V">20 mm</b><i class="tipi" aria-hidden="true">i</i></label><input type="range" id="rD1" min="5" max="40" step="1" value="20" aria-label="Source aperture diameter"></div><div class="ctl" data-tip="Diameter of the aperture at the sample, which sets the beam size on the sample. A smaller aperture improves resolution but reduces the count rate."><label for="rD2">Sample aperture diameter: <b id="rD2V">8 mm</b><i class="tipi" aria-hidden="true">i</i></label><input type="range" id="rD2" min="2" max="20" step="1" value="8" aria-label="Sample aperture diameter"></div><div class="ctl" data-tip="Size of one detector pixel. It blurs the scattering angle by about the pixel size divided by L2, so it matters most at short distances."><label for="rPx">Detector pixel size: <b id="rPxV">5 mm</b><i class="tipi" aria-hidden="true">i</i></label><input type="range" id="rPx" min="1" max="10" step="0.5" value="5" aria-label="Detector pixel size"></div>
+</div>
+<div class="grp"><h3>4. Neutron wavelength</h3><p class="sub">Time of flight: wavelength comes from arrival time.</p>
+<div class="ctl" data-tip="On a time-of-flight instrument the wavelength is worked out from the arrival time, so the pulse width and the bin width both blur it. Untick to see the geometry alone, as for a perfectly defined wavelength."><label class="chk" for="rTof"><input type="checkbox" id="rTof" checked> Include the wavelength spread<i class="tipi" aria-hidden="true">i</i></label></div>
+<div class="ctl" data-tip="The spread in the time at which neutrons leave the moderator (standard deviation, 0 to 500 &micro;s). It gives a wavelength spread of &sigma;t/t, where t is the flight time, so it matters most for short wavelengths, which arrive earliest."><label for="rT">Neutron pulse width (standard deviation): <b id="rTV">200 µs</b><i class="tipi" aria-hidden="true">i</i></label><input type="range" id="rT" min="0" max="500" step="10" value="200" aria-label="Neutron pulse width in microseconds"></div><div class="ctl" data-tip="The width of the wavelength bins from your user file, as a fraction of the wavelength (for example 5%). It adds a spread of the bin width divided by &radic;12."><label for="rB">Wavelength bin width, &Delta;&lambda;/&lambda;: <b id="rBV">5%</b><i class="tipi" aria-hidden="true">i</i></label><input type="range" id="rB" min="1" max="20" step="1" value="5" aria-label="Wavelength bin width"></div>
+</div>
+</div>
+<div class="rplots">
+<div class="pnl"><h3>How sharp is the measurement?</h3><p class="sub">Relative width of each Q bin, &sigma;Q/Q. Lower is better.</p>
+<canvas id="cRes1" width="560" height="300" aria-label="Relative Q resolution against Q for four wavelengths"></canvas>
+<div class="legend" id="rLeg1"></div>
+<p class="note">Each wavelength covers only part of the Q range. Resolution is worst at low Q, where the scattering angle is small compared with the beam size.</p>
+<p class="note" id="rNote"></p></div>
+<div class="pnl"><h3>What it does to the data</h3><p class="sub">The true curve and what you would measure at one wavelength.</p>
+<div class="ctl" data-tip="Which neutron wavelength is drawn in this plot. Short wavelengths reach high Q and long wavelengths reach low Q, and the resolution is different for each."><label for="rLam">Neutron wavelength shown: <b id="rLamV">6 Å</b><i class="tipi" aria-hidden="true">i</i></label><input type="range" id="rLam" min="1" max="16" step="0.5" value="6" aria-label="Neutron wavelength for the smearing plot"></div>
+<canvas id="cRes2" width="560" height="300" aria-label="Scattering with and without resolution smearing"></canvas>
+<div class="legend" id="rLeg2"></div>
+<p class="note" id="rNote2"></p></div>
+</div>
+</div>
+</section>
+
 <section id="multi">
 <h2>Multiple scattering</h2>
 <p>Longer wavelengths are scattered more strongly, so a neutron is more likely to scatter twice in the sample. The reduction assumes each neutron scatters once. Tick any wavelengths from 1 to 16 Å to overlay them, and raise the scattering strength to see how double and triple scattering fill in the minima and smear the curve. On a time-of-flight instrument every wavelength measures a different slice of Q: long wavelengths reach low Q and short wavelengths reach high Q. A sphere of radius 50 Å is used, and a small flat background (0.003 cm⁻¹) is added to every curve, as in a real measurement, so nothing falls to zero.</p>
-<div class="box"><div class="row">
+<div class="box"><label style="display:block;margin-bottom:12px">Sample <select id="mSam"><option value="sph">Sphere form factor</option><option value="lam">Lamellar phase (first peak at 0.03 Å⁻¹)</option></select></label>
+<div class="row">
 <div>
 <p style="margin:0 0 4px;font-size:15px">Neutron wavelength (Å), tick any to overlay:</p>
 <div id="mlist" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0 6px"></div>
@@ -225,7 +295,7 @@ footer{padding:30px 0 50px;color:var(--mute);font-size:14px}
 </section>
 
 </main>
-<footer><div style="max-width:1000px;margin:0 auto;padding:0 20px">Illustrative simulated data. Detector geometry and Q range are representative only; refer to the instrument page and the Mantid documentation for the settings used on your experiment.</div></footer>
+<footer><div style="max-width:1000px;margin:0 auto;padding:0 20px">Illustrative simulated data. Detector geometry and Q range are representative only; refer to the instrument page and the Mantid documentation for the settings used on your experiment.<p style="margin:10px 0 0">&copy; 2026 Lauren Matthews. Developed with the assistance of Claude (Anthropic). Text and figures licensed under <a style="color:inherit" rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; source code under the <a style="color:inherit" href="../LICENSE.txt">MIT License</a>. Third-party material is excluded; see <a style="color:inherit" href="credits.html">Credits</a>.</p></div></footer>
 
 <script>
 (function(){
@@ -246,8 +316,8 @@ function plot(cv,series,o){
   c.clearRect(0,0,W,H);c.setLineDash([]);c.font="12px IBM Plex Sans,sans-serif";c.fillStyle=css("--mute");c.strokeStyle=css("--grid");c.lineWidth=1;
   for(var e=Math.ceil(lx(ys[0]));e<=Math.floor(lx(ys[1]));e++){var y=Y(Math.pow(10,e));c.beginPath();c.moveTo(m.l,y);c.lineTo(W-m.r,y);c.stroke();c.textAlign="right";c.fillText("1e"+e,m.l-6,y+4)}
   for(e=Math.ceil(lx(xs[0]));e<=Math.floor(lx(xs[1]));e++){var x=X(Math.pow(10,e));c.beginPath();c.moveTo(x,m.t);c.lineTo(x,H-m.b);c.stroke();c.textAlign="center";c.fillText("1e"+e,x,H-m.b+16)}
-  c.textAlign="center";c.fillText("Q (1/Å)",(W+m.l)/2,H-4);
-  c.save();c.translate(12,H/2);c.rotate(-Math.PI/2);c.fillText("I(Q) (1/cm)",0,0);c.restore();
+  c.textAlign="center";c.fillText(o.xl||"Q (1/Å)",(W+m.l)/2,H-4);
+  c.save();c.translate(12,H/2);c.rotate(-Math.PI/2);c.fillText(o.yl||"I(Q) (1/cm)",0,0);c.restore();
   if(o.shade){c.save();c.fillStyle=css("--soft");c.globalAlpha=.9;c.fillRect(X(o.shade[0]),m.t,X(o.shade[1])-X(o.shade[0]),H-m.t-m.b);c.restore()}
   series.forEach(function(s){
     c.strokeStyle=c.fillStyle=s.color;c.lineWidth=s.w||2;c.setLineDash(s.dash||[]);
@@ -255,11 +325,15 @@ function plot(cv,series,o){
       if(p.e){var y1=Y(Math.max(p.y-p.e,ys[0])),y2=Y(p.y+p.e);c.lineWidth=1.3;c.beginPath();c.moveTo(px,y1);c.lineTo(px,y2);c.moveTo(px-3,y1);c.lineTo(px+3,y1);c.moveTo(px-3,y2);c.lineTo(px+3,y2);c.stroke()}
       c.beginPath();c.arc(px,Y(p.y),2.6,0,7);c.fill()});return}
     c.beginPath();var f=false;
-    var lo=s.r?s.r[0]:xs[0],hi=s.r?s.r[1]:xs[1];for(var i=0;i<=200;i++){var q=lo*Math.pow(hi/lo,i/200),v=s.f(q);if(!(v>ys[0])){f=false;continue}
+    var lo=s.r?s.r[0]:xs[0],hi=s.r?s.r[1]:xs[1];var nn=s.n||200;for(var i=0;i<=nn;i++){var q=lo*Math.pow(hi/lo,i/nn),v=s.f(q);if(!(v>ys[0])){f=false;continue}
       f?c.lineTo(X(q),Y(v)):c.moveTo(X(q),Y(v));f=true}
     c.stroke()});
 }
 var XR=[0.004,0.4];
+/* lamellar powder pattern: peaks at n*LQ1, with a Gaussian width sg chosen to suit each section */
+var LQ1=0.03,LH=null;
+function lamI(q,sg){if(!LH){LH=[];var mx=0,n,x;for(n=1;n*LQ1<1.2;n++){x=n*Math.PI*0.35;var H=Math.pow(Math.sin(x)/x,2)/(n*n);LH.push({q:n*LQ1,H:H});if(H>mx)mx=H}LH.forEach(function(e){e.H=50*e.H/mx})}
+  var v=INC;for(var i=0;i<LH.length;i++){var d=(q-LH[i].q)/sg;if(d>6||d<-6)continue;v+=LH[i].H*Math.exp(-0.5*d*d)}return v}
 
 /* ---- corrections ---- */
 function meas(Q,k,errPct,tf){tf=tf||TRUE;
@@ -352,9 +426,9 @@ function showStep(i){var S=steps();cur=Math.min(i,S.length-1);var s=S[cur],ink=c
   else{
     drawMap(k,$("cMap"),1);
     $("mapNote").textContent="Qx-Qy map of an isotropic sample. Lines mark the sectors plotted on the right.";
-    plot(cP,[{f:function(q){return fullAvg(k,q,1)},color:ink,w:2.5},{f:function(q){return secAvg(k,q,0,Math.PI/12,7,1)},color:a1},{f:function(q){return secAvg(k,q,Math.PI/2,Math.PI/12,7,1)},color:a2,dash:[6,4]}],{xr:XR,yr:yr});
-    legend([{c:ink,t:"Full azimuthal average (what 1D gives)"},{c:a1,t:"Horizontal sector (±15°)"},{c:a2,t:"Vertical sector (±15°)",dash:1}]);
-    $("pNote").textContent="The three curves lie on top of each other because the scattering is the same in every direction, so a 1D reduction loses nothing here."}}
+    var mu=css("--mute");plot(cP,[{f:TRUE,color:ink,w:1},{f:function(q){return fullAvg(k,q,1)},color:mu,w:2.5},{f:function(q){return secAvg(k,q,0,Math.PI/12,7,1)},color:a1},{f:function(q){return secAvg(k,q,Math.PI/2,Math.PI/12,7,1)},color:a2,dash:[6,4]}],{xr:XR,yr:yr});
+    legend([{c:ink,t:"True sample scattering"},{c:mu,t:"Full azimuthal average (what 1D gives)"},{c:a1,t:"Horizontal sector (±15°)"},{c:a2,t:"Vertical sector (±15°)",dash:1}]);
+    $("pNote").textContent="The three reduced curves lie on top of each other because the scattering is the same in every direction, so a 1D reduction loses nothing here. As the corrections are applied they converge on the true sample scattering."}}
 $("el").addEventListener("input",function(){EL=+this.value;$("elV").textContent=EL.toFixed(2);showStep(cur)});
 [].forEach.call($("modeTabs").children,function(b){b.onclick=function(){mode=+b.dataset.m;[].forEach.call($("modeTabs").children,function(x){x.setAttribute("aria-selected",x===b)});buildSteps();showStep(0)}});
 buildSteps();
@@ -383,7 +457,9 @@ GS.classList.add("all");gDraw();
 /* ---- detector ---- */
 var N=128,TC={x:67,y:61},UC={x:64,y:64},QP=0.0032,img=null,cD=$("cDet"),cDP=$("cDetPlot"),drag=false;
 var raw=new Float32Array(N*N);
-(function(){for(var y=0;y<N;y++)for(var x=0;x<N;x++){var r=Math.hypot(x-TC.x,y-TC.y);raw[y*N+x]=TRUE(Math.max(r,1)*QP)*(1+0.0*r)}})();
+function DT(q){return $("dSam").value==="lam"?lamI(q,0.003):TRUE(q)}
+function rebuildRaw(){for(var y=0;y<N;y++)for(var x=0;x<N;x++){var r=Math.hypot(x-TC.x,y-TC.y);raw[y*N+x]=DT(Math.max(r,1)*QP)}}
+rebuildRaw();
 function avg(c,mr){var nb=45,lo=Math.log(0.004),hi=Math.log(0.3),s=new Float64Array(nb),n=new Float64Array(nb);
   for(var y=0;y<N;y++)for(var x=0;x<N;x++){var r=Math.hypot(x+.5-c.x,y+.5-c.y);if(r<mr)continue;var q=r*QP;if(q<0.004||q>=0.3)continue;
     var b=Math.floor((Math.log(q)-lo)/(hi-lo)*nb);s[b]+=raw[y*N+x];n[b]++}
@@ -397,29 +473,31 @@ function drawDet(){
   c.lineWidth=2;c.strokeStyle="#fff";c.beginPath();c.arc(UC.x*S,UC.y*S,mr*S,0,7);c.fillStyle="rgba(255,255,255,.3)";c.fill();c.stroke();
   c.fillStyle="#fff";c.beginPath();c.arc(TC.x*S,TC.y*S,3,0,7);c.fill();
   c.strokeStyle="#ffb020";c.beginPath();c.moveTo(UC.x*S-9,UC.y*S);c.lineTo(UC.x*S+9,UC.y*S);c.moveTo(UC.x*S,UC.y*S-9);c.lineTo(UC.x*S,UC.y*S+9);c.stroke();
-  plot(cDP,[{f:TRUE,color:css("--ink"),w:1.5},{pts:avg(UC,mr),color:css("--accent2")}],{xr:XR,yr:[1e-2,1e2]});
+  plot(cDP,[{f:DT,color:css("--ink"),w:1.5},{pts:avg(UC,mr),color:css("--accent2")}],{xr:XR,yr:[1e-2,1e2]});
   var off=Math.hypot(UC.x-TC.x,UC.y-TC.y);
-  $("dNote").innerHTML=off<0.8?"Centre is within a pixel of the true value: the minima line up.":"<span class='warn'>Centre is "+off.toFixed(1)+" pixels off.</span> Minima fill in and shift. A good centre gives sharp minima."}
+  $("dNote").innerHTML=off<0.8?"Centre is within a pixel of the true value: "+($("dSam").value==="lam"?"the peaks are sharp.":"the minima line up."):"<span class='warn'>Centre is "+off.toFixed(1)+" pixels off.</span> "+($("dSam").value==="lam"?"The peaks broaden and drop. A good centre gives sharp peaks.":"Minima fill in and shift. A good centre gives sharp minima.")}
 function pos(e){var r=cD.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*N,y:(e.clientY-r.top)/r.height*N}}
 cD.addEventListener("pointerdown",function(e){drag=true;cD.setPointerCapture(e.pointerId);UC=pos(e);drawDet()});
 cD.addEventListener("pointermove",function(e){if(drag){UC=pos(e);drawDet()}});
 cD.addEventListener("pointerup",function(){drag=false});
-$("mask").addEventListener("input",drawDet);$("dReset").onclick=function(){UC={x:64,y:64};drawDet()};
+$("mask").addEventListener("input",drawDet);$("dSam").addEventListener("input",function(){rebuildRaw();drawDet()});$("dReset").onclick=function(){UC={x:64,y:64};drawDet()};
 
 /* ---- binning ---- */
 var cB=$("cBin");
 function rnd(i){var x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x)-.5}
+function BT(q){return $("bSam").value==="lam"?lamI(q,0.0012):TRUE(q)}
+function binAvg(q0,q1,qc){if($("bSam").value!=="lam")return TRUE(qc);var a=0,n=15;for(var j=0;j<n;j++)a+=BT(q0+(q1-q0)*(j+.5)/n);return a/n}
 function drawBin(){
   var n=+$("bN").value,t=+$("bT").value,lin=$("bMode").value==="lin";$("bNV").textContent=n;$("bTV").textContent=t+"x";
   var a=0.006,b=0.3,pts=[],near=null,K=1e5;
   for(var i=0;i<n;i++){
     var q0=lin?a+(b-a)*i/n:a*Math.pow(b/a,i/n),q1=lin?a+(b-a)*(i+1)/n:a*Math.pow(b/a,(i+1)/n),q=Math.sqrt(q0*q1);
-    var I=TRUE(q),N=Math.max(K*t*I*q*(q1-q0),1e-3),e=I/Math.sqrt(N),g=2*(rnd(i*2+1)+rnd(i*2+2)+rnd(i*5+3));
+    var I=binAvg(q0,q1,q),N=Math.max(K*t*I*q*(q1-q0),1e-3),e=I/Math.sqrt(N),g=2*(rnd(i*2+1)+rnd(i*2+2)+rnd(i*5+3));
     pts.push({x:q,y:I+e*g,e:e});if(!near||Math.abs(q-0.05)<Math.abs(near.x-0.05))near={x:q,r:1/Math.sqrt(N)}}
-  plot(cB,[{f:TRUE,color:css("--ink"),w:1},{pts:pts,color:css("--accent")}],{xr:XR,yr:[1e-3,1e2]});
+  plot(cB,[{f:BT,color:css("--ink"),w:1,n:$("bSam").value==="lam"?900:200},{pts:pts,color:css("--accent")}],{xr:XR,yr:[1e-3,1e2]});
   var rel=near.r*100;
-  $("bNote").innerHTML="Error bars show ±1 standard deviation. Statistical error goes as 1/√counts: relative error near 0.05 Å⁻¹ is <b>"+rel.toFixed(rel<10?1:0)+"%</b>. Counting 4x as long halves it. "+(lin?"Linear bins starve the low-Q end of counts, so the error bars there are large.":"Log bins share the counts more evenly across Q, so the error bars are similar along most of the curve.")}
-["bN","bT","bMode"].forEach(function(i){$(i).addEventListener("input",drawBin)});
+  $("bNote").innerHTML="Error bars show ±1 standard deviation. Statistical error goes as 1/√counts: relative error near 0.05 Å⁻¹ is <b>"+rel.toFixed(rel<10?1:0)+"%</b>. Counting 4x as long halves it. "+(lin?"Linear bins starve the low-Q end of counts, so the error bars there are large.":"Log bins share the counts more evenly across Q, so the error bars are similar along most of the curve.")+($("bSam").value==="lam"?" With the lamellar sample, wide bins blur the peaks together and narrow bins resolve them at the cost of noisier points.":"")}
+["bN","bT","bMode","bSam"].forEach(function(i){$(i).addEventListener("input",drawBin)});
 
 /* ---- transmission ---- */
 function calcT(){var s=+$("tS").value,d=+$("tD").value,c=+$("tC").value;
@@ -454,10 +532,11 @@ function J1(x){var ax=Math.abs(x);if(ax<8){var y=x*x;return x*(72362614232.0+y*(
 /* The scattered-neutron distribution is a radial function F(q). Its 2D Fourier (Hankel) transform H(r) turns n-fold
    convolutions into powers, so the sum over all orders is (N/mu)*(exp(mu*H/N)-1), transformed back. */
 var NQ=750,DQ=0.002,NR=500,DR=2,msH=null,msN=1,cMS=$("cMS");
-function msInit(){var F=[],i,j;for(i=0;i<NQ;i++)F.push(I0*sph((i+.5)*DQ,R0));
+function msF(q){return $("mSam").value==="lam"?lamI(q,0.004):I0*sph(q,R0)}
+function msInit(){var F=[],i,j;for(i=0;i<NQ;i++)F.push(msF((i+.5)*DQ));
   msH=new Float64Array(NR);msN=0;for(i=0;i<NQ;i++)msN+=F[i]*(i+.5)*DQ*DQ;msN*=2*Math.PI;
   for(j=0;j<NR;j++){var r=(j+.5)*DR,t=0;for(i=0;i<NQ;i++){var q=(i+.5)*DQ;t+=F[i]*J0(q*r)*q*DQ}msH[j]=2*Math.PI*t/msN}}
-function msI(q,mu){if(mu<1e-4)return I0*sph(q,R0);var t=0;for(var j=0;j<NR;j++){var r=(j+.5)*DR;t+=(Math.exp(mu*msH[j])-1-mu*msH[j])*J0(q*r)*r*DR}return I0*sph(q,R0)+msN/mu*t/(2*Math.PI)}
+function msI(q,mu){if(mu<1e-4)return msF(q);var t=0;for(var j=0;j<NR;j++){var r=(j+.5)*DR;t+=(Math.exp(mu*msH[j])-1-mu*msH[j])*J0(q*r)*r*DR}return msF(q)+msN/mu*t/(2*Math.PI)}
 function muOf(l){return +$("mm").value/100*Math.pow(l/10,2)}
 function lamCol(k){var h=Math.round(275-(k-1)*18.3);return "hsl("+h+",90%,"+(h>45&&h<105?36:46)+"%)"}
 var MSBG=0.003;
@@ -467,15 +546,15 @@ for(var kk=1;kk<=16;kk++)(function(k){var l=document.createElement("label");l.st
 function msSet(v){[].forEach.call(mlist.querySelectorAll("input"),function(c){c.checked=v});drawMS()}
 $("mAllB").onclick=function(){msSet(true)};$("mNoneB").onclick=function(){msSet(false)};
 function msQR(l){var f=function(r){return 4*Math.PI*Math.sin(0.5*Math.atan(r/4000))/l};return[Math.max(0.003,f(25)),Math.min(1,f(490))]}
-function drawMS(){if(!msH)msInit();
+function drawMS(){if(!msH)msInit();var NP=$("mSam").value==="lam"?700:200;
   var ks=[].filter.call(mlist.querySelectorAll("input"),function(c){return c.checked}).map(function(c){return+c.dataset.k}),rng=$("mRange").checked;$("mmV").textContent=$("mm").value+"%";
-  var ser=[{f:function(q){return MSBG+I0*sph(q,R0)},color:css("--ink"),w:1.5,dash:[6,4],r:[0.003,1]}],note=[];
+  var ser=[{f:function(q){return MSBG+msF(q)},color:css("--ink"),w:1.5,dash:[6,4],r:[0.003,1],n:NP}],note=[];
   ks.forEach(function(k){var m2=muOf(k),r=rng?msQR(k):[0.003,1];if(!(r[1]>r[0]))return;
-    ser.push({f:function(q){return MSBG+Math.max(0,msI(q,m2))},color:lamCol(k),w:2,r:r});
+    ser.push({f:function(q){return MSBG+Math.max(0,msI(q,m2))},color:lamCol(k),w:2,r:r,n:NP});
     var pS=1-Math.exp(-m2),fm=m2>1e-6?1-m2*Math.exp(-m2)/pS:0;note.push(k+" Å: "+(fm*100).toFixed(0)+"%")});
   plot(cMS,ser,{xr:[0.003,1],yr:[1e-4,100]});
   $("mNote").textContent=ks.length?"Share of scattered neutrons that scatter more than once, "+note.join(", ")+". Where curves overlap in Q they should agree; the longer wavelengths drift away first because they scatter more. Over 10% is significant.":"Tick one or more wavelengths."}
-["mm","mRange"].forEach(function(i){$(i).addEventListener("input",drawMS)});
+["mm","mRange"].forEach(function(i){$(i).addEventListener("input",drawMS)});$("mSam").addEventListener("input",function(){msH=null;drawMS()});
 
 /* ---- time of flight ---- */
 var TL1=19.3,TL2=4.0,TK=252.78*(TL1+TL2)/1000,SIGP=0.13;
@@ -538,7 +617,45 @@ $("tr").addEventListener("input",drawTof);
 $("tfPlay").onclick=function(){if(tPlay){clearInterval(tPlay);tPlay=null;this.textContent="Play";return}this.textContent="Pause";
   tPlay=setInterval(function(){var v=+$("tf").value+0.5;if(v>100)v=8;$("tf").value=v;drawTof()},90)};
 
-function all(){showStep(cur);drawMS();drawTof();drawCorr();drawDet();drawBin();calcT();drawFiles()}
+/* ---- resolution ---- */
+var cR1=$("cRes1"),cR2=$("cRes2"),RC=[2,4,8,16],rCry={a:0,sh:null};
+function rQR(l,L2){var f=function(r){return 4*Math.PI*Math.sin(0.5*Math.atan(r/(L2*1000)))/l};return[Math.max(0.003,f(25)),Math.min(1,f(490))]}
+function rPar(){return{L2:+$("rL2").value,L1:+$("rL1").value,d1:+$("rD1").value,d2:+$("rD2").value,dr:+$("rPx").value,st:+$("rT").value/1000,bin:+$("rB").value/100,lw:+$("rLam").value,tof:$("rTof").checked,cry:$("rSam").value==="cry",a:+$("rA").value,xr:$("rX").checked,xl:+$("rXL").value}}
+function rTerms(Q,l,p){var th=Math.asin(Math.min(1,Q*l/(4*Math.PI))),
+  g=Math.sqrt(Math.pow(p.d1/p.L1,2)+Math.pow(p.d2*(1/p.L1+1/p.L2),2)+Math.pow(p.dr/p.L2,2))*1e-3/4,
+  a=g/(2*th),w=p.fixw!==undefined?p.fixw:(p.tof?Math.sqrt(Math.pow(p.st/(TK*l),2)+p.bin*p.bin/12):0);
+  return{a:a,w:w,tot:Math.sqrt(a*a+w*w)}}
+function cryF(a){if(rCry.a!==a){var sh=[],mx=0,n,x;for(n=1;n<=40&&n*a<0.6;n++){x=n*Math.PI*0.35;var H=Math.pow(Math.sin(x)/x,2)/(n*n);sh.push({q:n*a,H:H});if(H>mx)mx=H}sh.forEach(function(e){e.H=50*e.H/mx});rCry={a:a,sh:sh}}return rCry.sh}
+function cryI(q,a){var sh=cryF(a),v=INC,sg=0.0005;for(var i=0;i<sh.length;i++){var e=sh[i],d=(q-e.q)/sg;if(d>6||d<-6)continue;v+=e.H*Math.exp(-0.5*d*d)}return v}
+function rTrue(q,sp){return sp.cry?cryI(q,sp.a):TRUE(q)}
+function smear(q,l,rp,sp){var s=q*rTerms(q,l,rp).tot,n=sp.cry?61:31,a=0,w=0;
+  for(var k=0;k<n;k++){var u=-3.5+7*k/(n-1),qq=q+u*s;if(qq<=0)continue;var g=Math.exp(-0.5*u*u);a+=g*rTrue(qq,sp);w+=g}return a/w}
+function drawRes(){var p=rPar(),xp={L1:p.L1,L2:p.L2,d1:0.3,d2:0.3,dr:0.172,fixw:0.005},ac=css("--accent"),a2=css("--accent2"),ink=css("--ink");
+  $("rL2V").textContent=p.L2+" m";$("rL1V").textContent=p.L1+" m";$("rD1V").textContent=p.d1+" mm";$("rD2V").textContent=p.d2+" mm";
+  $("rPxV").textContent=p.dr+" mm";$("rTV").textContent=Math.round(p.st*1000)+" µs";$("rBV").textContent=Math.round(p.bin*100)+"%";$("rLamV").textContent=p.lw+" Å";
+  $("rAV").textContent=p.a.toFixed(3)+" Å⁻¹";$("rXLV").textContent=p.xl.toFixed(2)+" Å";
+  $("rT").disabled=$("rB").disabled=!p.tof;$("rA").disabled=!p.cry;$("rXL").disabled=!p.xr;
+  var lc=function(l){return lamCol(l===2?1:l===4?4:l===8?10:16)},ser1=RC.map(function(l){return{f:function(q){return rTerms(q,l,p).tot},color:lc(l),w:2,r:rQR(l,p.L2)}});
+  if(p.xr)ser1.push({f:function(q){return rTerms(q,p.xl,xp).tot},color:ac,w:2.5,dash:[6,4],r:rQR(p.xl,p.L2)});
+  plot(cR1,ser1,{xr:[0.003,1],yr:[1e-3,1],yl:"σQ / Q"});
+  $("rLeg1").innerHTML=RC.map(function(l){return "<span><i class='key' style='background:"+lc(l)+"'></i>Neutron "+l+" Å</span>"}).join("")+(p.xr?"<span><i class='key' style='background:repeating-linear-gradient(90deg,"+ac+" 0 6px,transparent 6px 10px)'></i>X-ray "+p.xl.toFixed(2)+" Å</span>":"");
+  var r=rQR(p.lw,p.L2),rx=rQR(p.xl,p.L2),q0=Math.sqrt(r[0]*r[1]),T=rTerms(q0,p.lw,p),n2=p.cry?1500:200;
+  var ser=[{f:function(q){return rTrue(q,p)},color:ink,w:1.2,n:n2},{f:function(q){return smear(q,p.lw,p,p)},color:a2,w:2,r:r,n:n2}];
+  if(p.xr)ser.push({f:function(q){return smear(q,p.xl,xp,p)},color:ac,w:2,r:rx,n:n2});
+  plot(cR2,ser,{xr:XR,yr:[1e-2,1e2]});
+  $("rLeg2").innerHTML="<span><i class='key' style='background:"+ink+"'></i>True curve</span><span><i class='key' style='background:"+a2+"'></i>Neutron, "+p.lw+" Å, smeared</span>"+(p.xr?"<span><i class='key' style='background:"+ac+"'></i>X-ray, "+p.xl.toFixed(2)+" Å, smeared</span>":"");
+  var pc=function(v){return (v*100).toFixed(v<0.1?1:0)+"%"};
+  $("rNote").innerHTML="Neutron at "+p.lw+" Å and Q = "+q0.toFixed(3)+" Å⁻¹ (middle of the detector range): angle "+pc(T.a)+", wavelength "+pc(T.w)+", total <b>"+pc(T.tot)+"</b>. "+(T.tot>0.15?"<span class='warn'>This is a broad resolution and will visibly smear the oscillations.</span>":T.a>T.w?"The angular (geometry) term dominates here.":"The wavelength term dominates here: narrower bins or a shorter pulse help.");
+  var m2="It is drawn over the Q range the rear detector sees at each wavelength.";
+  if(p.cry){var q1=cryF(p.a)[0].q,tn=rTerms(q1,p.lw,p).tot,tx=rTerms(q1,p.xl,xp).tot,inN=q1>=r[0]&&q1<=r[1],inX=q1>=rx[0]&&q1<=rx[1];
+    m2="The first peak is at Q = "+q1.toFixed(4)+" Å⁻¹ (layer spacing d = "+(2*Math.PI/q1).toFixed(0)+" Å), with further peaks at 2, 3, 4 and so on times that Q. The peaks have a small intrinsic width, so what you see is mostly the resolution. "+(inN?"For the neutron measurement &sigma;Q/Q there is "+pc(tn)+", so neighbouring peaks "+(tn>0.04?"start to merge.":"stay separate."):"The first peak is outside the neutron detector range at this wavelength and L2.")+(p.xr?(inX?" For the X-ray measurement it is "+pc(tx)+", so the peaks stay sharp.":" The first peak is outside the X-ray detector range at this L2."):"")+" "+m2}
+  else m2="Smearing fills in the sphere minima and softens the oscillations, most strongly where &sigma;Q/Q is large. "+(p.xr?"The X-ray curve follows the true curve more closely because its resolution is finer. ":"")+m2;
+  $("rNote2").innerHTML=m2}
+function rTip(){var c=$("rSam").value==="cry";$("rSam").parentNode.setAttribute("data-tip",c?"Lamellar: stacked layers give sharp, equally spaced peaks at Q\u2081, 2Q\u2081, 3Q\u2081 and so on. This is a much tougher test of resolution, because poor resolution broadens and merges the peaks.":"Sphere: a smooth form factor whose minima are easily filled in by poor resolution.")}
+$("rSam").addEventListener("input",rTip);rTip();
+["rL2","rL1","rD1","rD2","rPx","rT","rB","rLam","rTof","rSam","rA","rX","rXL"].forEach(function(i){$(i).addEventListener("input",drawRes)});
+
+function all(){showStep(cur);drawMS();drawTof();drawCorr();drawDet();drawBin();drawRes();calcT();drawFiles()}
 all();
 window.matchMedia("(prefers-color-scheme:dark)").addEventListener("change",all);window.addEventListener("themechange",all);
 })();
@@ -546,9 +663,10 @@ window.matchMedia("(prefers-color-scheme:dark)").addEventListener("change",all);
 <script>
 (function(){var r=document.documentElement,m=matchMedia("(prefers-color-scheme: dark)"),b=document.getElementById("theme");
 function dark(){var t=r.dataset.theme;return t?t==="dark":m.matches}
-function label(){b.textContent=dark()?"Light mode":"Dark mode"}
+function label(){var d=dark();document.getElementById("themeIcon").textContent=d?"☀️":"🌙";document.getElementById("themeLabel").textContent=d?"Light mode":"Dark mode"}
 b.onclick=function(){r.dataset.theme=dark()?"light":"dark";label();window.dispatchEvent(new Event("themechange"))};
 m.addEventListener("change",label);label()})();
 </script>
+<script src="nav.js"></script>
 </body>
 </html>

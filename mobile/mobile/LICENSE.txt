@@ -1,0 +1,51 @@
+ISIS SANS 101
+Copyright (c) 2026 Lauren Matthews.
+Developed with the assistance of Claude (Anthropic).
+
+This site is released under two licences.
+
+------------------------------------------------------------------------
+1. TEXT, DIAGRAMS AND FIGURES
+------------------------------------------------------------------------
+Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+
+You may copy, redistribute and adapt this material for any purpose,
+provided that you:
+  - give appropriate credit, link to the licence and indicate any changes;
+  - distribute anything you build from it under the same licence.
+
+Summary:    https://creativecommons.org/licenses/by-sa/4.0/
+Legal code: https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+Suggested credit:
+  "ISIS SANS 101" by Lauren Matthews, licensed under CC BY-SA 4.0.
+
+------------------------------------------------------------------------
+2. SOURCE CODE (HTML, CSS and JavaScript)
+------------------------------------------------------------------------
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------
+3. THIRD-PARTY MATERIAL (NOT COVERED BY THE LICENCES ABOVE)
+------------------------------------------------------------------------
+Photographs, product images, graphics, videos, fonts and software libraries
+supplied by others remain the property of their owners and are used with
+acknowledgement. See html_pages/credits.html for the list.

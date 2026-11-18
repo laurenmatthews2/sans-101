@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>ISIS SANS 101</title>
+<meta name="author" content="Lauren Matthews">
+<meta name="copyright" content="(c) 2026 Lauren Matthews">
+<link rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+<!--
+  ISIS SANS 101
+  Copyright (c) 2026 Lauren Matthews.
+  Developed with the assistance of Claude (Anthropic).
+  Text and figures: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+    https://creativecommons.org/licenses/by-sa/4.0/
+  Source code: MIT License (see LICENSE.txt at the site root).
+  Third-party material is excluded from these licences; see the credits page.
+-->
+    <script>
+        // Set theme before first paint to avoid a flash
+        (function () {
+            var t = null;
+            try { t = localStorage.getItem('sans101-theme'); } catch (e) {}
+            if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #f6f8fb;
+            --surface: #ffffff;
+            --surface-2: #eef2f7;
+            --text: #1f2937;
+            --text-muted: #5b6472;
+            --border: #dfe5ee;
+            --primary: #2b6cb0;
+            --primary-strong: #1a365d;
+            --shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+            --shadow-hover: 0 10px 24px rgba(15, 23, 42, 0.12);
+            --hero-bg: linear-gradient(160deg, #eaf2fc 0%, #f6f8fb 100%);
+            --beam: #2b6cb0;
+            --ring: 43, 108, 176;
+            --larmor: #1d4ed8;
+            --sans2d: #15803d;
+            --zoom: #dc2626;
+            --ok: #15803d;
+        }
+        :root[data-theme="dark"] {
+            --bg: #0b1220;
+            --surface: #121b2e;
+            --surface-2: #19243b;
+            --text: #e5ebf5;
+            --text-muted: #9aa8c0;
+            --border: #25324d;
+            --primary: #63b3ed;
+            --primary-strong: #bee3f8;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 10px 28px rgba(0, 0, 0, 0.55);
+            --hero-bg: radial-gradient(ellipse at 75% 50%, #14264a 0%, #0b1220 70%);
+            --beam: #5eead4;
+            --ring: 94, 234, 212;
+            --larmor: #60a5fa;
+            --sans2d: #4ade80;
+            --zoom: #f87171;
+            --ok: #4ade80;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        a { color: var(--primary); }
+        .wrap { max-width: 920px; margin: 0 auto; padding: 0 20px; }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed; top: 14px; right: 14px; z-index: 10;
+            display: flex; align-items: center; gap: 8px;
+            background: var(--surface); color: var(--text);
+            border: 1px solid var(--border); border-radius: 999px;
+            padding: 8px 14px; font-size: 0.9rem; cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+        .theme-toggle:hover { border-color: var(--primary); }
+        .theme-toggle:focus-visible, .btn:focus-visible, .option:focus-visible, .card a:focus-visible {
+            outline: 3px solid var(--primary); outline-offset: 2px;
+        }
+
+        /* Hero */
+        .hero {
+            position: relative; overflow: hidden;
+            background: var(--hero-bg);
+            border-bottom: 1px solid var(--border);
+        }
+        /* The animation gets its own space so it never runs behind the text:
+           a column on the right on wide screens, a strip along the bottom otherwise. */
+        .hero canvas { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 170px; display: block; pointer-events: none; }
+        @media (min-width: 1000px) {
+            .hero canvas { left: 62%; width: 38%; top: 0; height: 100%; }
+            .hero-inner { padding-bottom: 64px !important; }
+        }
+        .hero-inner { position: relative; padding: 76px 0 190px; }
+        .eyebrow {
+            display: inline-block; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--primary); font-weight: 600; margin-bottom: 10px;
+        }
+        h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.1; margin: 0 0 12px; color: var(--primary-strong); }
+        .subtitle { font-size: 1.15rem; color: var(--text-muted); max-width: 30rem; margin: 0 0 24px; }
+        .btn {
+            display: inline-block; background: var(--primary); color: #fff; text-decoration: none;
+            padding: 10px 20px; border-radius: 8px; font-weight: 600; border: 0; cursor: pointer; font-size: 1rem;
+        }
+        :root[data-theme="dark"] .btn { color: #0b1220; }
+        .btn:hover { filter: brightness(1.1); }
+        .btn.ghost { background: transparent; color: var(--primary); border: 1px solid var(--border); margin-left: 8px; }
+        :root[data-theme="dark"] .btn.ghost { color: var(--primary); }
+
+        /* Fact ticker */
+        .fact {
+            margin-top: 28px; font-size: 0.95rem; color: var(--text-muted);
+            min-height: 3em; max-width: 34rem;
+        }
+        .fact b { color: var(--primary); }
+        .fact span { transition: opacity 0.4s ease; display: inline-block; }
+
+        section { padding: 44px 0 6px; }
+        h2 { font-size: 1.5rem; margin: 0 0 6px; color: var(--primary-strong); }
+        .section-intro { color: var(--text-muted); margin: 0 0 22px; }
+
+        /* Journey */
+        /* Snake layout: JS places each step (left-to-right, then right-to-left, and so on)
+           and sets data-arrow on each step to point at the next one. */
+        .journey { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 32px; position: relative; }
+        .journey li { position: relative; }
+        .journey a {
+            display: block; text-decoration: none; color: var(--text);
+            background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+            padding: 14px 14px 12px; height: 100%; box-shadow: var(--shadow); position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .step-emoji { position: absolute; top: 12px; right: 14px; font-size: 1.6rem; line-height: 1; }
+        .journey a:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); border-color: var(--primary); }
+        .step-num {
+            display: inline-flex; width: 28px; height: 28px; border-radius: 50%;
+            align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;
+            background: var(--primary); color: #fff; margin-bottom: 8px;
+        }
+        :root[data-theme="dark"] .step-num { color: #0b1220; }
+        .journey strong { display: block; }
+        .journey small { color: var(--text-muted); }
+        .journey li[data-arrow]::after {
+            content: attr(data-arrow); position: absolute; display: flex; align-items: center; justify-content: center;
+            color: var(--primary); font-size: 1.4rem; font-weight: 700; line-height: 1; pointer-events: none;
+        }
+        /* Gap between columns is 32px, between rows 40px: arrows are centred in the gap */
+        .journey li[data-dir="right"]::after { left: 100%; top: 0; bottom: 0; width: 32px; }
+        .journey li[data-dir="left"]::after  { right: 100%; top: 0; bottom: 0; width: 32px; }
+        .journey li[data-dir="down"]::after  { top: 100%; left: 0; right: 0; height: 40px; }
+
+        /* Cards */
+        .grid { display: grid; gap: 14px; }
+        .grid.three { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+        .card {
+            --accent: var(--primary);
+            position: relative; display: flex; justify-content: space-between; align-items: flex-start;
+            background: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--accent);
+            border-radius: 10px; padding: 18px 18px 16px; box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+        .card.larmor { --accent: var(--larmor); }
+        .card.sans2d { --accent: var(--sans2d); }
+        .card.zoom { --accent: var(--zoom); }
+        .card-content { flex: 1; padding-right: 12px; }
+        .card h3 { margin: 0 0 6px; font-size: 1.08rem; }
+        .card h3 a { color: var(--text); text-decoration: none; }
+        .card h3 a::after { content: ""; position: absolute; inset: 0; }  /* whole card clickable */
+        .card:hover h3 a { color: var(--accent); }
+        .card p { margin: 0 0 10px; color: var(--text-muted); font-size: 0.95rem; }
+        .card-emoji { font-size: 1.8rem; line-height: 1; flex-shrink: 0; }
+        .tag {
+            display: inline-block; font-size: 0.72rem; padding: 2px 9px; border-radius: 999px;
+            background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border);
+            margin-right: 4px;
+        }
+        .tag.start { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+        :root[data-theme="dark"] .tag.start { color: #0b1220; }
+        .list-cards { display: grid; gap: 14px; }
+
+        /* Quiz */
+        .quiz {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+            padding: 22px; box-shadow: var(--shadow);
+        }
+        .progress { height: 6px; background: var(--surface-2); border-radius: 99px; overflow: hidden; margin-bottom: 16px; }
+        .progress div { height: 100%; width: 0; background: var(--primary); transition: width 0.3s ease; }
+        .q-text { font-weight: 600; font-size: 1.1rem; margin: 0 0 12px; }
+        .options { display: grid; gap: 10px; }
+        .option {
+            text-align: left; background: var(--surface-2); color: var(--text);
+            border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-size: 1rem; cursor: pointer;
+            transition: border-color 0.15s ease, transform 0.15s ease;
+        }
+        .option:hover { border-color: var(--primary); transform: translateX(3px); }
+        .result h3 { margin: 0 0 6px; font-size: 1.3rem; }
+        .result p { color: var(--text-muted); }
+        .result .note { font-size: 0.85rem; }
+
+        /* Multi-select example-data question */
+        .options.multi { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+        .option.fig { display: flex; flex-direction: column; gap: 8px; position: relative; }
+        .option.fig:hover { transform: translateY(-2px); }
+        .option.none { grid-column: 1 / -1; text-align: center; }
+        .option[aria-checked="true"] { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary) inset; }
+        .option[aria-checked="true"]::after {
+            content: "\2713"; position: absolute; top: 8px; right: 10px;
+            width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff;
+            font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+        }
+        :root[data-theme="dark"] .option[aria-checked="true"]::after { color: #0b1220; }
+        .option.none[aria-checked="true"]::after { position: static; display: inline-flex; margin-left: 8px; vertical-align: middle; }
+        .option .fig-svg { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; }
+        .option .fig-svg svg { display: block; width: 100%; height: auto; }
+        .fig-axis { stroke: var(--text-muted); stroke-width: 1; fill: none; }
+        .fig-curve { stroke: var(--primary); stroke-width: 1.8; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+        .fig-bg { stroke: var(--text-muted); stroke-width: 0.8; stroke-dasharray: 3 2; fill: none; opacity: 0.7; }
+        .fig-band { fill: var(--primary); opacity: 0.14; }
+        .fig-label { fill: var(--text-muted); font-size: 6.5px; font-family: inherit; }
+        .hint { margin: 12px 0 0; min-height: 1.4em; color: var(--primary); font-weight: 600; font-size: 0.95rem; }
+        .quiz-actions { margin-top: 14px; }
+        .btn:disabled { opacity: 0.45; cursor: not-allowed; filter: none; }
+
+        footer { margin-top: 56px; border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Scroll reveal */
+        .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .reveal.in { opacity: 1; transform: none; }
+        .no-js .reveal { opacity: 1; transform: none; }
+
+        @media (max-width: 720px) {
+            .journey { gap: 36px 28px; }
+            .journey li[data-dir="right"]::after, .journey li[data-dir="left"]::after { width: 28px; }
+            .journey li[data-dir="down"]::after { height: 36px; }
+            .hero-inner { padding-top: 84px; }
+            .btn.ghost { margin-left: 0; margin-top: 8px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .reveal { opacity: 1; transform: none; transition: none; }
+            .card, .journey a, .option { transition: none; }
+        }
+
+        /* q-range section */
+        .tablewrap { overflow-x: auto; margin: 0 0 24px; }
+        .qtable { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); font-size: 0.95rem; }
+        .qtable th, .qtable td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+        .qtable th { background: var(--surface-2); font-weight: 600; }
+        .qh3 { margin: 0 0 6px; font-size: 1.15rem; color: var(--primary-strong); }
+        .qbox { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); }
+        .qrow { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 24px; align-items: start; }
+        @media (max-width: 760px) { .qrow { grid-template-columns: 1fr; } }
+        .qlabel { display: block; }
+        .qval { color: var(--primary); }
+        #radiusSlider { width: 100%; accent-color: var(--primary); }
+        .qinsttitle { margin-top: 16px; font-weight: 600; font-size: 0.95rem; }
+        .qinst-list { margin-top: 6px; }
+        .qinst { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 500; padding: 2px 0; }
+        .qinst input { width: 17px; height: 17px; }
+        .qchartbox { position: relative; height: 460px; }
+        .qchartbox canvas { width: 100%; display: block; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<!-- Phone app: remembered theme, home-screen icon, phone styles (see html_pages/app.css and app.js) -->
+<meta name="theme-color" content="#f6f8fa">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SANS 101">
+<link rel="stylesheet" href="html_pages/app.css">
+</head>
+<body>
+
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch between light and dark mode">
+        <span id="themeIcon" aria-hidden="true">🌙</span><span id="themeLabel">Dark mode</span>
+    </button>
+
+    <header class="hero">
+        <canvas id="beam" aria-hidden="true"></canvas>
+        <div class="wrap hero-inner">
+            <span class="eyebrow">Brought to you by the ISIS Neutron and Muon Source</span>
+            <h1>ISIS SANS 101</h1>
+            <p class="subtitle">How can I perform successful experiments at ISIS?</p>
+            <a class="btn" href="#picker">Which instrument do I need?</a>
+            <a class="btn ghost" href="#journey">See the journey</a>
+            <div class="fact" aria-live="off"><b>Did you know?</b> <span id="factText"></span></div>
+        </div>
+    </header>
+
+    <main class="wrap">
+
+        <section id="journey" class="reveal">
+            <h2>The path of an experiment</h2>
+            <p class="section-intro">New to SANS? Follow the steps, from choosing an instrument to making sense of your data.</p>
+            <ol class="journey">
+                <li><a href="html_pages/before_you_apply.html" target="_blank" rel="noopener noreferrer"><span class="step-num">1</span><span class="step-emoji" aria-hidden="true">🔬</span><strong>Before</strong><small>Start planning immediately</small></a></li>
+                <li><a href="#instruments"><span class="step-num" >2</span><span class="step-emoji" aria-hidden="true">🧭</span><strong>Choose</strong><small>Meet the instruments</small></a></li>
+                <li><a href="html_pages/writing_a_proposal.html"><span class="step-num" >3</span><span class="step-emoji" aria-hidden="true">📝</span><strong>Proposal</strong><small>Write your beamtime proposal</small></a></li>
+                <li><a href="html_pages/youve_got_beamtime.html" target="_blank" rel="noopener noreferrer"><span class="step-num">4</span><span class="step-emoji" aria-hidden="true">🧪</span><strong>Beamtime</strong><small>Prepare to run</small></a></li>
+                <li><a href="html_pages/data-reduction.html" target="_blank" rel="noopener noreferrer"><span class="step-num">5</span><span class="step-emoji" aria-hidden="true">⚙️</span><strong>Reduce</strong><small>Raw data to usable</small></a></li>
+                <li><a href="html_pages/data-analysis.html" target="_blank" rel="noopener noreferrer"><span class="step-num">6</span><span class="step-emoji" aria-hidden="true">📊</span><strong>Analyse</strong><small>Extract the science</small></a></li>
+            </ol>
+        </section>
+
+        <section id="instruments" class="reveal">
+            <h2>Meet the instruments</h2>
+            <p class="section-intro">Three SANS instruments, each with its own strengths.</p>
+            <div class="grid three">
+                <div class="card larmor">
+                    <div class="card-content">
+                        <h3><a href="html_pages/meet_larmor.html" target="_blank" rel="noopener noreferrer">Meet our Larmor instrument</a></h3>
+                        <p>What is a SESANS?</p>
+                        <span class="tag start">Start here</span><span class="tag">Instrument</span>
+                    </div>
+                    <div class="card-emoji">🌀</div>
+                </div>
+                <div class="card sans2d">
+                    <div class="card-content">
+                        <h3><a href="html_pages/meet_sans2d.html" target="_blank" rel="noopener noreferrer">Meet our SANS2D instrument</a></h3>
+                        <p>What does SANS2D really stand for?</p>
+                        <span class="tag">Instrument</span>
+                    </div>
+                    <div class="card-emoji">🎯</div>
+                </div>
+                <div class="card zoom">
+                    <div class="card-content">
+                        <h3><a href="html_pages/meet_zoom.html" target="_blank" rel="noopener noreferrer">Meet our ZOOM instrument</a></h3>
+                        <p>SANS instrument or video software?</p>
+                        <span class="tag">Instrument</span>
+                    </div>
+                    <div class="card-emoji">🔍</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="picker" class="reveal">
+            <h2>Which instrument do I need?</h2>
+            <p class="section-intro">Answer three quick questions for a starting point. It isn't a substitute for talking to the instrument scientists - please talk to us, we love it!</p>
+            <div class="quiz" id="quiz"></div>
+        </section>
+
+        <section id="qrange" class="reveal">
+            <h2>What about q-range?</h2>
+            <p class="section-intro">Please use the graph below to understand the q-range you need for your system! </p>
+        <div class="qbox"><div class="qrow">
+        <div>
+        <label class="qlabel">Sphere radius (R): <b class="qval" id="radiusValue">50 Å</b></label>
+        <input id="radiusSlider" type="range" min="1" max="3000" value="847" aria-label="Sphere radius">
+        <div class="qinsttitle">Instrument q-ranges</div>
+        <div id="instList" class="qinst-list"></div>
+        </div>
+        <div class="qchartbox"><canvas id="sansChart" aria-label="Sphere scattering with instrument q-ranges"></canvas></div>
+        </div></div>
+        </section>
+
+        <section id="more" class="reveal">
+            <h2>Keep learning</h2>
+            <div class="card">
+                <div class="card-content">
+                    <h3><a href="https://lmsweb.stfc.ac.uk/moodle/login/index.php" target="_blank" rel="noopener noreferrer">More SANS training</a></h3>
+                    <p>If you'd like more information, please check out our moodle site, search for "SANS", and you'll find the SANS training course with more materials.</p>
+                    <span class="tag">Moodle</span><span class="tag">Course</span>
+                </div>
+                <div class="card-emoji">📖</div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="wrap">ISIS SANS 101 &middot; A guide for new and returning users of the ISIS SANS instruments.</div>
+        <div class="wrap" style="margin-top:8px">&copy; 2026 Lauren Matthews. Developed with the assistance of Claude (Anthropic). Text and figures licensed under <a style="color:inherit" rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; source code under the <a style="color:inherit" href="../LICENSE.txt">MIT License</a>. Third-party material is excluded; see <a style="color:inherit" href="html_pages/credits.html">Credits</a>.</div>
+    </footer>
+
+    <script src="html_pages/nav.js"></script>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var css=function(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()};
+/* ---- sphere q-range chart ---- */
+var INST=[
+{name:"Larmor (4m)",min:0.0035,max:0.7,color:"#e11d48"},
+{name:"SANS2D (4m)",min:0.0045,max:1.0,color:"#f59e0b"},
+{name:"SANS2D (6m)",min:0.0035,max:1.0,color:"#10b981"},
+{name:"SANS2D (8m)",min:0.0025,max:0.8,color:"#3b82f6"},
+{name:"SANS2D (12m)",min:0.0015,max:0.7,color:"#8b5cf6"},
+{name:"ZOOM (4m)",min:0.0045,max:0.85,color:"#ec4899"},
+{name:"ZOOM (8m)",min:0.0025,max:0.45,color:"#64748b"}];
+INST.forEach(function(s,i){
+  var l=document.createElement("label");l.className="qinst";
+  var c=document.createElement("input");c.type="checkbox";c.checked=true;c.style.accentColor=s.color;c.addEventListener("change",updateGraph);
+  var t=document.createElement("span");t.textContent=s.name;t.style.color=s.color;
+  l.appendChild(c);l.appendChild(t);$("instList").appendChild(l)});
+function checks(){return [].slice.call($("instList").querySelectorAll("input"))}
+
+function calculateSANS(radius){
+  var q=[],I=[],n=3000,qMin=0.001,qMax=1.5,sigma=radius*0.05;
+  var gn=[-2.8159,-2.1044,-1.4886,-0.9163,-0.3705,0.3705,0.9163,1.4886,2.1044,2.8159];
+  var gw=[0.0006,0.0125,0.0792,0.2223,0.3854,0.3854,0.2223,0.0792,0.0125,0.0006];
+  var baseVol=(4/3)*Math.PI*Math.pow(radius,3);
+  for(var i=0;i<=n;i++){
+    var qq=qMin*Math.pow(qMax/qMin,i/n);q.push(qq);var avg=0;
+    for(var j=0;j<gn.length;j++){
+      var r=radius+gn[j]*sigma;if(r<=0)continue;
+      var qr=qq*r,p;
+      if(qr<1e-5)p=1;else{var t=3*(Math.sin(qr)-qr*Math.cos(qr))/Math.pow(qr,3);p=t*t}
+      var v=(4/3)*Math.PI*Math.pow(r,3);
+      avg+=p*Math.pow(v/baseVol,2)*gw[j]}
+    I.push((avg>0?avg*1e5:1e-10)+0.1)}
+  return{q:q,intensity:I}}
+
+function radiusNow(){
+  var v=Math.max(+$("radiusSlider").value,1);
+  return Math.round(10*Math.pow(3000/10,(v-1)/(3000-1)))}
+
+var chart=null,BASE=2e5,MULT=2.2;
+function instData(q){
+  var act=[];checks().forEach(function(c,i){if(c.checked)act.push(i)});
+  return{act:act,sets:INST.map(function(s,i){
+    var a=act.indexOf(i);
+    return a!==-1?q.map(function(x){return(x>=s.min&&x<=s.max)?BASE*Math.pow(MULT,a+1):null}):q.map(function(){return null})})}}
+function yMax(n){return n?BASE*Math.pow(MULT,n+1):BASE}
+
+function buildChart(){
+  if(chart)chart.destroy();
+  var r=radiusNow();$("radiusValue").textContent=r+" Å";
+  var d=calculateSANS(r),inst=instData(d.q);
+  Chart.defaults.font.family='system-ui,sans-serif';
+  Chart.defaults.color=css("--text-muted");
+  var grid=css("--border");
+  chart=new Chart($("sansChart").getContext("2d"),{
+    type:"line",
+    data:{labels:d.q,datasets:[
+      {label:"Intensity I(q)",data:d.intensity,borderColor:css("--primary"),backgroundColor:css("--surface-2"),borderWidth:2,fill:true,tension:0.15,pointRadius:0}
+    ].concat(INST.map(function(s,i){return{label:s.name,data:inst.sets[i],borderColor:s.color,borderWidth:4,pointRadius:0,fill:false,spanGaps:false}}))},
+    options:{responsive:true,maintainAspectRatio:false,
+      scales:{
+        x:{type:"logarithmic",title:{display:true,text:"Scattering Vector q (Å⁻¹)",font:{weight:"bold"}},grid:{color:grid},ticks:{callback:function(v){return Number(v).toFixed(3)}}},
+        y:{type:"logarithmic",title:{display:true,text:"Intensity I(q) (a.u.)",font:{weight:"bold"}},grid:{color:grid},min:1e-1,max:yMax(inst.act.length)}},
+      plugins:{legend:{display:true,position:"top",labels:{boxWidth:15,font:{size:11}}},
+        tooltip:{callbacks:{title:function(it){return"q: "+it[0].label+" Å⁻¹"},label:function(it){return it.dataset.label+": "+(it.raw?"In Range":"Out of Range")}}}}}})}
+
+function updateGraph(){
+  if(!chart)return;
+  var r=radiusNow();$("radiusValue").textContent=r+" Å";
+  var d=calculateSANS(r),inst=instData(d.q);
+  chart.data.labels=d.q;chart.data.datasets[0].data=d.intensity;
+  inst.sets.forEach(function(s,i){chart.data.datasets[i+1].data=s});
+  chart.options.scales.y.max=yMax(inst.act.length);
+  chart.update("none")}
+$("radiusSlider").addEventListener("input",updateGraph);
+
+if(window.Chart){buildChart();}else{window.addEventListener("load",buildChart);}
+window.addEventListener("themechange",function(){if(window.Chart)buildChart()});
+})();
+</script>
+    <script>
+    (function () {
+        var root = document.documentElement;
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        /* ---------- Theme toggle ---------- */
+        var toggle = document.getElementById('themeToggle');
+        var icon = document.getElementById('themeIcon');
+        var label = document.getElementById('themeLabel');
+        function syncToggle() {
+            var dark = root.getAttribute('data-theme') === 'dark';
+            icon.textContent = dark ? '☀️' : '🌙';
+            label.textContent = dark ? 'Light mode' : 'Dark mode';
+            readColours();
+        }
+        toggle.addEventListener('click', function () {
+            var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', next);
+            try { localStorage.setItem('sans101-theme', next); } catch (e) {}
+            syncToggle();
+            window.dispatchEvent(new Event('themechange'));
+        });
+
+        /* ---------- Hero animation: neutrons scatter from a sample onto a detector ---------- */
+        var canvas = document.getElementById('beam');
+        var ctx = canvas.getContext('2d');
+        var W = 0, H = 0, dpr = 1, beamColour = '#5eead4', ringRgb = '94,234,212';
+        function readColours() {
+            var s = getComputedStyle(root);
+            beamColour = s.getPropertyValue('--beam').trim() || beamColour;
+            ringRgb = s.getPropertyValue('--ring').trim() || ringRgb;
+            if (reduceMotion) draw(true);
+        }
+        function resize() {
+            var r = canvas.getBoundingClientRect();
+            dpr = window.devicePixelRatio || 1;
+            W = r.width; H = r.height;
+            canvas.width = W * dpr; canvas.height = H * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            if (reduceMotion) draw(true);
+        }
+        var particles = [], flashes = [];
+        function geometry() {
+            var strip = W > H * 1.6;   // short, wide strip under the text (phones and tablets)
+            return {
+                y: H * 0.5,
+                sampleX: W * (strip ? 0.28 : 0.3),
+                detX: W * (strip ? 0.8 : 0.74),
+                detR: strip ? Math.min(H * 0.42, W * 0.14) : Math.min(H * 0.42, W * 0.24)
+            };
+        }
+        function spawn() {
+            var g = geometry();
+            var sp = 3 + Math.random() * 1.5;
+            particles.push({ x: -10, y: g.y + (Math.random() - 0.5) * 6, vx: sp, vy: 0, speed: sp, scattered: false, tx: 0, ty: 0 });
+        }
+        // Choose a landing spot on one of the rings, at any angle around the circle
+        function pickTarget(g) {
+            var rings = [0.22, 0.45, 0.72, 1], weights = [0.35, 0.3, 0.2, 0.15];
+            var r = Math.random(), k = 0, acc = weights[0];
+            while (r > acc && k < rings.length - 1) { k++; acc += weights[k]; }
+            var rad = g.detR * rings[k] + (Math.random() - 0.5) * 5;
+            var a = Math.random() * Math.PI * 2;
+            return { x: g.detX + Math.cos(a) * rad, y: g.y + Math.sin(a) * rad };
+        }
+        function draw(staticFrame) {
+            if (!W) return;
+            var g = geometry();
+            ctx.clearRect(0, 0, W, H);
+
+            // detector pattern: faint concentric rings
+            var i, rings = [0.22, 0.45, 0.72, 1];
+            for (i = 0; i < rings.length; i++) {
+                ctx.beginPath();
+                ctx.arc(g.detX, g.y, g.detR * rings[i], 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(' + ringRgb + ',' + (0.30 - i * 0.05) + ')';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+            // beam line
+            ctx.strokeStyle = 'rgba(' + ringRgb + ',0.25)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 6]);
+            ctx.beginPath(); ctx.moveTo(0, g.y); ctx.lineTo(g.sampleX, g.y); ctx.stroke();
+            ctx.setLineDash([]);
+            // sample
+            ctx.fillStyle = 'rgba(' + ringRgb + ',0.8)';
+            ctx.beginPath(); ctx.arc(g.sampleX, g.y, 7, 0, Math.PI * 2); ctx.fill();
+
+            if (staticFrame) {
+                ctx.fillStyle = 'rgba(' + ringRgb + ',0.6)';
+                for (i = 0; i < 160; i++) {
+                    var t = pickTarget(g);
+                    ctx.beginPath(); ctx.arc(t.x, t.y, 2, 0, Math.PI * 2); ctx.fill();
+                }
+                return;
+            }
+
+            // particles
+            ctx.fillStyle = beamColour;
+            for (i = particles.length - 1; i >= 0; i--) {
+                var p = particles[i];
+                p.x += p.vx; p.y += p.vy;
+                if (!p.scattered && p.x >= g.sampleX) {
+                    // Scatter towards a point on a ring, anywhere around the circle
+                    p.scattered = true;
+                    var tgt = pickTarget(g);
+                    p.tx = tgt.x; p.ty = tgt.y;
+                    var dx = tgt.x - p.x, dy = tgt.y - p.y, d = Math.sqrt(dx * dx + dy * dy) || 1;
+                    p.vx = dx / d * p.speed; p.vy = dy / d * p.speed;
+                }
+                if (p.scattered) {
+                    var rx = p.tx - p.x, ry = p.ty - p.y;
+                    if (rx * rx + ry * ry <= p.speed * p.speed) {
+                        // Settle on the ring and stay there for a while
+                        flashes.push({ x: p.tx, y: p.ty, life: 1 });
+                        if (flashes.length > 400) flashes.shift();
+                        particles.splice(i, 1);
+                        continue;
+                    }
+                }
+                ctx.globalAlpha = 0.9;
+                ctx.beginPath(); ctx.arc(p.x, p.y, 2.2, 0, Math.PI * 2); ctx.fill();
+            }
+            // detector hits fade out
+            for (i = flashes.length - 1; i >= 0; i--) {
+                var f = flashes[i];
+                f.life -= 0.0025;
+                if (f.life <= 0) { flashes.splice(i, 1); continue; }
+                ctx.globalAlpha = Math.min(1, f.life * 1.2) * 0.85;
+                ctx.beginPath(); ctx.arc(f.x, f.y, 2.5, 0, Math.PI * 2); ctx.fill();
+            }
+            ctx.globalAlpha = 1;
+        }
+        var running = true, last = 0;
+        function loop(t) {
+            if (running) {
+                if (t - last > 45 && particles.length < 120) { spawn(); last = t; }
+                draw(false);
+            }
+            requestAnimationFrame(loop);
+        }
+        window.addEventListener('resize', resize);
+        document.addEventListener('visibilitychange', function () { running = !document.hidden; });
+        resize();
+        syncToggle();
+        if (!reduceMotion) requestAnimationFrame(loop);
+
+        /* ---------- Journey: snake layout ---------- */
+        var journey = document.querySelector('.journey');
+        var steps = [].slice.call(journey.children);
+        var lastCols = 0;
+        function layoutJourney() {
+            var gap = window.innerWidth <= 720 ? 28 : 32, minCard = 170;
+            var cols = Math.max(1, Math.min(4, Math.floor((journey.clientWidth + gap) / (minCard + gap))));
+            if (cols === lastCols) return;
+            lastCols = cols;
+            journey.style.gridTemplateColumns = 'repeat(' + cols + ', minmax(0, 1fr))';
+            steps.forEach(function (li, i) {
+                var row = Math.floor(i / cols), pos = i % cols, ltr = row % 2 === 0;
+                li.style.gridRow = row + 1;
+                li.style.gridColumn = ltr ? pos + 1 : cols - pos;
+                var num = li.querySelector('.step-num');
+                if (num) num.textContent = i + 1;  // numbers update automatically when steps are added
+                if (i === steps.length - 1) { li.removeAttribute('data-arrow'); li.removeAttribute('data-dir'); }
+                else if (pos === cols - 1) { li.setAttribute('data-arrow', '↓'); li.setAttribute('data-dir', 'down'); }
+                else if (ltr) { li.setAttribute('data-arrow', '→'); li.setAttribute('data-dir', 'right'); }
+                else { li.setAttribute('data-arrow', '←'); li.setAttribute('data-dir', 'left'); }
+            });
+        }
+        layoutJourney();
+        window.addEventListener('resize', layoutJourney);
+
+        /* ---------- Fun facts ---------- */
+        var facts = [
+            'Neutrons carry no electric charge, so they can travel deep inside materials that X-rays struggle with.',
+            'SANS typically looks at structures from about 1 nanometre up to several hundred nanometres.',
+            'On a time-of-flight instrument, neutrons of different wavelengths arrive at the detector at different times.',
+            'ISIS is the home of pulsed neutron and muon research at the Harwell campus in Oxfordshire.',
+            'The neutron was discovered by James Chadwick in 1932.',
+            'Neutrons scatter very differently from hydrogen and deuterium, which lets you highlight parts of a sample by swapping one for the other.'
+        ];
+        var factEl = document.getElementById('factText'), fi = 0;
+        function showFact() {
+            factEl.style.opacity = 0;
+            setTimeout(function () {
+                factEl.textContent = facts[fi]; factEl.style.opacity = 1;
+                fi = (fi + 1) % facts.length;
+            }, 400);
+        }
+        factEl.textContent = facts[fi]; fi = 1;
+        if (!reduceMotion) setInterval(showFact, 7000);
+
+        /* ---------- Instrument picker ---------- */
+        var questions = [
+            { q: 'How big are the structures you want to study?', opts: [
+                { t: 'Nanometre scale (proteins, micelles, small particles)', s: { sans2d: 2, zoom: 1 } },
+                { t: 'Larger, up to a few hundred nanometres', s: { zoom: 2, sans2d: 1 } },
+                { t: 'Very large, around a micron or more', s: { larmor: 3 } }
+            ]},
+            { q: 'What technique are you interested in?', opts: [
+                { t: 'Spin-echo small-angle neutron scattering (SESANS)', s: { larmor: 3 }, only: 'larmor' },
+                { t: 'Small-angle neutron scattering (SANS)', s: { zoom: 3, sans2d: 3, larmor: 3 }, flag: 'sans' },
+                { t: 'Both', s: { larmor: 3 }, only: 'larmor', flag: 'both' }
+            ]},
+            // Only shown when SANS or Both was chosen above
+            { q: 'Will your data look like this?', multi: true, cond: 'sans', hint: 'Select all that apply, then continue.', opts: [
+                { t: 'Discrete nanostructures, such as micelles or nanoparticles', fig: 'micelle', s: { sans2d: 1, zoom: 1, larmor: 1 } },
+                { t: 'High volume fraction discrete nanostructures', fig: 'nano', s: { sans2d: 1, zoom: 1, larmor: 1 } },
+                { t: 'Membrane-like structures', fig: 'lamellar', s: { sans2d: 1, zoom: 1, larmor: 1 } },
+                { t: 'Large nanoscale assemblies (d > 200 nm)', fig: 'large', s: { sans2d: 3, zoom: 2 }, ex: ['larmor'],
+                  exNote: 'Larmor is not suggested because you chose a large-object turnover in the 0.0015 – 0.004 Å⁻¹ range.' },
+                { t: 'Hierarchically organized systems featuring dual nano- and microscale morphology', fig: 'midpeak', s: { sans2d: 1, zoom: 1, larmor: 1 },
+                  note: 'The 4 m configuration is sufficient for this type of data.' },
+                { t: 'Short-range crystalline or lattice-ordered assemblies (0.5 – 1 Å⁻¹)', fig: 'bragg', s: { sans2d: 3, zoom: 1, larmor: 2 } },
+                { t: 'Unsure', none: true, s: {} }
+            ]},
+            { q: 'Do you need polarised neutrons, for example to study magnetic samples?', opts: [
+                { t: 'Yes', s: { larmor: 3, zoom: 3 }, ex: ['sans2d'] },
+                { t: 'No', s: { sans2d: 1, zoom: 1 } },
+                { t: 'Not sure', s: {} }
+            ]},
+            { q: 'What matters most for your measurement?', opts: [
+                { t: 'A wide range of length scales in a single measurement', s: { sans2d: 2, zoom: 1 } },
+                { t: 'Flexibility to tune resolution and intensity', s: { zoom: 2 } },
+                { t: 'Real-space information on large structures', s: { larmor: 2 } }
+            ]}
+        ];
+        var info = {
+            larmor: { name: 'Larmor', emoji: '🌀', page: 'html_pages/meet_larmor.html', blurb: 'Larmor uses polarised neutrons and can run SESANS, which suits very large structures and magnetic samples.' },
+            sans2d: { name: 'SANS2D', emoji: '🎯', page: 'html_pages/meet_sans2d.html', blurb: 'SANS2D is a versatile instrument that covers a wide range of length scales in one go, so it is a strong general-purpose choice.' },
+            zoom: { name: 'ZOOM', emoji: '🔍', page: 'html_pages/meet_zoom.html', blurb: 'ZOOM lets you tune its set-up to balance resolution against intensity, which is handy for larger structures. It can also use polarised neutrons for magnetic samples.' }
+        };
+        var quizEl = document.getElementById('quiz'), step = 0, score, excluded, flags, notes, exNotes;
+        function resetQuiz() {
+            step = 0; score = { larmor: 0, sans2d: 0, zoom: 0 }; excluded = {};
+            flags = {}; notes = []; exNotes = [];
+            renderQuiz();
+        }
+        function visibleQuestions() {
+            return questions.filter(function (q) { return !q.cond || flags[q.cond]; });
+        }
+        function applyOpt(o) {
+            for (var k in o.s) score[k] += o.s[k];
+            if (o.ex) o.ex.forEach(function (n) { excluded[n] = true; });
+            if (o.exNote) exNotes.push(o.exNote);
+            if (o.flag) flags[o.flag] = true;
+            if (o.only) flags.only = o.only;  // e.g. SESANS: only Larmor can offer it
+            if (o.note) notes.push(o.note);
+        }
+        // Simple sketch plots (log-log style) of what each kind of dataset looks like
+        function figure(kind) {
+            var g = {
+                micelle: '<path class="fig-curve" d="M14,14 L28,15 C40,17 46,28 54,36 C58,40 62,39 66,42 C72,47 78,53 88,56 C94,57.5 100,58 114,58"/>',
+                nano: '<path class="fig-curve" d="M14,26 C22,28 28,20 36,14 C42,10 46,12 50,20 C56,32 60,38 64,38 C68,38 70,41 74,44 C80,50 90,55 100,57 L114,58"/>',
+                lamellar: '<path class="fig-curve" d="M14,14 L34,14 C40,15 44,22 48,30 C49,33 50,34 52,33 C55,32 57,33 59,38 C61,42 63,41 65,46 C68,52 70,57 72,56 C74,52 77,48 80,49 C84,51 88,58 91,58 C93,57 96,55 98,56 C101,58 106,58 114,57"/>',
+                large: '<rect class="fig-band" x="20" y="6" width="26" height="58"/>' +
+                       '<text class="fig-label" x="33" y="13" text-anchor="middle">0.0015–0.004</text>' +
+                       '<text class="fig-label" x="33" y="20" text-anchor="middle">Å⁻¹</text>' +
+                       '<path class="fig-curve" d="M14,14 L22,15 C30,18 36,30 44,40 C48,45 52,45 56,43 C60,42 64,46 70,51 C78,56 88,58 114,58"/>',
+                midpeak: '<path class="fig-curve" d="M14,10 L46,26 C52,29 56,31 60,26 C64,22 68,24 72,32 L92,50 C98,56 104,58 114,58"/>',
+                bragg: '<rect class="fig-band" x="80" y="6" width="28" height="58"/>' +
+                       '<text class="fig-label" x="94" y="13" text-anchor="middle">0.5–1</text>' +
+                       '<text class="fig-label" x="94" y="20" text-anchor="middle">Å⁻¹</text>' +
+                       '<path class="fig-curve" d="M14,8 L64,48 C68,51 74,54 80,55 L81,55 L82.5,30 L84,55 L91,55.5 L92.5,40 L94,55.5 L102,56 L103.5,46 L105,56 L108,57 L114,57"/>'
+            };
+            return '<svg viewBox="0 0 120 80" role="img" aria-label="Sketch of ' + kind + ' scattering data" xmlns="http://www.w3.org/2000/svg">' +
+                '<path class="fig-axis" d="M14,6 V64 H114 M14,64 v2 M31,64 v2 M48,64 v2 M64,64 v2 M81,64 v2 M97,64 v2 M114,64 v2 M12,6 h2 M12,19 h2 M12,32 h2 M12,45 h2 M12,58 h2"/>' +
+                '<text class="fig-label" x="64" y="76" text-anchor="middle">q (Å⁻¹)</text>' +
+                '<text class="fig-label" x="4" y="38" transform="rotate(-90 4 38)" text-anchor="middle">I(q)</text>' +
+                g[kind] + '</svg>';
+        }
+        function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+        function renderQuiz() {
+            quizEl.textContent = '';
+            var vis = visibleQuestions();
+            if (step < vis.length) {
+                var cur = vis[step];
+                var prog = el('div', 'progress'), bar = el('div'); bar.style.width = (step / vis.length * 100) + '%'; prog.appendChild(bar);
+                quizEl.appendChild(prog);
+                quizEl.appendChild(el('p', 'q-text', 'Question ' + (step + 1) + ' of ' + vis.length + ': ' + cur.q));
+                if (cur.hint) quizEl.appendChild(el('p', 'section-intro', cur.hint));
+                var wrap = el('div', 'options' + (cur.multi ? ' multi' : ''));
+                if (!cur.multi) {
+                    cur.opts.forEach(function (o) {
+                        var b = el('button', 'option', o.t); b.type = 'button';
+                        b.addEventListener('click', function () { applyOpt(o); step++; renderQuiz(); });
+                        wrap.appendChild(b);
+                    });
+                    quizEl.appendChild(wrap);
+                } else {
+                    // Multi-select: several options can be ticked, but "Unsure" is exclusive
+                    var sel = {}, btns = [], noteBox = el('p', 'hint'), cont = el('button', 'btn', 'Continue');
+                    wrap.setAttribute('role', 'group'); wrap.setAttribute('aria-label', cur.q);
+                    noteBox.setAttribute('aria-live', 'polite');
+                    cont.type = 'button'; cont.disabled = true;
+                    var sync = function () {
+                        var any = false, msgs = [];
+                        cur.opts.forEach(function (o, i) {
+                            btns[i].setAttribute('aria-checked', sel[i] ? 'true' : 'false');
+                            if (sel[i]) { any = true; if (o.note) msgs.push(o.note); }
+                        });
+                        cont.disabled = !any;
+                        noteBox.textContent = msgs.join(' ');
+                    };
+                    cur.opts.forEach(function (o, i) {
+                        var b = el('button', 'option' + (o.fig ? ' fig' : '') + (o.none ? ' none' : '')); b.type = 'button';
+                        b.setAttribute('role', 'checkbox'); b.setAttribute('aria-checked', 'false');
+                        if (o.fig) { var f = el('div', 'fig-svg'); f.innerHTML = figure(o.fig); b.appendChild(f); }
+                        b.appendChild(el('span', '', o.t));
+                        b.addEventListener('click', function () {
+                            if (o.none) {
+                                var wasOn = !!sel[i]; sel = {}; if (!wasOn) sel[i] = true;
+                            } else {
+                                cur.opts.forEach(function (x, j) { if (x.none) delete sel[j]; });
+                                if (sel[i]) delete sel[i]; else sel[i] = true;
+                            }
+                            sync();
+                        });
+                        btns.push(b); wrap.appendChild(b);
+                    });
+                    cont.addEventListener('click', function () {
+                        cur.opts.forEach(function (o, i) { if (sel[i]) applyOpt(o); });
+                        step++; renderQuiz();
+                    });
+                    quizEl.appendChild(wrap);
+                    quizEl.appendChild(noteBox);
+                    var actions = el('div', 'quiz-actions'); actions.appendChild(cont);
+                    quizEl.appendChild(actions);
+                }
+            } else {
+                // Instruments ruled out by a hard requirement (e.g. polarisation) are never suggested
+                var ranked = Object.keys(score)
+                    .filter(function (n) { return !excluded[n]; })
+                    .sort(function (a, b) { return score[b] - score[a]; });
+                // If SESANS was chosen, Larmor is the only possible answer
+                if (flags.only) ranked = [flags.only];
+                var best = ranked[0];
+                var d = info[best], res = el('div', 'result');
+                res.appendChild(el('h3', '', d.emoji + ' We suggest: ' + d.name));
+                res.appendChild(el('p', '', d.blurb));
+                if (flags.only) {
+                    res.appendChild(el('p', 'note', 'Larmor is the only ISIS instrument that offers SESANS, so it is the only one we can suggest.'));
+                } else if (excluded.sans2d) {
+                    res.appendChild(el('p', 'note', 'SANS2D is not an option here because it does not offer polarised neutrons.'));
+                }
+                (flags.only ? [] : exNotes.concat(notes)).forEach(function (n) { res.appendChild(el('p', 'note', n)); });
+                if (ranked[1] && score[best] - score[ranked[1]] <= 1) {
+                    var alt = info[ranked[1]], altP = el('p', '', 'Also worth a look: ');
+                    var altA = el('a', '', alt.name); altA.href = alt.page; altA.target = '_blank'; altA.rel = 'noopener noreferrer';
+                    altP.appendChild(altA); altP.appendChild(document.createTextNode('. It scored almost as well for your answers.'));
+                    res.appendChild(altP);
+                }
+                var go = el('a', 'btn', 'Meet ' + d.name); go.href = d.page; go.target = '_blank'; go.rel = 'noopener noreferrer';
+                var again = el('button', 'btn ghost', 'Start again'); again.type = 'button';
+                again.addEventListener('click', resetQuiz);
+                res.appendChild(go); res.appendChild(again);
+                res.appendChild(el('p', 'note', 'This is only a rough guide. Please talk to the instrument scientists about what suits your experiment.'));
+                if (flags.both) {
+                    var bn = el('p', 'note', 'For the SANS measurements alone, ');
+                    [['sans2d', ' and '], ['zoom', ' could also be worth pursuing.']].forEach(function (x) {
+                        var a = el('a', '', info[x[0]].name); a.href = info[x[0]].page; a.target = '_blank'; a.rel = 'noopener noreferrer';
+                        bn.appendChild(a); bn.appendChild(document.createTextNode(x[1]));
+                    });
+                    res.appendChild(bn);
+                }
+                quizEl.appendChild(res);
+            }
+        }
+        resetQuiz();
+
+        /* ---------- Scroll reveal ---------- */
+        var items = document.querySelectorAll('.reveal');
+        if ('IntersectionObserver' in window && !reduceMotion) {
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+            }, { threshold: 0.1 });
+            items.forEach(function (n) { io.observe(n); });
+        } else {
+            items.forEach(function (n) { n.classList.add('in'); });
+        }
+    })();
+    </script>
+</body>
+</html>

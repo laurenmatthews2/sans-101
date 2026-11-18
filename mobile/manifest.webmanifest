@@ -1,0 +1,22 @@
+{
+  "name": "ISIS SANS 101",
+  "short_name": "SANS 101",
+  "description": "A guide for new and returning users of the ISIS SANS instruments: plan, propose, measure, reduce and analyse.",
+  "lang": "en-GB",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f6f8fb",
+  "theme_color": "#1a365d",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Which instrument?", "url": "./index.html#picker" },
+    { "name": "Data reduction", "url": "./html_pages/data-reduction.html" },
+    { "name": "Data analysis", "url": "./html_pages/data-analysis.html" }
+  ]
+}

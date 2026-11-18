@@ -1,0 +1,103 @@
+/* ISIS SANS 101
+   Copyright (c) 2026 Lauren Matthews. Developed with the assistance of Claude (Anthropic).
+   Source code licensed under the MIT License (see LICENSE.txt at the site root). */
+/* ISIS SANS 101 - phone and tablet layer.
+   Linked from every page AFTER the page's own <style>, so these rules win on small screens.
+   Nothing in here changes the desktop layout: every block sits inside a media query,
+   apart from the two touch rules at the top, which only matter on touchscreens. */
+
+/* ---- touch: let a finger on a plot scroll the page ----
+   Several pages set canvas{touch-action:none}, which stops the page scrolling whenever
+   a finger lands on a plot. Only the draggable detector image needs that. */
+canvas{touch-action:auto}
+#cDet{touch-action:none}
+
+/* tooltips on the "i" markers (data reduction page) opened by a tap; see app.js */
+.ctl.tip-open::after{opacity:1!important;visibility:visible!important;transform:none!important}
+
+/* ---- fingers instead of a mouse ---- */
+@media (pointer:coarse){
+  button,.btn,select:not([size]),input[type=number],input[type=text]{min-height:44px}
+  /* 16px stops iPhones zooming the page whenever a field is tapped */
+  input,select,textarea{font-size:16px!important}
+  input[type=checkbox]{width:22px!important;height:22px!important;flex:none}
+  input[type=range]{min-height:36px}
+  nav button.themebtn{min-height:36px}
+  .nb{width:84px!important;min-height:38px!important;padding:4px 6px!important}
+  .li{padding:9px 8px!important;font-size:14px!important}
+  .tipi{position:relative;width:20px!important;height:20px!important;line-height:18px!important;font-size:12px!important}
+  .tipi::after{content:"";position:absolute;inset:-12px}
+  .presets button,.seg button{min-height:40px}
+  /* hover never fires reliably on a touchscreen, so tooltips open from the "i" instead */
+  .ctl:hover::after,.ctl:has(label:hover)::after,.ctl:has(input:focus-visible)::after{opacity:0;visibility:hidden}
+}
+
+/* ---- tablets and phones ---- */
+@media (max-width:900px){
+  /* room for the notch and rounded corners when installed (viewport-fit=cover) */
+  body>nav:not(.sans-nav){padding-top:env(safe-area-inset-top,0px)}
+  body>header:not(.hero),main,.wrap{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+  html{scroll-padding-top:calc(60px + env(safe-area-inset-top,0px))}
+
+  /* section links along the top: keep the theme button in view while the links scroll */
+  body>nav:not(.sans-nav) .in{padding-right:0;scrollbar-width:none}
+  body>nav:not(.sans-nav) .in::-webkit-scrollbar{display:none}
+  nav button.themebtn{position:sticky;right:10px;margin-right:10px;z-index:1;box-shadow:-14px 0 12px 8px var(--panel),14px 0 0 8px var(--panel)}
+
+  /* landing page */
+  .hero-inner{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+  /* the light/dark switch scrolls away with the header instead of floating over the text */
+  .theme-toggle{position:absolute;top:calc(10px + env(safe-area-inset-top,0px))}
+
+  /* tab rows that are wider than the screen scroll sideways instead of spilling out */
+  .tabs{overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:none;white-space:nowrap;padding-left:14px;padding-right:14px}
+
+  /* anything that pops into view should not sit under the bottom bar */
+  html{scroll-padding-bottom:80px}
+}
+
+/* ---- phones ---- */
+@media (max-width:640px){
+  section{padding:28px 0}
+  h2{font-size:24px}
+  .box,.qbox,.quiz{padding:14px}
+  .chartbox,.qchartbox{height:360px}
+  .plot:not(.s){height:340px!important}
+  .paper{padding:18px 16px;text-align:left}
+  .meta{gap:12px}
+  th,td{padding:8px 10px}
+  #cDet{max-width:300px;margin:0 auto}
+
+  /* instrument pages: the strip of nine components */
+  .sch{min-width:760px;--ic:58px;padding:30px 60px 8px 6px}
+  .sw{scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+      -webkit-mask-image:linear-gradient(90deg,#000 0,#000 84%,transparent);mask-image:linear-gradient(90deg,#000 0,#000 84%,transparent)}
+  .sw::-webkit-scrollbar{display:none}
+  .nd{scroll-snap-align:center}
+  .nd b{font-size:12px}
+  .nd small{font-size:11px}
+
+  /* Previous / Next stay in reach while you read about a component */
+  .insp .hd{position:sticky;top:calc(48px + env(safe-area-inset-top,0px));z-index:3;background:var(--panel);padding-top:8px;margin-top:-8px}
+  .insp h3{font-size:16px;line-height:1.3}
+  .pn button{white-space:nowrap}
+
+  /* the diagrams are drawn 760 units wide; keep them readable and let them pan */
+  .dgfig{padding:10px}
+  .dgfig::before{content:"Swipe the diagram sideways to see all of it";display:block;font-size:12.5px;color:var(--mute);margin:0 0 6px}
+  #dDiag{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  #dDiag svg.dg{min-width:640px}
+  .dgk{flex-wrap:wrap;gap:6px 14px}
+
+  /* Mantid screenshots pan sideways too */
+  .gwrap{-webkit-overflow-scrolling:touch}
+  .gwrap::before{content:"Swipe sideways to see the whole window";display:block;position:sticky;left:0;font-size:12.5px;line-height:1.4;color:var(--mute);padding:6px 10px}
+
+  /* proposal page: beamtime bars */
+  .bars .br{grid-template-columns:96px 1fr 56px}
+  .tn{font-size:36px}
+}
+
+@media print{.dgfig::before,.gwrap::before{display:none}}

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="../device-redirect.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thinking of applying for beamtime? (ISIS SANS)</title>
+<meta name="author" content="Lauren Matthews">
+<meta name="copyright" content="(c) 2026 Lauren Matthews">
+<link rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+<!--
+  ISIS SANS 101
+  Copyright (c) 2026 Lauren Matthews.
+  Developed with the assistance of Claude (Anthropic).
+  Text and figures: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+    https://creativecommons.org/licenses/by-sa/4.0/
+  Source code: MIT License (see LICENSE.txt at the site root).
+  Third-party material is excluded from these licences; see the credits page.
+-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f6f8fa;--panel:#fff;--ink:#14212b;--mute:#5a6b78;--line:#d3dce3;--accent:#0b6e79;--accent2:#c2410c;--soft:#e2f0f1;--grid:#e6ebef;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1a21;--panel:#162531;--ink:#e6edf2;--mute:#9bb0bd;--line:#2a3d4b;--accent:#4cc3cf;--accent2:#fb923c;--soft:#173844;--grid:#223441;color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0f1a21;--panel:#162531;--ink:#e6edf2;--mute:#9bb0bd;--line:#2a3d4b;--accent:#4cc3cf;--accent2:#fb923c;--soft:#173844;--grid:#223441;color-scheme:dark}
+nav button.themebtn{margin-left:auto;flex:none;padding:6px 12px;font-size:13px;margin-top:6px;margin-bottom:6px}
+*{box-sizing:border-box}
+html{scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+header,main,nav .in{max-width:1000px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);z-index:5}
+nav .in{display:flex;gap:18px;overflow-x:auto;white-space:nowrap}
+nav a{padding:14px 0;color:var(--mute);text-decoration:none;font-size:14px;font-weight:500}
+nav a:hover,nav a:focus-visible{color:var(--accent)}
+h1,h2{font-family:Newsreader,Georgia,serif;font-weight:600;line-height:1.2}
+h1{font-size:clamp(30px,5vw,46px);margin:40px 0 10px}
+h2{font-size:28px;margin:0 0 6px}
+h3{font-size:18px;margin:24px 0 6px}
+.lede{color:var(--mute);max-width:none;margin:0 0 30px}
+section{padding:36px 0;border-top:1px solid var(--line)}
+section>p{max-width:none;color:var(--mute);margin:0 0 18px}
+a{color:var(--accent)}
+strong{color:var(--accent);font-weight:600}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:20px}
+@media(max-width:760px){.row,.row.narrow{grid-template-columns:1fr!important}}
+.list{max-width:none;color:var(--mute);margin:0 0 18px;padding-left:22px}
+.list li{margin:4px 0}
+.list a{text-decoration:none}
+.list a:hover{text-decoration:underline}
+canvas{width:100%;display:block}
+label{display:flex;align-items:center;gap:8px;margin:6px 0;cursor:pointer;font-size:15px}
+input[type=checkbox]{accent-color:var(--accent);width:17px;height:17px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:6px 8px;width:100%}
+button{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:7px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note{font-size:14px;color:var(--mute);margin-top:10px}
+.out2{font-weight:600;color:var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px}
+.card{padding:0;overflow:hidden;text-align:center;font:inherit;display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;align-self:stretch;width:100%}
+.card .img{flex:none;height:110px;background:hsl(var(--h,180) var(--cs) var(--cbl));display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line);color:hsl(var(--h,180) 60% var(--cfl));font-family:Newsreader,serif;font-weight:600;font-size:30px}
+:root{--cs:70%;--cbl:89%;--cfl:28%}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--cs:35%;--cbl:24%;--cfl:78%}}
+:root[data-theme=dark]{--cs:35%;--cbl:24%;--cfl:78%}
+.card .img svg{width:100%;height:100%;padding:8px}
+.card b{display:block;padding:10px 10px 0;font-weight:600}
+.card span.s{display:block;padding:0 10px 10px;font-size:13px;color:var(--mute)}
+.card[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.info{max-width:none;margin-bottom:10px}
+.info .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.badge{display:inline-block;padding:2px 10px;background:var(--soft);color:var(--accent);font-size:12px;font-weight:600;border-radius:99px}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;border-top:1px solid var(--line);padding-top:12px;margin-top:14px;font-size:14px;color:var(--mute)}
+.meta b{display:block;color:var(--ink);font-weight:600}
+.empty{border-style:dashed;text-align:center;color:var(--mute);font-size:14px}
+.tablewrap{overflow-x:auto;margin:0 0 24px}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);font-size:15px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-weight:600}
+tbody tr:hover{background:var(--bg)}
+.chartbox{position:relative;height:420px}
+.inst{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500}
+.ok{color:#15803d;font-weight:600}.part{color:var(--accent2);font-weight:600}.no{color:var(--mute)}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px}
+
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.seg button{border:0;border-radius:0;background:var(--panel);padding:6px 14px;font-size:14px}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--panel)}
+input[type=text],select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:6px 8px;width:100%}
+.presets button{margin:0 6px 6px 0;padding:4px 10px;font-size:13px}
+.formula{font-family:Newsreader,Georgia,serif;font-size:20px;text-align:center;padding:12px;background:var(--soft);border-radius:6px;margin:0 0 18px;overflow-x:auto}
+.cbar{height:16px;border-radius:3px;min-width:2px}
+.err{color:var(--accent2);font-size:14px;margin-top:8px;min-height:20px}
+.outtable td:first-child{color:var(--mute)}
+.outtable td:last-child{font-weight:600;color:var(--accent)}
+footer{padding:30px 0 50px;color:var(--mute);font-size:14px}
+</style>
+</head>
+<body>
+<nav><div class="in">
+<a href="#discuss">Local contact</a><a href="#existing">Existing data</a><a href="#sld">Scattering length density</a><a href="#contrast">Contrast variation</a><a href="#environment">Sample environment</a><a href="#estimator">q-range estimator</a><a href="#proposal">Proposal</a>
+<button id="theme" class="themebtn" type="button">Theme</button></div></nav>
+<header>
+<h1>Thinking of applying for beamtime? Start here</h1>
+<p class="lede">A strong SANS proposal shows that you have already characterised your system, that neutrons are the right tool for the question, and that the experiment you propose is realistic on our instruments. This page walks you through what to prepare <strong>before</strong> you submit.</p>
+</header>
+<main>
+
+<section id="checklist" style="border-top:0;padding-top:0">
+<p style="margin-bottom:10px">Before submitting a proposal, work through this checklist:</p>
+<ol class="list">
+<li><a href="#discuss">Talk to a member of the SANS group about your idea</a></li>
+<li><a href="#existing">Gather existing characterisation data (DLS, microscopy, SAXS, SEC/HPLC and more)</a></li>
+<li><a href="#sld">Work out the scattering length density of your components</a></li>
+<li><a href="#contrast">Decide whether contrast variation or deuteration could answer your question</a></li>
+<li><a href="#environment">Identify the sample environment you will need</a></li>
+<li><a href="#estimator">Check the q-range you need against the instrument configurations</a></li>
+<li><a href="#proposal">Write the proposal so that every choice above is justified</a></li>
+</ol>
+</section>
+
+<section id="discuss">
+<h2>Talk to us first</h2>
+<p>You are very welcome to contact the SANS group before you apply. A short conversation can save a lot of time, and is <strong>essential</strong> if you plan to use a non-standard sample environment, deuterated materials or any equipment that you will bring yourself. Useful things to have ready:</p>
+<ul class="list">
+<li>The scientific question, in one or two sentences, and why neutrons are needed to answer it.</li>
+<li>What you already know about the sample (see the next section).</li>
+<li>The conditions you want to study: temperature, concentration, pH, flow, shear, pressure and so on.</li>
+<li>Whether the sample is, or could be, isotopically labelled or measured in deuterated solvent.</li>
+</ul>
+</section>
+
+<section id="existing">
+<h2>What do we already know about the sample?</h2>
+<p>Reviewers and instrument scientists want to see that the sample is well characterised, stable and reproducible. Prior data also helps us choose the instrument, configuration and sample environment. Select a technique below to see what it contributes and what is worth quoting in your proposal.</p>
+<div class="cards" id="cards"></div>
+<div class="info">
+<div class="box empty" id="defaultPrompt">Select any technique above to display details here.</div>
+<div class="box" id="infoContent" hidden>
+<div class="hd"><div><span class="badge">Prior characterisation</span><h3 id="infoTitle" style="margin:6px 0 0"></h3></div>
+<button id="closeBtn" aria-label="Close panel">Close</button></div>
+<p id="infoDescription" style="margin:10px 0 0;color:var(--mute)"></p>
+<div class="meta"><div><b>What it tells you</b><span id="infoGives"></span></div><div><b>Limitations</b><span id="infoLimits"></span></div><div><b>Worth showing in a proposal</b><span id="infoShow"></span></div></div>
+</div>
+</div>
+<p style="max-width:none;color:var(--mute);margin:0 0 0">You do not need every technique. Choose the two or three that best demonstrate sample quality and that tell us the length scales to expect, then explain what <em>remains unknown</em> that SANS can address.</p>
+</section>
+
+<section id="sld">
+<h2>Scattering length density: your chemistry, as neutrons see it</h2>
+<p>A SANS (or SAXS) experiment does not see atoms individually; it sees how the <strong>scattering length density (SLD)</strong> varies from place to place in your sample. Particles, polymers, micelles or membranes are visible because their SLD differs from that of their surroundings. The SLD follows directly from the <strong>chemical composition</strong> and the <strong>mass density</strong>, so you can calculate it before you ever come to ISIS, and it tells you how strong the signal will be and whether contrast variation is worth considering.</p>
+<div class="formula" aria-label="SLD equals sum of scattering lengths divided by molecular volume">ρ<sub>SLD</sub> = Σ<sub>i</sub> b<sub>i</sub> / V<sub>m</sub> = d · N<sub>A</sub> · Σ<sub>i</sub> b<sub>i</sub> / M</div>
+<ul class="list">
+<li><strong>b<sub>i</sub></strong> is the scattering length of each atom in the molecule (or repeat unit), <strong>d</strong> the mass density, <strong>M</strong> the molar mass and <strong>N<sub>A</sub></strong> Avogadro's number.</li>
+<li><strong>Composition matters, including isotopes.</strong> Hydrogen and deuterium have very different neutron scattering lengths, which is what makes H/D contrast variation possible.</li>
+<li><strong>Exchangeable hydrogens</strong> (for example in -OH, -NH or -COOH groups) swap with the solvent, so the effective SLD of proteins, DNA, polysaccharides and similar materials depends on the H₂O/D₂O ratio.</li>
+<li><strong>Density is part of the answer.</strong> Use the density of the material in your sample (for a dissolved or hydrated component, the partial specific volume), not necessarily the bulk dry value.</li>
+</ul>
+
+<h3>Neutrons and X-rays see atoms differently</h3>
+<p style="max-width:none;color:var(--mute);margin:0 0 14px">X-rays scatter from electrons, so an atom's scattering length grows steadily with atomic number Z (heavy atoms dominate). Neutrons scatter from nuclei, so scattering lengths vary irregularly between elements and even between isotopes, and can be negative (as for ¹H). Compare them below.</p>
+<div class="box">
+<div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:10px">
+<span style="font-size:14px;color:var(--mute)">Show:</span>
+<div class="seg" id="probeSeg" role="group" aria-label="Probe to display">
+<button type="button" data-mode="both" aria-pressed="true">Both</button>
+<button type="button" data-mode="n" aria-pressed="false">Neutrons</button>
+<button type="button" data-mode="x" aria-pressed="false">X-rays</button></div></div>
+<div class="chartbox" style="height:340px"><canvas id="elemChart" aria-label="Neutron and X-ray scattering lengths of common elements"></canvas></div>
+<div class="note">Neutron values are coherent scattering lengths b<sub>c</sub> for natural isotopic abundance (D is ²H). X-ray values are Z × 2.818 fm, the electron scattering length times Z, without anomalous corrections.</div>
+</div>
+
+<h3>Which probe can see the difference?</h3>
+<p style="max-width:none;color:var(--mute);margin:0 0 14px">Pick two materials and see how much contrast (Δρ) each probe gives between them. Water and heavy water are almost identical to X-rays but very different to neutrons; gold stands out far more to X-rays.</p>
+<div class="box"><div class="row narrow" style="grid-template-columns:minmax(0,260px) minmax(0,1fr)">
+<div>
+<label style="display:block">Material A</label><select id="matA" aria-label="Material A"></select>
+<label style="display:block;margin-top:10px">Material B</label><select id="matB" aria-label="Material B"></select>
+</div>
+<div id="cmpOut"></div>
+</div></div>
+
+<h3>SLD calculator</h3>
+<p style="max-width:none;color:var(--mute);margin:0 0 14px">Enter a chemical formula and a mass density to calculate the neutron and X-ray SLD, together with the incoherent and absorption cross-sections that affect sample thickness and background. It is modelled on the <a href="https://www.ncnr.nist.gov/resources/sldcalc.html" target="_blank" rel="noopener noreferrer">NIST SLD calculator</a>, which you should use for elements not included here. Use <b>D</b> for deuterium, brackets for groups, and decimals if needed, e.g. <b>C8D8</b> or <b>C12H25NaO4S</b>.</p>
+<div class="box"><div class="row narrow" style="grid-template-columns:minmax(0,300px) minmax(0,1fr)">
+<div>
+<label style="display:block" for="sldFormula">Chemical formula</label>
+<input id="sldFormula" type="text" value="H2O" autocomplete="off" spellcheck="false" aria-label="Chemical formula">
+<label style="display:block;margin-top:10px" for="sldDensity">Mass density (g/cm³)</label>
+<input id="sldDensity" type="number" min="0.001" step="0.01" value="1">
+<label style="display:block;margin-top:10px" for="sldLambda">Neutron wavelength (Å)</label>
+<input id="sldLambda" type="number" min="0.5" step="0.1" value="6">
+<label style="display:block;margin-top:10px" for="sldThick">Sample thickness (mm)</label>
+<input id="sldThick" type="number" min="0" step="0.1" value="1">
+<div class="err" id="sldErr" role="alert"></div>
+<div style="font-weight:600;font-size:14px;margin:6px 0">Examples</div>
+<div class="presets" id="sldPresets"></div>
+</div>
+<div class="tablewrap" style="margin:0"><table class="outtable">
+<thead><tr><th>Quantity</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Molar mass (g/mol)</td><td id="oM"></td></tr>
+<tr><td>Neutron SLD (×10⁻⁶ Å⁻²)</td><td id="oN"></td></tr>
+<tr><td>X-ray SLD (×10⁻⁶ Å⁻²)</td><td id="oX"></td></tr>
+<tr><td>Incoherent scattering (cm⁻¹)</td><td id="oInc"></td></tr>
+<tr><td>Absorption at this wavelength (cm⁻¹)</td><td id="oAbs"></td></tr>
+<tr><td>Neutron 1/e length (cm)</td><td id="oLe"></td></tr>
+<tr><td>Transmission through the thickness (%)</td><td id="oTr"></td></tr>
+<tr><td>H₂O/D₂O match point (% D₂O)</td><td id="oMatch"></td></tr>
+</tbody></table></div>
+</div>
+<div class="note">X-ray SLD is the classical value with no anomalous (energy-dependent) corrections. Incoherent scattering and absorption use tabulated cross-sections, with absorption scaled linearly with wavelength. The 1/e length combines both. The match point assumes no H/D exchange, so for exchangeable materials use the contrast section and calculate the exchanged formula. Check values for your own sample with your local contact before applying.</div>
+</div>
+</section>
+
+<section id="contrast">
+<h2>Contrast variation: a route worth considering</h2>
+<p>Neutrons scatter from nuclei, and hydrogen (¹H) and deuterium (²H) scatter very differently. By changing the H/D content of the solvent, or of one component, you can make parts of a multi-component system effectively <strong>invisible</strong> and highlight the rest. The intensity scales with the square of the <em>contrast</em>, Δρ², which is the difference between the scattering length density (SLD) of a component and that of the solvent.</p>
+<ul class="list">
+<li><strong>Solvent contrast variation:</strong> mix H₂O and D₂O (or equivalent H/D solvents). Cheap, simple, and compatible with sample changers.</li>
+<li><strong>Contrast matching:</strong> choose the mixture where one component has Δρ = 0, so you see only what remains (for example, the protein in a protein-lipid complex).</li>
+<li><strong>Selective deuteration:</strong> label one component (polymer, surfactant, lipid, protein) so it stands out in a hydrogenated or matched background. This needs planning and lead time, so discuss it early.</li>
+<li><strong>Contrast series:</strong> measure several H₂O/D₂O ratios and analyse them together to separate the shape, size and distribution of the components.</li>
+</ul>
+
+<div class="box"><div class="row narrow" style="grid-template-columns:minmax(0,280px) minmax(0,1fr)">
+<div>
+<label style="display:block">D₂O in solvent: <b class="out2" id="d2oValue">0 %</b></label>
+<input id="d2oSlider" type="range" min="0" max="100" value="0" aria-label="Percentage of D2O in solvent">
+<div style="margin-top:8px;font-size:14px;color:var(--mute)">Solvent SLD: <b class="out2" id="solvSld"></b> ×10⁻⁶ Å⁻²</div>
+<div style="margin-top:16px;font-weight:600;font-size:15px">Components</div>
+<div id="compList" style="margin-top:6px"></div>
+<div class="note">Approximate SLDs, with exchangeable hydrogens assumed to equilibrate with the solvent. Calculate exact values for your own material before applying.</div>
+</div>
+<div><div class="chartbox"><canvas id="contrastChart" aria-label="Relative scattering from each component against D2O percentage"></canvas></div></div>
+</div>
+<div class="tablewrap" style="margin:18px 0 0"><table>
+<thead><tr><th>Component</th><th>SLD (×10⁻⁶ Å⁻²)</th><th>Match point (% D₂O)</th><th>Contrast Δρ at current setting</th></tr></thead>
+<tbody id="contrastTable"></tbody></table></div>
+</div>
+<p style="max-width:none;color:var(--mute);margin:14px 0 0">Reference points: H₂O has an SLD of about −0.56 and D₂O about 6.37 ×10⁻⁶ Å⁻². Solvent SLD varies linearly with D₂O fraction. Remember that more D₂O gives a lower incoherent background than H₂O, but that H-rich samples in D₂O may need different thicknesses. Your local contact can help.</p>
+
+<h3>Is contrast variation right for me?</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Your situation</th><th>Suggested route</th></tr></thead>
+<tbody>
+<tr><td>One component dominates and you only need overall size and shape</td><td>A single contrast (often D₂O) is usually enough.</td></tr>
+<tr><td>Core-shell particle, micelle or coated colloid</td><td>Match the shell or core, or measure a short H₂O/D₂O series.</td></tr>
+<tr><td>Protein-lipid, protein-polymer or protein-nucleic acid complex</td><td>Contrast match one partner; consider deuterating one component.</td></tr>
+<tr><td>Polymer blend or one chain within a matrix</td><td>Selective deuteration, with a deuterated fraction in a hydrogenated matrix.</td></tr>
+<tr><td>Multi-component formulation or mixed micelles</td><td>A contrast series with global analysis; ask us about planning the number of contrasts.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="environment">
+<h2>Which sample environment will I need?</h2>
+<p>Many experiments use the standard sample changers, but ISIS can also support more specialised environments. Select one to see how it works, what it is good for and what to think about. Availability changes, so always confirm with your local contact <strong>before</strong> submitting a proposal.</p>
+<div class="cards" id="envCards"></div>
+<div class="info">
+<div class="box empty" id="envPrompt">Select any environment above to display details here.</div>
+<div class="box" id="envContent" hidden>
+<div class="hd"><div><span class="badge">Sample environment</span><h3 id="envTitle" style="margin:6px 0 0"></h3></div>
+<button id="envClose" aria-label="Close panel">Close</button></div>
+<div class="row narrow" style="margin-top:10px;grid-template-columns:minmax(0,220px) minmax(0,1fr)">
+<div id="envSvg" style="background:var(--soft);border-radius:6px;padding:8px"></div>
+<p id="envDesc" style="margin:0;color:var(--mute)"></p></div>
+<div class="meta"><div><b>Good for</b><span id="envGood"></span></div><div><b>Think about</b><span id="envThink"></span></div><div><b>Typical parameters</b><span id="envParams"></span></div></div>
+</div>
+</div>
+<h3>Other ISIS and user-developed environments</h3>
+<p style="max-width:none;color:var(--mute);margin:0 0 12px">A detailed list of ISIS sample environment equipment can be found <a href="https://www.isis.stfc.ac.uk/using-isis/academics/experimental-support/sample-environment/" target="_blank" rel="noopener noreferrer"><b>here</b></a>. User-developed equipment is also welcome, but it <strong>must</strong> be discussed with us before proposal submission so that we can check compatibility with the beamline and with safety requirements.</p>
+</section>
+
+<section id="estimator">
+<h2>Does my size range fit the instruments?</h2>
+<p>Your DLS, microscopy or SAXS results already tell you roughly which length scales matter. Enter the largest object or correlation length and the smallest feature you want to resolve to see which configurations cover them. This uses the simple rules q<sub>min</sub> ≈ π / D<sub>max</sub> and q<sub>max</sub> ≈ 2π / d<sub>min</sub>, so treat it as a first guide only.</p>
+<div class="box"><div class="row narrow" style="grid-template-columns:minmax(0,260px) minmax(0,1fr)">
+<div>
+<label style="display:block">Largest size D<sub>max</sub> (nm)</label>
+<input id="dmax" type="number" min="1" step="1" value="100" aria-label="Largest size in nanometres">
+<label style="display:block;margin-top:10px">Smallest feature d<sub>min</sub> (nm)</label>
+<input id="dmin" type="number" min="0.1" step="0.1" value="2" aria-label="Smallest feature in nanometres">
+<div style="margin-top:14px;font-size:15px">Needed q-range:<br><b class="out2" id="needQ"></b></div>
+</div>
+<div class="tablewrap" style="margin:0"><table>
+<thead><tr><th>Instrument</th><th>Config.</th><th>q-range (Å⁻¹)</th><th>Coverage</th></tr></thead>
+<tbody id="estTable"></tbody></table></div>
+</div></div>
+<p class="note">Combining configurations on one instrument extends the range, and overlapping q-ranges give you a check. Discuss this with your local contact.</p>
+</section>
+
+<section id="proposal">
+<h2>Putting it together in your proposal</h2>
+<p>A well-prepared proposal tends to include the following:</p>
+<ul class="list">
+<li>A clear scientific question, and why SANS (rather than light scattering, SAXS or microscopy alone) can answer it.</li>
+<li>Key prior data (for example DLS size distribution, a cryo-TEM image, a SAXS curve, an SEC trace) demonstrating sample quality and expected length scales.</li>
+<li>Your chosen contrast strategy, including any deuterated materials and how they will be sourced.</li>
+<li>The sample environment, with the conditions and number of samples to be measured.</li>
+<li>The instrument and q-range you intend to use, and a realistic estimate of the time needed.</li>
+<li>Any safety considerations (chemicals, biological material, bringing your own equipment), which will lead into the risk assessments if you are awarded time.</li>
+</ul>
+<p style="margin-top:14px">If you are successful, our companion page <em>"You've got beamtime, but what do you do now?"</em> takes you through the next steps.</p>
+</section>
+
+</main>
+<footer><div style="max-width:1000px;margin:0 auto;padding:0 20px">&copy; 2026 Lauren Matthews. Developed with the assistance of Claude (Anthropic). Text and figures licensed under <a style="color:inherit" rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; source code under the <a style="color:inherit" href="../LICENSE.txt">MIT License</a>. Third-party material is excluded; see <a style="color:inherit" href="credits.html">Credits</a>.</div></footer>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var css=function(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()};
+
+/* ---------- technique cards ---------- */
+var TECH=[
+{t:"DLS",ab:"DLS",s:"Dynamic light scattering",
+ d:"Measures how fast particles diffuse in solution through fluctuations in scattered light, and converts that into a hydrodynamic size distribution. It is quick, uses little sample and is often the first check on a new batch.",
+ g:"Hydrodynamic radius, polydispersity, signs of aggregation, and stability over time or temperature.",
+ l:"Strongly weighted towards the largest particles, and gives no shape or internal structure. Poor for polydisperse or very concentrated samples.",
+ sh:"Size distribution plots with the concentration and temperature used, and repeat batches to show reproducibility."},
+{t:"Microscopy",ab:"EM",s:"TEM, cryo-EM, SEM, AFM",
+ d:"Direct images of particles, fibres, vesicles or surfaces. Cryo-TEM is especially valuable for soft matter and biological samples because it preserves the solution structure.",
+ g:"Morphology, approximate dimensions, and whether the structures you assume are really present.",
+ l:"Looks at a tiny number of particles in a prepared state (dried, frozen or on a surface), so it may not represent the bulk solution.",
+ sh:"Representative images with scale bars, plus a note on how the sample was prepared and how it compares with the solution conditions."},
+{t:"SAXS",ab:"SAXS",s:"Small-angle X-ray scattering",
+ d:"Probes the same length scales as SANS, using X-rays. A SAXS curve shows how well the sample scatters, its overall size and shape, and which q-range will be important.",
+ g:"Radius of gyration, shape, interparticle interactions, and the q-range with features that you will want to measure with neutrons.",
+ l:"X-ray contrast follows electron density, so it cannot separate components the way neutron contrast variation can, and some samples are damaged by the beam.",
+ sh:"The curve itself, any fit, and a statement of what the X-ray data could not distinguish and why neutrons will."},
+{t:"SEC / HPLC",ab:"SEC",s:"Chromatography, SEC-MALS",
+ d:"Size-exclusion chromatography separates species by size and can be combined with multi-angle light scattering (MALS) and UV or refractive index detection. Reverse-phase and other HPLC modes check purity and composition.",
+ g:"Purity, oligomeric state, aggregate content, molar mass (with MALS), and the composition of mixtures.",
+ l:"The sample is diluted and the buffer and column can change its state, so it may not reflect the sample at the concentration you will measure.",
+ sh:"Chromatograms showing a single, well-resolved species (or the mixture you expect), with the column and buffer used."},
+{t:"Light scattering",ab:"SLS",s:"Static light scattering, zeta potential",
+ d:"Static light scattering gives molar mass and interactions (second virial coefficient), while zeta potential indicates the surface charge and colloidal stability.",
+ g:"Weight-average molar mass, interactions in solution, and how charge stabilises particles.",
+ l:"Limited length-scale information, and sensitive to dust or large aggregates.",
+ sh:"Values with the buffer, pH and ionic strength, especially if interactions are central to the proposed study."},
+{t:"Composition & purity",ab:"UV",s:"UV-Vis, NMR, mass spec, gels",
+ d:"Routine analytical data that confirm concentration, identity and purity. For neutron work these also tell you the molecular formula, which is needed to calculate scattering length densities accurately.",
+ g:"Concentration, extinction coefficient, degree of labelling or deuteration, and sample identity.",
+ l:"No direct information on structure in solution.",
+ sh:"Concentration, purity and (if relevant) deuteration level, plus the molecular formula or sequence."}
+];
+var HUES=[0,28,50,140,200,275];
+var cardEls=[];
+TECH.forEach(function(p,i){
+  var b=document.createElement("button");b.className="card";b.setAttribute("aria-pressed","false");
+  b.innerHTML='<div class="img">'+p.ab+'</div><b>'+p.t+'</b><span class="s">'+p.s+'</span>';
+  b.style.setProperty("--h",HUES[i%HUES.length]);
+  b.onclick=function(){showInfo(i)};$("cards").appendChild(b);cardEls.push(b)});
+function showInfo(i){
+  var d=TECH[i];
+  cardEls.forEach(function(c,j){c.setAttribute("aria-pressed",j===i)});
+  $("infoTitle").textContent=d.t+" ("+d.s+")";$("infoDescription").textContent=d.d;
+  $("infoGives").textContent=d.g;$("infoLimits").textContent=d.l;$("infoShow").textContent=d.sh;
+  $("defaultPrompt").hidden=true;$("infoContent").hidden=false;
+  $("infoContent").scrollIntoView({behavior:"smooth",block:"nearest"})}
+$("closeBtn").onclick=function(){$("infoContent").hidden=true;$("defaultPrompt").hidden=false;cardEls.forEach(function(c){c.setAttribute("aria-pressed","false")})};
+
+/* ---------- contrast variation ---------- */
+var COMP=[
+{n:"Protein (H)",sld:2.4,color:"#e11d48"},
+{n:"DNA",sld:3.7,color:"#f59e0b"},
+{n:"Lipid tails (H)",sld:-0.4,color:"#10b981"},
+{n:"Silica",sld:3.47,color:"#3b82f6"},
+{n:"Polystyrene (H)",sld:1.41,color:"#8b5cf6"},
+{n:"Polystyrene (D)",sld:6.4,color:"#64748b"}];
+var H2O=-0.56,SLOPE=6.93;
+function solv(f){return H2O+SLOPE*f/100}
+function match(s){return (s-H2O)/SLOPE*100}
+COMP.forEach(function(s){
+  var l=document.createElement("label");l.className="inst";
+  var c=document.createElement("input");c.type="checkbox";c.checked=true;c.style.accentColor=s.color;c.addEventListener("change",update);
+  var t=document.createElement("span");t.textContent=s.n;t.style.color=s.color;
+  l.appendChild(c);l.appendChild(t);$("compList").appendChild(l)});
+function cchecks(){return [].slice.call($("compList").querySelectorAll("input"))}
+var cchart=null;
+function yMax(on){
+  var m=0;
+  COMP.forEach(function(s,i){
+    if(on[i].checked)m=Math.max(m,Math.pow(s.sld-H2O,2),Math.pow(s.sld-(H2O+SLOPE),2))});
+  return m>0?Math.ceil(m*1.1):10}
+function buildTable(f){
+  var sv=solv(f),h="";
+  COMP.forEach(function(s,i){
+    var m=match(s.sld);
+    h+='<tr><td><span class="sw" style="background:'+s.color+'"></span> '+s.n+'</td><td>'+s.sld.toFixed(2)+'</td><td>'+(m>=0&&m<=100?m.toFixed(0)+' %':'above 100 %')+'</td><td>'+(s.sld-sv).toFixed(2)+'</td></tr>'});
+  $("contrastTable").innerHTML=h;$("solvSld").textContent=sv.toFixed(2);$("d2oValue").textContent=f+" %"}
+function build(){
+  if(cchart)cchart.destroy();
+  var f=+$("d2oSlider").value,xs=[],ds=[];
+  for(var x=0;x<=100;x+=2)xs.push(x);
+  Chart.defaults.font.family='"IBM Plex Sans",system-ui,sans-serif';Chart.defaults.color=css("--mute");
+  var grid=css("--grid"),on=cchecks();
+  COMP.forEach(function(s,i){
+    ds.push({label:s.n,data:xs.map(function(x){return{x:x,y:Math.pow(s.sld-solv(x),2)}}),borderColor:s.color,borderWidth:2.5,pointRadius:0,hidden:!on[i].checked,tension:0})});
+  COMP.forEach(function(s,i){
+    ds.push({label:"pt"+i,data:[{x:f,y:Math.pow(s.sld-solv(f),2)}],borderColor:s.color,backgroundColor:s.color,pointRadius:6,showLine:false,hidden:!on[i].checked})});
+  cchart=new Chart($("contrastChart").getContext("2d"),{type:"line",data:{datasets:ds},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,parsing:false,
+    scales:{x:{type:"linear",min:0,max:100,title:{display:true,text:"D₂O in solvent (%)",font:{weight:"bold"}},grid:{color:grid}},
+            y:{type:"linear",min:-5,max:yMax(on),title:{display:true,text:"Relative scattering ∝ (Δρ)²",font:{weight:"bold"}},grid:{color:grid}}},
+    plugins:{legend:{position:"top",labels:{boxWidth:14,font:{size:11},filter:function(it,data){return it.datasetIndex<COMP.length&&!data.datasets[it.datasetIndex].hidden}},onClick:function(){}},
+      tooltip:{filter:function(it){return it.datasetIndex<COMP.length},callbacks:{title:function(it){return it[0].parsed.x+" % D₂O"},label:function(it){return it.dataset.label+": "+it.parsed.y.toFixed(1)}}}}}});
+  buildTable(f)}
+function update(){
+  if(!cchart)return;
+  var f=+$("d2oSlider").value,on=cchecks();
+  COMP.forEach(function(s,i){
+    var line=cchart.data.datasets[i],pt=cchart.data.datasets[COMP.length+i];
+    line.hidden=!on[i].checked;pt.hidden=!on[i].checked;
+    pt.data=[{x:f,y:Math.pow(s.sld-solv(f),2)}]});
+  cchart.options.scales.y.max=yMax(on);
+  cchart.update("none");buildTable(f)}
+$("d2oSlider").addEventListener("input",update);
+build();
+
+/* ---------- sample environments ---------- */
+var st='stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+function svg(inner){return '<svg viewBox="0 0 200 110" '+st+' aria-hidden="true">'+inner+'</svg>'}
+var ENV=[
+{t:"Sample changer",s:"Cuvettes in racks",
+ svg:svg('<rect x="15" y="62" width="170" height="30" rx="3"/><path d="M35 62V30h18v32M72 62V30h18v32M109 62V30h18v32M146 62V30h18v32"/>'),
+ d:"The workhorse of SANS. Many samples are loaded into cuvettes in a rack, which is moved automatically through the beam, so you can measure a whole series (concentrations, contrasts, formulations) in one session. Cuvette types and pathlengths are described on our beamtime preparation page.",
+ good:"Concentration series, contrast series, screening many formulations, liquids, gels and powders.",
+ think:"Sample volume, pathlength and contrast, plus rack capacity.",
+ par:"Typically a few mm pathlength and sub-mL to mL volumes."},
+{t:"Temperature control",s:"Heated and cooled racks",
+ svg:svg('<rect x="40" y="25" width="120" height="65" rx="4"/><rect x="85" y="40" width="30" height="40"/><g transform="translate(62 58) scale(1.06) translate(-62 -65)"><path d="M62 82c-10 0-14-8-10-16 3-6 8-9 8-18 7 5 14 12 14 22 0 7-4 12-12 12z"/><path d="M62 82c-4 0-6-3-4-7 1-2 3-3 4-6 3 2 5 5 5 8 0 3-2 5-5 5z" opacity=".6"/></g><path d="M138 58L138.0 40.0M138.0 46.5L141.9 42.6M138.0 46.5L134.1 42.6M138 58L153.6 49.0M148.0 52.2L153.3 53.7M148.0 52.2L149.4 46.9M138 58L153.6 67.0M148.0 63.8L149.4 69.1M148.0 63.8L153.3 62.3M138 58L138.0 76.0M138.0 69.5L134.1 73.4M138.0 69.5L141.9 73.4M138 58L122.4 67.0M128.0 63.8L122.7 62.3M128.0 63.8L126.6 69.1M138 58L122.4 49.0M128.0 52.2L126.6 46.9M128.0 52.2L122.7 53.7"/>'),
+ d:"Thermostatted sample changers let you follow phase behaviour, micellisation, thermal unfolding or gelation while keeping the convenience of many samples per run.",
+ good:"Temperature series, thermal transitions, stability tests, physiological temperatures.",
+ think:"Equilibration time at each temperature, and whether evaporation or sample degradation is a risk.",
+ par:"Range depends on the equipment; confirm with your local contact."},
+{t:"Magnet",s:"Applied magnetic field",
+ svg:svg('<path d="M65 22H85V65A15 15 0 0 0 115 65V22H135V65A35 35 0 0 1 65 65Z"/><path d="M65 36H85M115 36H135" opacity=".6"/><circle cx="100" cy="46" r="7"/><path d="M88 58h24" stroke-dasharray="3 3"/>'),
+ d:"A sample can be placed in a magnetic field while it is in the beam. This lets you study how magnetic or magnetically responsive structures change, align or order under the field.",
+ good:"Magnetic nanoparticles, ferrofluids, field-aligned soft matter, and magnetic structure in materials.",
+ think:"Field strength and direction, the sample space available, and how the field geometry relates to the beam.",
+ par:"Magnet type and field range vary; confirm availability and fit with your local contact."},
+{t:"Rheo-SANS",s:"Structure under shear",
+ svg:svg('<ellipse cx="100" cy="28" rx="36" ry="9"/><path d="M64 28v50c0 5 16 10 36 10s36-5 36-10V28"/><rect x="90" y="46" width="20" height="20"/><path d="M48 62A52 12 0 0 1 152 62" stroke-dasharray="3 4" opacity=".45"/><path d="M48 62A52 12 0 0 0 133.4 71.2"/><path d="M130.5 76.9L140.3 69.9L128.6 67.1Z" fill="currentColor"/>'),
+ d:"A rheometer is placed in the beam so that the nanostructure can be measured while the sample is sheared. It links flow behaviour to what is happening to micelles, polymers, particles or fibres.",
+ good:"Wormlike micelles, gels, suspensions and polymers under flow; alignment, shear thinning and shear banding.",
+ think:"Sample volume, the beam geometry (radial or tangential) and the shear rates needed.",
+ par:"Set-up and geometry should be agreed in advance."},
+{t:"SEC-SANS",s:"Chromatography in the beam",
+ svg:svg('<circle cx="14" cy="34" r="8"/><circle cx="34" cy="52" r="4"/><circle cx="16" cy="70" r="5"/><circle cx="40" cy="30" r="3"/><rect x="58" y="32" width="50" height="50" rx="4"/><path d="M68 44h30M68 57h30M68 70h30" opacity=".4"/><circle cx="130" cy="57" r="6"/><circle cx="152" cy="57" r="6"/><circle cx="174" cy="57" r="6"/>'),
+ d:"Size-exclusion chromatography is coupled directly to the SANS beam, so a mixture is separated by size before it reaches the neutrons and each fraction is measured on its own. This removes aggregates and impurities that would otherwise dominate the signal. Asymmetric flow field-flow fractionation (AF4) is a possible future extension for larger or more fragile particles that do not suit a column; talk to us if this is relevant to your system.",
+ good:"Mixtures, samples prone to aggregation, oligomeric or polydisperse proteins and complexes, and samples that need separating from impurities.",
+ think:"Neutron counting statistics on dilute eluting fractions, sample concentration and volume, deuterated buffers, and how the separation will be matched to the time resolution of the measurement.",
+ par:"Early planning is essential; availability and feasibility should be agreed before proposal submission."},
+{t:"Stopped-flow and flow-through",s:"Kinetics and pumped samples",
+ svg:svg('<path d="M10 55h50"/><rect x="60" y="40" width="40" height="30" rx="3"/><path d="M100 55h40"/><path d="M130 48l10 7-10 7"/><circle cx="165" cy="55" r="14"/><path d="M165 41v28M151 55h28" opacity=".4"/>'),
+ d:"Stopped-flow rapidly mixes two solutions and follows the structure as it develops, which suits fast self-assembly or aggregation. Flow-through set-ups pump a sample continuously through a cell in the beam using a syringe or peristaltic pump, which allows changes to be followed over time or lets you add reagents while measuring.",
+ good:"Kinetics of self-assembly, aggregation, mixing and formulation processes, and titrations or sequential additions.",
+ think:"Time resolution against neutron flux, sample volume and concentration, tubing and cell materials, and how well the pump delivers the flow you need.",
+ par:"Check feasibility and timing with the instrument team."},
+{t:"DLS-SANS",s:"Light scattering alongside neutrons",
+ svg:svg('<path d="M8 57H85"/><path d="M77 50l8 7-8 7"/><rect x="85" y="32" width="30" height="50" rx="3"/><path d="M115 57h70"/><rect x="25" y="88" width="22" height="12" rx="2"/><path d="M47 90L85 70" stroke-dasharray="3 3"/><path d="M115 44L150 22" stroke-dasharray="3 3"/><circle cx="158" cy="17" r="9"/>'),
+ d:"Dynamic light scattering is measured on the same sample while it is in the neutron beam. The DLS size gives you an immediate check on the state of the sample, and lets you link changes in hydrodynamic size with the nanoscale structure seen by SANS.",
+ good:"Samples where aggregation or stability matters, time- or temperature-dependent studies, and checking that the sample is unchanged during a long measurement.",
+ think:"Sample transparency and concentration for light scattering, cell compatibility with both probes, and the effect of deuterated solvent on the DLS analysis.",
+ par:"Availability and set-up should be confirmed with your local contact."},
+{t:"LED",s:"Light-triggered samples",
+ svg:svg('<path d="M10 55h15"/><path d="M25 38v34l30-17z"/><path d="M55 38v34M55 55h10"/><path d="M72 42h22M72 55h22M72 68h22"/><rect x="100" y="30" width="40" height="50" rx="3"/><path d="M100 50h40" opacity=".5"/><path d="M120 6v22M114 22l6 6 6-6"/><path d="M120 80v24" opacity=".6"/>'),
+ d:"An LED light source illuminates the sample in the beam, so that you can trigger and follow light-induced changes in structure. The sample can be switched on and off while the nanostructure is measured.",
+ good:"Photoswitchable surfactants and polymers, photoresponsive gels and colloids, and photo-induced assembly or polymerisation.",
+ think:"Wavelength and intensity, sample pathlength and absorbance (light must reach the whole sample), and heating from the light source.",
+ par:"Wavelength and power options should be discussed with your local contact."},
+{t:"Pressure cell",s:"High pressure",
+ svg:svg('<rect x="55" y="20" width="90" height="70" rx="6"/><circle cx="100" cy="55" r="18"/><path d="M100 20V8M90 8h20" /><path d="M100 55l10-8" opacity=".7"/>'),
+ d:"Cells that allow samples to be measured at elevated pressure, including gases and supercritical fluids. Window materials and safety certification are important here.",
+ good:"Gas uptake, pressure-induced transitions, supercritical fluids, and protein stability.",
+ think:"Pressure range, window materials, sample volume and safety documentation.",
+ par:"Discuss pressure and gas type before applying."},
+{t:"Your own equipment",s:"User-developed",
+ svg:svg('<rect x="30" y="35" width="55" height="45" rx="4"/><path d="M85 57h30"/><circle cx="145" cy="57" r="25"/><path d="M145 40v34M128 57h34" opacity=".5"/>'),
+ d:"Bespoke cells such as electrochemical, humidity, Langmuir trough or microfluidic set-ups are welcome, but they need to be compatible with the beamline and safety rules.",
+ good:"Experiments where a specialised stimulus or measurement needs to run in the beam.",
+ think:"Dimensions, window materials, services needed (power, gas, pumps) and safety review.",
+ par:"Must be discussed with us before proposal submission."}];
+function envHue(i){return Math.round(i*360/ENV.length)}
+var envEls=[];
+ENV.forEach(function(p,i){
+  var b=document.createElement("button");b.className="card";b.setAttribute("aria-pressed","false");
+  b.innerHTML='<div class="img">'+p.svg+'</div><b>'+p.t+'</b><span class="s">'+p.s+'</span>';
+  b.style.setProperty("--h",envHue(i));
+  b.onclick=function(){showEnv(i)};$("envCards").appendChild(b);envEls.push(b)});
+function showEnv(i){
+  var d=ENV[i];
+  envEls.forEach(function(c,j){c.setAttribute("aria-pressed",j===i)});
+  $("envTitle").textContent=d.t;$("envDesc").textContent=d.d;$("envSvg").innerHTML=d.svg.replace('aria-hidden="true"','style="color:hsl('+envHue(i)+' 60% var(--cfl));width:100%" aria-hidden="true"');$("envSvg").style.background="hsl("+envHue(i)+" var(--cs) var(--cbl))";
+  $("envGood").textContent=d.good;$("envThink").textContent=d.think;$("envParams").textContent=d.par;
+  $("envPrompt").hidden=true;$("envContent").hidden=false;
+  $("envContent").scrollIntoView({behavior:"smooth",block:"nearest"})}
+$("envClose").onclick=function(){$("envContent").hidden=true;$("envPrompt").hidden=false;envEls.forEach(function(c){c.setAttribute("aria-pressed","false")})};
+
+/* ---------- q-range estimator ---------- */
+var INST=[
+["Larmor","4 m",0.0035,0.7],["SANS2D","4 m",0.0045,1.0],["SANS2D","6 m",0.0035,1.0],["SANS2D","8 m",0.0025,0.8],
+["SANS2D","12 m",0.0015,0.7],["ZOOM","4 m",0.0045,0.85],["ZOOM","8 m",0.0025,0.45]];
+function est(){
+  var D=+$("dmax").value*10,d=+$("dmin").value*10;
+  if(!(D>0)||!(d>0)){return}
+  var qmin=Math.round(Math.PI/D*1e4)/1e4,qmax=Math.round(2*Math.PI/d*1e3)/1e3;
+  $("needQ").textContent=qmin.toFixed(4)+" – "+qmax.toFixed(3)+" Å⁻¹";
+  var h="";
+  INST.forEach(function(r){
+    var lo=r[2]<=qmin,hi=r[3]>=qmax,c;
+    if(lo&&hi)c='<span class="ok">Full coverage</span>';
+    else if(lo)c='<span class="part">Large sizes only (max q too low)</span>';
+    else if(hi)c='<span class="part">Small features only (min q too high)</span>';
+    else c='<span class="no">Partial</span>';
+    h+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+' – '+r[3]+'</td><td>'+c+'</td></tr>'});
+  $("estTable").innerHTML=h}
+$("dmax").addEventListener("input",est);$("dmin").addEventListener("input",est);est();
+
+
+/* ---------- scattering length density ---------- */
+var ELEM={
+H:{Z:1,b:-3.739,inc:80.26,abs:0.3326,M:1.008},D:{Z:1,b:6.671,inc:2.05,abs:0.000519,M:2.014},
+Li:{Z:3,b:-1.90,inc:0.91,abs:70.5,M:6.94},C:{Z:6,b:6.646,inc:0.001,abs:0.0035,M:12.011},
+N:{Z:7,b:9.36,inc:0.5,abs:1.9,M:14.007},O:{Z:8,b:5.803,inc:0,abs:0.00019,M:15.999},
+F:{Z:9,b:5.654,inc:0.0008,abs:0.0096,M:18.998},Na:{Z:11,b:3.63,inc:1.62,abs:0.53,M:22.990},
+Mg:{Z:12,b:5.375,inc:0.08,abs:0.063,M:24.305},Al:{Z:13,b:3.449,inc:0.0082,abs:0.231,M:26.982},
+Si:{Z:14,b:4.1491,inc:0.004,abs:0.171,M:28.086},P:{Z:15,b:5.13,inc:0.005,abs:0.172,M:30.974},
+S:{Z:16,b:2.847,inc:0.007,abs:0.53,M:32.06},Cl:{Z:17,b:9.577,inc:5.3,abs:33.5,M:35.45},
+K:{Z:19,b:3.67,inc:0.27,abs:2.1,M:39.098},Ca:{Z:20,b:4.70,inc:0.05,abs:0.43,M:40.078},
+Ti:{Z:22,b:-3.438,inc:2.87,abs:6.09,M:47.867},Fe:{Z:26,b:9.45,inc:0.4,abs:2.56,M:55.845},
+Cu:{Z:29,b:7.718,inc:0.55,abs:3.78,M:63.546},Zn:{Z:30,b:5.68,inc:0.077,abs:1.11,M:65.38},
+Br:{Z:35,b:6.795,inc:0.1,abs:6.9,M:79.904},I:{Z:53,b:5.28,inc:0,abs:6.15,M:126.904},
+Au:{Z:79,b:7.63,inc:0.43,abs:98.65,M:196.967}};
+var RE=2.8179403,NA=0.602214; /* r_e in fm; N_A in 1e24 */
+var PRESETS=[
+{n:"H₂O",f:"H2O",d:1},{n:"D₂O",f:"D2O",d:1.107},{n:"Ethanol",f:"C2H6O",d:0.789},
+{n:"Silica",f:"SiO2",d:2.2},{n:"Polystyrene (H)",f:"C8H8",d:1.05},{n:"Polystyrene (D)",f:"C8D8",d:1.13},
+{n:"SDS",f:"C12H25NaO4S",d:1.01},{n:"Gold",f:"Au",d:19.32}];
+function parseFormula(str){
+  var i=0;
+  function num(){var r=/^(\d+\.?\d*|\.\d+)/.exec(str.slice(i));if(r){i+=r[0].length;return parseFloat(r[0])}return 1}
+  function group(){
+    var m={};
+    while(i<str.length){
+      var c=str.charAt(i);
+      if(c==="("){i++;var sub=group();if(str.charAt(i)!==")")throw new Error("Missing closing bracket");i++;var n=num();for(var k in sub)m[k]=(m[k]||0)+sub[k]*n}
+      else if(c===")"){return m}
+      else if(/[A-Z]/.test(c)){var e=c;i++;if(i<str.length&&/[a-z]/.test(str.charAt(i))){e+=str.charAt(i);i++}var n2=num();m[e]=(m[e]||0)+n2}
+      else if(/\s/.test(c)){i++}
+      else throw new Error("Unexpected character \""+c+"\"")}
+    return m}
+  var res=group();
+  if(i<str.length)throw new Error("Unmatched closing bracket");
+  if(!Object.keys(res).length)throw new Error("Enter a chemical formula");
+  return res}
+function calcSLD(formula,rho,lambda,thickMm){
+  var comp=parseFormula(formula),M=0,B=0,Z=0,inc=0,ab=0;
+  for(var e in comp){
+    var d=ELEM[e];if(!d)throw new Error("Element \""+e+"\" is not in this calculator (see the NIST calculator)");
+    var n=comp[e];M+=n*d.M;B+=n*d.b;Z+=n*d.Z;inc+=n*d.inc;ab+=n*d.abs*lambda/1.798}
+  if(!(rho>0))throw new Error("Enter a positive density");
+  var k=rho*NA/M;
+  var sldN=k*B*10,sldX=k*Z*RE*10;
+  var incXS=k*inc,absXS=k*ab,mu=incXS+absXS;
+  var t=Math.max(+thickMm||0,0)/10;
+  return{M:M,sldN:sldN,sldX:sldX,inc:incXS,abs:absXS,le:mu>0?1/mu:Infinity,trans:100*Math.exp(-mu*t),
+    match:(sldN+0.56)/6.93*100}}
+
+function fmt(v,d){return isFinite(v)?v.toFixed(d):"∞"}
+function fmtSig(v){if(!isFinite(v))return"∞";if(v===0)return"0";var a=Math.abs(v);return a<0.001||a>=1e5?v.toExponential(2):(+v.toPrecision(3)).toString()}
+/* element chart */
+var probeMode="both",echart=null,EL=["H","D","C","N","O","Na","Si","P","S","Cl","Ca","Fe"];
+function buildEl(){
+  if(echart)echart.destroy();
+  Chart.defaults.font.family='"IBM Plex Sans",system-ui,sans-serif';Chart.defaults.color=css("--mute");
+  var grid=css("--grid");
+  echart=new Chart($("elemChart").getContext("2d"),{type:"bar",
+    data:{labels:EL.map(function(e){return e==="D"?"D (²H)":e}),datasets:[
+      {label:"Neutron b (fm)",data:EL.map(function(e){return ELEM[e].b}),backgroundColor:css("--accent"),hidden:probeMode==="x"},
+      {label:"X-ray b = Z × 2.818 (fm)",data:EL.map(function(e){return ELEM[e].Z*2.818}),backgroundColor:css("--accent2"),hidden:probeMode==="n"}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,
+      scales:{x:{grid:{color:grid},title:{display:true,text:"Element",font:{weight:"bold"}}},
+              y:{min:-5,max:80,grid:{color:grid},title:{display:true,text:"Scattering length (fm)",font:{weight:"bold"}}}},
+      plugins:{legend:{position:"top",labels:{boxWidth:14,font:{size:11},filter:function(it,data){return!data.datasets[it.datasetIndex].hidden}},onClick:function(){}},
+        tooltip:{callbacks:{label:function(it){return it.dataset.label+": "+it.parsed.y.toFixed(2)}}}}}})}
+[].slice.call($("probeSeg").querySelectorAll("button")).forEach(function(b){
+  b.onclick=function(){
+    probeMode=b.getAttribute("data-mode");
+    [].slice.call($("probeSeg").querySelectorAll("button")).forEach(function(x){x.setAttribute("aria-pressed",x===b)});
+    echart.data.datasets[0].hidden=probeMode==="x";echart.data.datasets[1].hidden=probeMode==="n";echart.update("none")}});
+buildEl();
+/* material comparison */
+PRESETS.forEach(function(m,i){
+  ["matA","matB"].forEach(function(id){var o=document.createElement("option");o.value=i;o.textContent=m.n;$(id).appendChild(o)})});
+$("matA").value=0;$("matB").value=1;
+function cmp(){
+  var a=PRESETS[+$("matA").value],b=PRESETS[+$("matB").value];
+  var ra=calcSLD(a.f,a.d,6,1),rb=calcSLD(b.f,b.d,6,1);
+  var dn=Math.abs(ra.sldN-rb.sldN),dx=Math.abs(ra.sldX-rb.sldX),mx=Math.max(dn,dx,0.001);
+  function line(lbl,sa,sb,dl,col){
+    return '<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><b>'+lbl+'</b><span style="color:var(--mute)">'+a.n+': '+sa.toFixed(2)+' · '+b.n+': '+sb.toFixed(2)+'</span></div>'+
+    '<div style="display:flex;align-items:center;gap:10px;margin-top:4px"><div class="cbar" style="background:'+col+';width:'+(dl/mx*100).toFixed(1)+'%"></div><span class="out2" style="font-size:14px;white-space:nowrap">Δρ = '+dl.toFixed(2)+'</span></div></div>'}
+  var verdict=dn>dx*1.5?"Neutrons give the larger contrast here.":(dx>dn*1.5?"X-rays give the larger contrast here.":"Both probes give a similar contrast here.");
+  $("cmpOut").innerHTML=line("Neutrons (×10⁻⁶ Å⁻²)",ra.sldN,rb.sldN,dn,"var(--accent)")+line("X-rays (×10⁻⁶ Å⁻²)",ra.sldX,rb.sldX,dx,"var(--accent2)")+'<div class="note" style="margin-top:0">'+verdict+'</div>'}
+$("matA").onchange=cmp;$("matB").onchange=cmp;cmp();
+/* calculator */
+function calcUI(){
+  var ids=["oM","oN","oX","oInc","oAbs","oLe","oTr","oMatch"];
+  try{
+    var r=calcSLD($("sldFormula").value,+$("sldDensity").value,+$("sldLambda").value,+$("sldThick").value);
+    $("sldErr").textContent="";
+    $("oM").textContent=fmt(r.M,2);$("oN").textContent=fmt(r.sldN,3);$("oX").textContent=fmt(r.sldX,3);
+    $("oInc").textContent=fmtSig(r.inc);$("oAbs").textContent=fmtSig(r.abs);$("oLe").textContent=fmtSig(r.le);
+    $("oTr").textContent=fmt(r.trans,1);
+    $("oMatch").textContent=r.match<0?"below 0 %":(r.match>100?"above 100 %":fmt(r.match,0)+" %")}
+  catch(e){$("sldErr").textContent=e.message;ids.forEach(function(i){$(i).textContent="–"})}}
+PRESETS.forEach(function(m){
+  var b=document.createElement("button");b.type="button";b.textContent=m.n;
+  b.onclick=function(){$("sldFormula").value=m.f;$("sldDensity").value=m.d;calcUI()};
+  $("sldPresets").appendChild(b)});
+["sldFormula","sldDensity","sldLambda","sldThick"].forEach(function(id){$(id).addEventListener("input",calcUI)});
+calcUI();
+window.matchMedia("(prefers-color-scheme:dark)").addEventListener("change",buildEl);window.addEventListener("themechange",buildEl);
+
+window.matchMedia("(prefers-color-scheme:dark)").addEventListener("change",build);window.addEventListener("themechange",build);
+})();
+</script>
+<script>
+(function(){var r=document.documentElement,m=matchMedia("(prefers-color-scheme: dark)"),b=document.getElementById("theme");
+function dark(){var t=r.dataset.theme;return t?t==="dark":m.matches}
+function label(){b.textContent=dark()?"Light mode":"Dark mode"}
+b.onclick=function(){r.dataset.theme=dark()?"light":"dark";label();window.dispatchEvent(new Event("themechange"))};
+m.addEventListener("change",label);label()})();
+</script>
+<script src="nav.js"></script>
+</body>
+</html>

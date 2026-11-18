@@ -1,16 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="../device-redirect.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meet SANS2d</title>
+<title>Meet SANS2D</title>
+<meta name="author" content="Lauren Matthews">
+<meta name="copyright" content="(c) 2026 Lauren Matthews">
+<link rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">
+<!--
+  ISIS SANS 101
+  Copyright (c) 2026 Lauren Matthews.
+  Developed with the assistance of Claude (Anthropic).
+  Text and figures: Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+    https://creativecommons.org/licenses/by-sa/4.0/
+  Source code: MIT License (see LICENSE.txt at the site root).
+  Third-party material is excluded from these licences; see the credits page.
+-->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
 <style>
 
 :root{--bg:#f6f8fa;--panel:#fff;--ink:#14212b;--mute:#5a6b78;--line:#d3dce3;--accent:#0b6e79;--accent2:#c2410c;--soft:#e2f0f1;--grid:#e6ebef;color-scheme:light}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1a21;--panel:#162531;--ink:#e6edf2;--mute:#9bb0bd;--line:#2a3d4b;--accent:#4cc3cf;--accent2:#fb923c;--soft:#173844;--grid:#223441;color-scheme:dark}}
 :root[data-theme=dark]{--bg:#0f1a21;--panel:#162531;--ink:#e6edf2;--mute:#9bb0bd;--line:#2a3d4b;--accent:#4cc3cf;--accent2:#fb923c;--soft:#173844;--grid:#223441;color-scheme:dark}
-nav button.themebtn{margin-left:auto;flex:none;padding:6px 12px;font-size:13px;margin-top:6px;margin-bottom:6px}
+nav button.themebtn{margin-left:auto;flex:none;align-self:center;display:flex;align-items:center;gap:8px;white-space:nowrap;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:.9rem;line-height:1.3;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+nav button.themebtn:hover{border-color:var(--accent)}
 *{box-sizing:border-box}
 html{scroll-padding-top:70px}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
@@ -98,38 +112,98 @@ figure{margin:0}
 .photo img{width:100%;height:auto;border-radius:6px;display:block;background:var(--grid)}
 video{width:100%;border-radius:6px;background:#0b1620;display:block}
 .sw{overflow-x:auto}
+.dgfig{margin:0 0 20px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px 14px 10px}
+.dgmeta{display:flex;flex-wrap:wrap;gap:6px 22px;justify-content:space-between;align-items:center;margin-top:6px;padding-top:8px;border-top:1px solid var(--line)}
+.dgfig figcaption{margin:0;text-align:left;flex:1 1 320px}
+.dgk{display:flex;gap:16px;font-size:13px;color:var(--mute)}
+.dgk span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.dgk i{display:inline-block;width:22px;height:4px;border-radius:2px}
+svg.dg{width:100%;height:auto;display:block}
+.dg text{font:12px "IBM Plex Sans",system-ui,sans-serif;fill:var(--mute)}
+.dg text.tk{fill:var(--ink);font-weight:600}
+.dg .gpl{stroke:var(--line);fill:none;stroke-width:.6;opacity:.55}
+.dg .htb{fill:var(--grid)}
+.dg .htl{stroke:var(--mute);stroke-width:1.6;opacity:.7}
+.dg .axis{stroke:var(--mute);stroke-width:1;stroke-dasharray:2 6;opacity:.55}
+.dg .ld{stroke:var(--mute);stroke-width:1;fill:none}
+.dg .ldot{fill:var(--mute)}
+.dg .bm{stroke:var(--accent2);fill:none;stroke-width:3;stroke-linecap:round}
+.dg .bc{stroke:var(--accent);fill:none;stroke-width:3;stroke-linecap:round}
+.dg .bm2{stroke:var(--accent2);fill:none;stroke-width:1.8;stroke-linecap:round}
+.dg .bc2{stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round}
+.dg .mgp{stroke:url(#mg);fill:none;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.dg .ds{stroke-dasharray:6 5}
+.dg .fd{opacity:.4}
+.dg .mt{fill:url(#mt);stroke:var(--mute);stroke-width:1.2}
+.dg .hat{fill:url(#ht);stroke:var(--mute);stroke-width:1.2}
+.dg .vac{fill:var(--soft);stroke:var(--accent);stroke-width:1.5}
+.dg .cav{fill:var(--bg);stroke:var(--mute);stroke-width:1.2}
+.dg .smp{fill:var(--soft);stroke:var(--accent);stroke-width:2}
+.dg .env{fill:none;stroke:var(--mute);stroke-width:1.4;stroke-dasharray:5 4}
+.dg .clad{fill:none;stroke:var(--accent2);stroke-width:1.6}
+.dg .mol{fill:var(--panel);stroke:var(--accent);stroke-width:1.3}
+.dg .cone{fill:var(--accent);opacity:.12}
+.dg .bfo{fill:var(--accent2);opacity:.2}
+.dg .bfc{fill:var(--accent);opacity:.16}
+.dg .ring{fill:none;stroke:var(--accent);stroke-linecap:round}
+.dg .ar{fill:var(--accent2)}
+.dg .ac{fill:var(--accent)}
+.dgseg{display:flex;flex-wrap:wrap;gap:6px;align-items:center;flex:1 1 100%}
+.dgseg>span{margin-right:4px}
+.dgright{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.dgbtn{padding:5px 12px;font-size:13px}
+.dgbtn[aria-pressed=true]{border-color:var(--accent);color:var(--accent)}
+.dgctl{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;margin-top:10px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-radius:6px;font-size:14px}
+.dgctl:empty{display:none}
+.dgctl label.dgsl{margin:0;flex:1 1 240px;gap:10px;cursor:default}
+.dgctl label.dgsl span{white-space:nowrap}
+.dgctl input[type=range]{flex:1;min-width:100px}
+.dgval{font-weight:600;min-width:64px;text-align:right;font-variant-numeric:tabular-nums}
+.dgout{flex:1 1 100%;color:var(--mute)}
+.dgout b{color:var(--ink)}
+.dg .fw{stroke:var(--bg);stroke-width:3;stroke-dasharray:4 16;opacity:.45;fill:none}
+.dg .dt{fill:var(--accent2);stroke:var(--bg);stroke-width:1.5}
+.dg .dc{fill:var(--accent);stroke:var(--bg);stroke-width:1.5}
+.dg .sblk{transition:transform .7s ease}
+.dg.open .sblk{transform:translateY(-72px)}
+.dg .bafter{opacity:.25;transition:opacity .7s}
+.dg.open .bafter{opacity:1}
+.dg .topen{opacity:0;transition:opacity .5s}
+.dg.open .topen{opacity:1}
+.dg .tclosed{transition:opacity .5s}
+.dg.open .tclosed{opacity:0}
 </style>
 </head>
 <body>
 <nav><div class="in">
 <a href="#about">About</a><a href="#sample">Sample area</a><a href="#schematic">Schematic</a><a href="#video">Video guide</a>
-<button id="theme" class="themebtn" type="button">Theme</button></div></nav>
+<button id="theme" class="themebtn" type="button" aria-label="Switch between light and dark mode"><span id="themeIcon" aria-hidden="true">🌙</span><span id="themeLabel">Dark mode</span></button></div></nav>
 <header>
-<h1>Meet SANS2d</h1>
+<h1>Meet SANS2D</h1>
 <p class="lede">ISIS SANS Instruments Explorer. Follow the neutron beam from source to detector and see how each component helps produce high-quality small-angle neutron scattering data.</p>
 </header>
 <main>
 
 <section id="about">
-<h2>SANS2d: a time-of-flight small-angle neutron scattering instrument</h2>
-<p>Explore the <a href="https://www.isis.stfc.ac.uk/instruments/sans2d/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-weight:600">SANS2d</a> instrument, from source to detector, and understand how each component contributes to generating our high-quality small-angle neutron scattering (SANS) data. Click on the components to find out more information about them, and see our short video guide with one of our instrument scientists.</p>
+<h2>SANS2D: a time-of-flight small-angle neutron scattering instrument</h2>
+<p>Explore the <a href="https://www.isis.stfc.ac.uk/instruments/sans2d/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-weight:600">SANS2D</a> instrument, from source to detector, and understand how each component contributes to generating our high-quality small-angle neutron scattering (SANS) data. Click on the components to find out more information about them, and see our short video guide with one of our instrument scientists.</p>
 </section>
 
 <section id="sample">
 <h2>The sample area</h2>
 <div class="box"><div class="row" style="align-items:center">
-<div><p style="margin:0">The SANS2d instrument is a time-of-flight instrument</p></div>
+<div><p style="margin:0">The SANS2D instrument is a time-of-flight instrument</p></div>
 <figure class="photo"><img src="../images/sans2d_sample_area.jpg" alt="Photograph of the SANS2D sample area"></figure>
 </div></div>
 </section>
 
 <section id="schematic">
-<h2>SANS2d schematic</h2>
+<h2>SANS2D schematic</h2>
 <p>The neutron beam travels left to right, straight through the centre of every component. Click a component, or use the arrow keys, to see what it does.</p>
 <div class="box">
 <div class="flight-path-header"><span>Neutron flight path</span><div class="mini-beam" aria-hidden="true"></div>
 </div>
-<div class="sw"><div class="sch" id="sch" role="group" aria-label="SANS2d components from source to detector">
+<div class="sw"><div class="sch" id="sch" role="group" aria-label="SANS2D components from source to detector">
 <div class="beam" aria-hidden="true"></div>
 <div class="nodes">
 <button class="nd" id="node-source" data-k="source" aria-pressed="false"><span class="ic"><span class="em" aria-hidden="true">☢️</span><span class="no">01</span></span><b>Target Station</b><small>Generate Neutrons</small></button>
@@ -145,16 +219,18 @@ video{width:100%;border-radius:6px;background:#0b1620;display:block}
 <div class="insp" aria-live="polite">
 <div class="hd"><div><h3 id="dTitle"></h3><span class="note" id="dStage" style="margin:0"></span></div>
 <div class="pn"><button id="prev" aria-label="Previous component">&larr; Previous</button><button id="next" aria-label="Next component">Next &rarr;</button></div></div>
+<figure class="dgfig"><div id="dDiag" role="img" aria-labelledby="dCap"></div><div class="dgctl" id="dCtl"></div><div class="dgmeta"><figcaption class="note" id="dCap"></figcaption><div class="dgright"><div class="dgk" aria-hidden="true"><span><i style="background:var(--accent2)"></i>Fast neutrons</span><span><i style="background:var(--accent)"></i>Cold neutrons</span></div><button id="dgPlay" class="dgbtn" type="button" aria-pressed="false">Pause motion</button></div></div></figure>
 <div class="row">
-<div><h4>Physical description</h4><p id="dDesc"></p><h4>Function</h4><p class="fn" id="dRole"></p></div>
+<div><h4>Physical description</h4><p id="dDesc"></p></div>
 <div><h4>Technical specifications</h4><div id="dSpecs"></div></div>
-</div></div>
+</div>
+<h4>Function</h4><p class="fn" id="dRole"></p></div>
 </div>
 </section>
 
 <section id="video">
-<h2>Not satisfied? Meet SANS2d directly from our instrument scientists</h2>
-<p>Meet Dr Scientist in the video who will tell you more about SANS2d and the types of science that we typically see on SANS2d.</p>
+<h2>Not satisfied? Meet SANS2D directly from our instrument scientists</h2>
+<p>Meet Dr Scientist in the video who will tell you more about SANS2D and the types of science that we typically see on SANS2D.</p>
 <div class="box"><video controls preload="metadata" playsinline>
 <source src="../videos/Crystals.mp4" type="video/mp4">
 Your browser does not support the video tag.
@@ -162,7 +238,7 @@ Your browser does not support the video tag.
 </section>
 
 </main>
-<footer><div style="max-width:1000px;margin:0 auto;padding:0 20px">Meet our ISIS SANS instruments &bull; ISIS SANS Group 2026</div></footer>
+<footer><div style="max-width:1000px;margin:0 auto;padding:0 20px">&copy; 2026 Lauren Matthews. Developed with the assistance of Claude (Anthropic). Text and figures licensed under <a style="color:inherit" rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; source code under the <a style="color:inherit" href="../LICENSE.txt">MIT License</a>. Third-party material is excluded; see <a style="color:inherit" href="credits.html">Credits</a>. Instrument photograph courtesy of the ISIS Neutron and Muon Source.</div></footer>
 
 <script>
 (function(){
@@ -265,7 +341,7 @@ var componentData = {
             detector: {
                 title: "Detector Array",
                 stage: "Stage 09 of 09",
-                description: "Neutrons carry no net electrical charge, so they cannot be detected directly by ionisation. Detectors use nuclear reaction converters such as Helium-3 (³He) gas proportional tubes or Lithium-6 (⁶Li) scintillators. When a neutron is captured, secondary charged particles ionise gas or create flashes of light recorded by photomultipliers.",
+                description: "Neutrons carry no net electrical charge, so they cannot be detected directly by ionisation. Detectors use nuclear reaction converters such as Helium-3 (³He) gas proportional tubes or Lithium-6 (⁶Li) scintillators. When a neutron is captured, secondary charged particles ionise gas or create flashes of light recorded by photomultipliers. SANS2D has two large area detectors of about 1 m² each: a rear detector on the beam axis and a front detector offset to one side. Both move inside the evacuated tank, so one measurement can cover a very wide range of scattering angles.",
                 role: "Records the scattering angle (2θ), time-of-flight, and intensity of scattered neutrons to map atomic structures.",
                 specs: [
                     { label: "Detector Media", value: "³He Gas tubes or ⁶Li Glass Scintillators" },
@@ -274,6 +350,202 @@ var componentData = {
                 ]
             }
         };
+/* Schematic diagrams: one inline SVG per component, drawn on a common beam axis (y = 120).
+   Orange = fast / early neutrons, teal = cold / later neutrons. Motion is SMIL (pausable as a whole). */
+var DEFS='<defs>'+
+ '<pattern id="gp" width="20" height="20" patternUnits="userSpaceOnUse"><path class="gpl" d="M20 0H0V20"/></pattern>'+
+ '<pattern id="ht" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect class="htb" width="7" height="7"/><line class="htl" x1="0" y1="0" x2="0" y2="7"/></pattern>'+
+ '<linearGradient id="mt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--panel)"/><stop offset="1" style="stop-color:var(--line)"/></linearGradient>'+
+ '<linearGradient id="mg" gradientUnits="userSpaceOnUse" x1="240" y1="0" x2="470" y2="0"><stop offset="0" style="stop-color:var(--accent2)"/><stop offset="1" style="stop-color:var(--accent)"/></linearGradient>'+
+ '<marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ar" d="M0 0L10 5L0 10z"/></marker>'+
+ '<marker id="ac" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ac" d="M0 0L10 5L0 10z"/></marker></defs>';
+function H(cls){return '<svg viewBox="0 0 760 240" class="dg'+(cls?' '+cls:'')+'" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+DEFS+
+ '<rect x="0" y="0" width="760" height="240" fill="url(#gp)"/><line class="axis" x1="8" y1="120" x2="752" y2="120"/>'}
+var END='</svg>';
+function T(x,y,s,a,c){return '<text x="'+x+'" y="'+y+'" text-anchor="'+(a||'middle')+'"'+(c?' class="'+c+'"':'')+'>'+s+'</text>'}
+function L(x1,y1,x2,y2,c,m){return '<line class="'+c+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'"'+(m?' marker-end="url(#'+m+')"':'')+'/>'}
+function R(x,y,w,h,c,r){return '<rect class="'+c+'" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'"'+(r?' rx="'+r+'"':'')+'/>'}
+/* neutron dot coloured by p: 100 = fast (orange) ... 0 = cold (teal) */
+function D(x,y,p,r){return '<circle cx="'+x+'" cy="'+y+'" r="'+(r||3.5)+'" style="fill:color-mix(in srgb,var(--accent2) '+p+'%,var(--accent))"/>'}
+function wave(x0,x1,y,a,wl,c){var d='M'+x0+' '+y;for(var x=x0;x<=x1;x+=2){d+=' L'+x+' '+(y-a*Math.sin((x-x0)/wl*6.2832)).toFixed(1)}return '<path class="'+c+'" d="'+d+'"/>'}
+/* animated helpers */
+function F(x1,x2,y){return '<line class="fw" x1="'+x1+'" y1="'+y+'" x2="'+x2+'" y2="'+y+'"><animate attributeName="stroke-dashoffset" from="0" to="-20" dur="0.8s" repeatCount="indefinite"/></line>'}
+function MV(path,dur,cls,begin,extra,r){return '<circle r="'+(r||5)+'" class="'+cls+'"><animateMotion dur="'+dur+'s" begin="'+(begin||0)+'s" repeatCount="indefinite" path="'+path+'"'+(extra||'')+'/></circle>'}
+function rnd(i){var s=Math.sin(i*12.9898)*43758.5453;return s-Math.floor(s)}
+/* callout: leader from (px,py) to (tx,ty); label lines split by "|", first line bold */
+function C(px,py,tx,ty,label,side){var Ls=label.split('|'),lh=14,n=Ls.length,x=tx,y,a='middle',o=L(px,py,tx,ty,'ld')+'<circle class="ldot" cx="'+px+'" cy="'+py+'" r="2.5"/>';
+ if(side==='r'){x=tx+6;a='start';y=ty+4-(n-1)*lh/2}
+ else if(side==='l'){x=tx-6;a='end';y=ty+4-(n-1)*lh/2}
+ else if(side==='t'){y=ty-6-(n-1)*lh}
+ else{y=ty+15}
+ Ls.forEach(function(s,i){o+=T(x,y+i*lh,s,a,i?'':'tk')});return o}
+
+var detGrid='';for(var gi=0;gi<=160;gi+=16){detGrid+=L(566,40+gi,584,40+gi,'ld')}
+var fan='',mols='',bendPlates='',protons='',chopA='',chopB='',flashes='';
+[-150,-120,-90,-60,-30,30,60,90,120,150].forEach(function(a){var c=Math.cos(a*Math.PI/180),s=Math.sin(a*Math.PI/180);
+ fan+=L((340+28*c).toFixed(1),(120+28*s).toFixed(1),(340+44*c).toFixed(1),(120+44*s).toFixed(1),'bm2')+D((340+46*c).toFixed(1),(120+46*s).toFixed(1),100,3)});
+for(var n=-1;n<=6;n++){protons+='<circle cx="'+(28+32*n)+'" cy="120" r="4" style="fill:var(--ink)"/>'}
+for(var i=0;i<=44;i++){var dot=D(44+i*4,(120+(rnd(i)-.5)*28).toFixed(1),Math.round(i/44*100),3.2);chopA+=dot;if(i>=14&&i<=30)chopB+=dot}
+[[262,70],[296,172],[330,66],[372,176],[410,72],[438,168],[290,104],[420,128],[322,150]].forEach(function(p){mols+='<circle class="mol" cx="'+p[0]+'" cy="'+p[1]+'" r="5"/><circle class="mol" cx="'+(p[0]+8)+'" cy="'+p[1]+'" r="5"/>'});
+[-30,-10,10,30].forEach(function(d){bendPlates+='<path class="ld" style="stroke:var(--ink);stroke-width:2.2" d="M110 '+(120+d)+' Q430 '+(120+d)+' 650 '+(192+d)+'"/>'});
+[[18,20],[18,110],[18,250],[32,70],[32,200],[32,320],[46,150],[46,290],[46,10]].forEach(function(p,k){var a=p[1]*Math.PI/180;
+ flashes+='<circle cx="'+(685+p[0]*Math.cos(a)).toFixed(1)+'" cy="'+(120+p[0]*Math.sin(a)).toFixed(1)+'" r="3.5" class="dc" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="1.8s" begin="'+(k*0.2).toFixed(1)+'s" repeatCount="indefinite"/></circle>'});
+var MPATH='M82 120 L240 120 L278 86 L316 150 L352 100 L386 140 L420 112 L448 126 L470 120 L730 120';
+var CPATH='M20 120 L80 120 L150 76 L230 164 L310 76 L390 164 L470 76 L550 164 L630 76 L680 120 L740 120';
+
+var diagrams={
+source:{cap:"800 MeV protons strike a tantalum-clad tungsten target inside heavy shielding, knocking out fast neutrons that leave through the beam channel.",svg:H()+
+ '<defs><clipPath id="cp"><rect x="0" y="0" width="246" height="240"/></clipPath></defs>'+
+ R(250,40,180,160,'hat',6)+R(285,75,110,90,'cav')+R(250,114,38,12,'cav')+R(392,114,40,12,'cav')+
+ '<g><animate attributeName="opacity" values=".3;1;.3" dur="0.9s" repeatCount="indefinite"/>'+fan+'</g>'+
+ R(322,102,36,36,'mt',2)+R(318,98,44,44,'clad',3)+
+ '<g clip-path="url(#cp)"><g><animateTransform attributeName="transform" type="translate" from="0 0" to="32 0" dur="0.9s" repeatCount="indefinite"/>'+protons+'</g></g>'+
+ '<polygon points="250,120 240,114 240,126" style="fill:var(--ink)"/>'+
+ L(432,120,712,120,'bm','ar')+F(432,700,120)+
+ C(110,120,110,72,'Proton pulses|800 MeV','t')+C(340,98,340,24,'Tantalum-clad tungsten target','t')+
+ C(580,120,580,72,'Fast neutrons|> 1 MeV','t')+T(340,222,'Target Station shielding','middle')+END},
+moderator:{cap:"Each collision with a hydrogen molecule takes energy from the neutron, so it slows down. It changes from fast (orange) to cold (teal) as it goes.",svg:H()+
+ R(36,98,44,44,'mt',2)+T(58,160,'Target')+
+ wave(82,236,120,8,12,'bm2')+
+ R(240,45,230,150,'vac',16)+mols+
+ '<polyline class="mgp" points="240,120 278,86 316,150 352,100 386,140 420,112 448,126 470,120"/>'+
+ wave(472,700,120,9,52,'bc2')+L(700,120,732,120,'bc','ac')+
+ (function(){var P='M82 120 L240 120 L278 86 L316 150 L352 100 L386 140 L420 112 L448 126 L470 120 L730 120',kp='0;.2091;.2766;.3751;.4566;.5261;.5843;.6258;.6560;1',kt='0;.0433;.0713;.1223;.1756;.2332;.2936;.3451;.3892;1',tr=[[0,5.5,1]],o='',i;
+ for(i=0;i<tr.length;i++){(function(d,r,v){['dt','dc'].forEach(function(c){o+='<circle r="'+r+'" class="'+c+'" opacity="0"><animateMotion dur="8s" begin="'+d+'s" repeatCount="indefinite" path="'+P+'" keyPoints="'+kp+'" keyTimes="'+kt+'" calcMode="linear"/><animate attributeName="opacity" values="'+(c==='dt'?v+';'+v+';0;0':'0;0;'+v+';'+v)+'" keyTimes="0;.0433;.3892;1" dur="8s" begin="'+d+'s" repeatCount="indefinite"/></circle>'})})(tr[i][0],tr[i][1],tr[i][2])}
+ return o})()+
+ C(150,112,150,60,'Fast neutron|short wavelength','t')+C(600,111,600,60,'Cold neutron|λ = 1.75 – 16.5 Å','t')+
+ C(355,195,355,198,'Liquid H₂ moderator, ~20 K|~20–30 elastic collisions','b')+END},
+bender:{cap:"A curved stack of nickel supermirror plates bends the cold beam round a corner; fast neutrons and gamma rays travel straight on and are absorbed.",svg:H()+
+ L(110,120,696,120,'bm2 ds fd')+R(696,92,26,56,'hat',2)+
+ L(30,120,110,120,'bm','ar')+
+ bendPlates+'<path class="bc" d="M110 120 Q430 120 650 192" marker-end="url(#ac)"/>'+
+ MV('M30 120 L110 120 Q430 120 650 192',3.2,'dc',0)+MV('M30 120 L110 120 Q430 120 650 192',3.2,'dc',-1.6)+
+ '<circle r="5" class="dt"><animateMotion dur="1.6s" repeatCount="indefinite" path="M30 120 L696 120"/><animate attributeName="opacity" values="1;1;0" keyTimes="0;0.93;1" dur="1.6s" repeatCount="indefinite"/></circle>'+
+ C(709,92,692,56,'Fast neutrons and γ|no line of sight: absorbed','l')+
+ C(293,127,293,196,'Nickel supermirror plates|cold neutrons are reflected round the bend','b')+END},
+chopper:{cap:"Two counter-rotating discs open for a short window, cutting the pulse into a packet; fast neutrons arrive first, so arrival time sorts them by wavelength.",svg:H()+
+ '<defs><clipPath id="cpl"><rect x="0" y="0" width="262" height="240"/></clipPath><clipPath id="cpr"><rect x="308" y="0" width="452" height="240"/></clipPath></defs>'+
+ '<g clip-path="url(#cpl)"><g><animateTransform attributeName="transform" type="translate" from="0 0" to="540 0" dur="6s" repeatCount="indefinite"/>'+chopA+'</g></g>'+
+ '<g clip-path="url(#cpr)"><g><animateTransform attributeName="transform" type="translate" from="0 0" to="540 0" dur="6s" repeatCount="indefinite"/>'+chopB+'</g></g>'+
+ R(262,40,12,66,'mt')+R(262,134,12,66,'mt')+R(296,40,12,66,'mt')+R(296,134,12,66,'mt')+
+ '<text x="268" y="32" text-anchor="middle" style="font-size:20px">↻</text><text x="302" y="32" text-anchor="middle" style="font-size:20px">↺</text>'+
+ C(130,100,130,72,'Neutron pulse|all wavelengths','t')+C(470,100,470,72,'Selected band|fast neutrons lead','t')+
+ T(285,218,'Double disc chopper','middle','tk')+T(285,232,'counter-rotating, Δλ/λ < 4%')+END},
+collimation:{cap:"Supermirror guide walls reflect neutrons by total external reflection, carrying the beam along evacuated sections with little loss.",svg:H()+
+ R(80,72,600,96,'vac')+R(80,60,600,12,'mt')+R(80,168,600,12,'mt')+
+ L(280,72,280,168,'ld')+L(480,72,480,168,'ld')+R(274,56,12,20,'mt')+R(274,164,12,20,'mt')+R(474,56,12,20,'mt')+R(474,164,12,20,'mt')+
+ L(20,120,80,120,'bc','ac')+
+ '<polyline class="bc" points="80,120 150,76 230,164 310,76 390,164 470,76 550,164 630,76 680,120"/>'+L(680,120,740,120,'bc','ac')+
+ [150,310,470,630].map(function(x){return '<circle class="ac" cx="'+x+'" cy="76" r="3.5"/>'}).join('')+[230,390,550].map(function(x){return '<circle class="ac" cx="'+x+'" cy="164" r="3.5"/>'}).join('')+
+ MV(CPATH,4,'dc',0)+MV(CPATH,4,'dc',-2)+
+ C(150,60,150,34,'Nickel supermirror walls','t')+C(310,76,330,34,'Total external reflection','r')+
+ C(380,168,380,196,'Evacuated sections|variable length 2 – 12 m, ~0.02 mbar','b')+END},
+apertures:{cap:"Cadmium slits and pinholes trim the beam, setting its size and divergence at the sample. Drag the slider to change the second aperture.",
+ ctl:[{id:'mm',label:'Aperture 2 opening',min:0.1,max:30,step:0.1,val:10,unit:' mm'}],
+ out:function(v){return v.mm>=22?'The beam is limited by aperture 1 – close aperture 2 to trim it further.':'Smaller openings give a narrower, less divergent beam, but fewer neutrons.'},
+ svg:function(v){var g2=3+(v.mm-0.1)/29.9*37,ge=Math.min(g2,22);
+  return H()+'<polygon class="bfc" points="40,50 250,98 520,'+(120-ge).toFixed(1)+' 700,'+(120-ge).toFixed(1)+' 700,'+(120+ge).toFixed(1)+' 520,'+(120+ge).toFixed(1)+' 250,142 40,190"/>'+
+ L(40,120,712,120,'bc2','ac')+F(40,700,120)+
+ R(241,28,18,70,'hat')+R(241,142,18,70,'hat')+R(511,28,18,(120-g2-28).toFixed(1),'hat')+R(511,(120+g2).toFixed(1),18,(92-g2).toFixed(1),'hat')+
+ T(250,18,'Aperture 1','middle','tk')+T(520,18,'Aperture 2','middle','tk')+T(250,228,'Cadmium, 0.1 – 30 mm')+T(520,228,'Cadmium')+
+ C(120,68,120,40,'Diverging beam','t')+C(640,120-ge,640,66,'Defined beam|at the sample','t')+
+ T(667,166,'Available shapes','middle','tk')+
+ '<circle class="cav" cx="610" cy="192" r="14"/><rect class="cav" x="650" y="179" width="34" height="26" rx="2"/><rect class="cav" x="722" y="172" width="5" height="40"/>'+
+ T(610,228,'Disc')+T(667,228,'Rectangle')+T(724,228,'Slit')+END}},
+shutter:{cap:"A block of steel slides across the beamline; it can only open once the safety search shows the hutch is empty and locked. (Illustration only.)",
+ ctl:[{id:'open',type:'toggle',label:['Open shutter','Close shutter']}],
+ out:function(v){return v.open?'Shutter open: the beam reaches the sample area.':'Shutter closed: the beam is blocked.'},
+ live:function(s,v){s.classList.toggle('open',!!v.open)},
+ svg:function(v){return H(v.open?'open':'')+
+ L(30,120,278,120,'bc','ac')+F(30,270,120)+
+ '<g class="bafter">'+L(362,120,730,120,'bc')+F(362,730,120)+'</g>'+
+ '<rect class="env" x="276" y="8" width="88" height="224" rx="4"/>'+
+ '<rect class="env" x="290" y="20" width="60" height="56" rx="2"/>'+
+ '<g class="sblk">'+R(290,92,60,56,'hat',2)+'</g>'+
+ L(384,138,384,48,'ld','ar')+T(396,96,'Slides up to open','start')+T(396,40,'Open position','start')+
+ C(150,120,150,74,'Beam towards shutter','t')+
+ '<g class="tclosed">'+C(560,120,560,74,'Beam blocked|when closed','t')+'</g><g class="topen">'+C(560,120,560,74,'Beam on|towards the sample','t')+'</g>'+
+ C(290,130,190,190,'Steel shutter|150 mm steel plates, 22 tonnes','l')+
+ T(740,226,'Interlocked: opens only after the safety search','end')+END}},
+sample:{cap:"Neutrons are scattered through small angles (2θ) by structure in the sample, which can sit in a cryostat, furnace, magnet or rheometer. Scattering angle is exaggerated in the drawing.",
+ ctl:[{id:'tt',label:'Scattering angle 2θ',min:0.5,max:12,step:0.1,val:4,unit:'°'},{id:'lam',label:'Wavelength λ',min:1.75,max:16.5,step:0.05,val:6,unit:' Å'}],
+ out:function(v){var q=4*Math.PI/v.lam*Math.sin(v.tt/2*Math.PI/180),d=2*Math.PI/q/10;return 'q = (4π/λ) sin θ = <b>'+q.toPrecision(3)+' Å⁻¹</b> &nbsp;·&nbsp; probes structures of ~<b>'+d.toPrecision(3)+' nm</b>'},
+ svg:function(v){var a=v.tt*1.8*Math.PI/180,c=Math.cos(a),s=Math.sin(a),x2=(330+270*c).toFixed(1),dy=(270*s).toFixed(1),ex=(330+92*c).toFixed(1),ey=(120-92*s).toFixed(1),
+  up='M330 120 L'+x2+' '+(120-dy),dn='M330 120 L'+x2+' '+(120+Number(dy));
+  return H()+L(30,120,318,120,'bc','ac')+F(30,310,120)+
+ '<polygon class="cone" points="330,120 '+x2+','+(120-dy).toFixed(1)+' '+x2+','+(120+Number(dy)).toFixed(1)+'"/>'+
+ L(338,120,730,120,'bc2 ds fd')+
+ '<path class="bc2 ds" d="'+up+'"/><path class="bc2 ds" d="'+dn+'"/>'+
+ R(290,70,80,100,'env',10)+R(322,92,16,56,'smp',2)+
+ MV(up,2,'dc',0,'',4)+MV(dn,2,'dc',-1,'',4)+MV(up,2,'dc',-1,'',4)+MV(dn,2,'dc',0,'',4)+
+ '<path class="ld" style="stroke:var(--ink);stroke-width:1.4" d="M422 120 A92 92 0 0 0 '+ex+' '+ey+'"/>'+T(436,(120-92*s/2+4).toFixed(1),'2θ','start','tk')+
+ C(330,92,330,36,'Sample|crystals, powders, liquids, gels, films','t')+
+ C(150,120,150,74,'Incident beam','t')+
+ C(330,170,330,200,'Sample environment|cryostat, furnace, magnet, rheometer','b')+
+ C(560,Math.max(40,120-(560-330)*Math.tan(a)),600,44,'Scattered neutrons','r')+END}},
+detector:{cap:"SANS2D has two detectors in one evacuated tank: a rear detector on the beam axis and a front detector, offset sideways, that catches neutrons scattered to larger angles. Choose the rear detector distance and the front one moves with it. Plan view of the evacuated tank, not to scale.",
+ ctl:[{id:'d',type:'choice',label:'Rear detector distance',options:[4,6,8,12],val:4,unit:' m'}],
+ out:function(v){var f={4:2.4,6:4.4,8:4,12:5}[v.d];return 'Rear detector at <b>'+v.d+' m</b>, front detector at <b>'+f+' m</b> from the sample. Closer detectors reach higher Q; further ones reach lower Q.'},
+ svg:function(v){var px=function(m){return 78+m*38},xr=px(v.d),xf=px({4:2.4,6:4.4,8:4,12:5}[v.d]),i,gi,k,a,
+  rr=[150,180],fr=[48,76],fl='',
+  s=H()+R(100,30,464,180,'vac',12)+T(114,200,'Vacuum: 0.02 mbar','start')+  L(20,120,60,120,'bc','ac')+R(62,104,16,32,'smp',2)+
+  L(78,120,xr-12,120,'bc2')+F(78,xr-12,120)+R(xr-10,106,8,28,'mt');
+  for(i=0;i<2;i++){s+=L(78,120,xr,rr[i],'bc2 ds')+L(78,120,xf,fr[i],'bc2 ds')}
+  for(i=0;i<2;i++){s+=MV('M78 120 L'+xr+' '+rr[i],2.4,'dc',-0.6*i,'',3.5)+MV('M78 120 L'+xf+' '+fr[i],2,'dc',-0.5-0.7*i,'',3.5)}
+  s+=R(xf,36,12,64,'mt');
+  for(gi=0;gi<=64;gi+=16){s+=L(xf,36+gi,xf+12,36+gi,'ld')}
+  s+=R(xr,40,18,160,'mt');
+  for(gi=0;gi<=160;gi+=16){s+=L(xr,40+gi,xr+18,40+gi,'ld')}
+  s+=L(xf+12,52,630,52,'ld ds')+L(xr+18,170,630,170,'ld ds')+
+  R(630,24,110,80,'mt',4)+R(630,124,110,90,'mt',4)+
+  '<path class="ring" d="M640 92 Q685 52 730 92" style="stroke-width:3;opacity:.45"/><path class="ring" d="M648 62 Q685 36 722 62" style="stroke-width:3;opacity:.8"/>'+
+  '<circle class="ring" cx="685" cy="172" r="36" style="stroke-width:3;opacity:.35"/><circle class="ring" cx="685" cy="172" r="25" style="stroke-width:3;opacity:.6"/><circle class="ring" cx="685" cy="172" r="14" style="stroke-width:3;opacity:.95"/>';
+  (function(){var q,n,u,w,fx,fy,ang,rad,arcs=[[640,92,685,52,730,92],[648,62,685,36,722,62]],rr=[14,25,36],
+   h=function(x,y,k){return '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(2.6+rnd(k+7)*1.4).toFixed(1)+'" class="dc" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="'+(1.2+rnd(k+3)*1.8).toFixed(2)+'s" begin="'+(rnd(k+11)*3.5).toFixed(2)+'s" repeatCount="indefinite"/></circle>'};
+   for(n=0;n<24;n++){q=arcs[rnd(n+100)<.4?1:0];u=.04+rnd(n+200)*.92;w=1-u;fx=w*w*q[0]+2*w*u*q[2]+u*u*q[4]+(rnd(n+300)-.5)*7;fy=w*w*q[1]+2*w*u*q[3]+u*u*q[5]+(rnd(n+400)-.5)*7;s+=h(fx,fy,n)}
+   for(n=0;n<30;n++){ang=rnd(n+500)*6.2832;if(rnd(n+600)<.8){rad=rr[Math.floor(rnd(n+700)*3)]+(rnd(n+800)-.5)*6}else{rad=8+rnd(n+900)*34}s+=h(685+rad*Math.cos(ang),172+rad*Math.sin(ang),n+50)}
+  })();
+  s+='<circle cx="685" cy="172" r="6" style="fill:var(--ink)"/>'+
+  T(685,118,'Front detector image','middle')+T(685,228,'Rear detector image','middle')+
+  C(70,136,70,170,'Sample','b')+C(xr-6,106,xr-6,34,'Beam stop','t')+
+  C(xf+6,36,xf-4,22,'Front detector','l')+C(xr+9,200,xr+9,214,'Rear detector','b');
+  return s+END}}
+};
+
+/* ---- showing a diagram, its controls and the pause button ---- */
+var playing=!matchMedia("(prefers-reduced-motion: reduce)").matches;
+function svgEl(){return $("dDiag").querySelector("svg")}
+function applyPlay(){var s=svgEl(),b=$("dgPlay");
+  if(s&&s.pauseAnimations){if(playing){s.unpauseAnimations()}else{s.pauseAnimations();try{s.setCurrentTime(1.5)}catch(e){}}}
+  b.textContent=playing?"Pause motion":"Play motion";b.setAttribute("aria-pressed",String(!playing))}
+function paint(k){var d=diagrams[k];$("dDiag").innerHTML=typeof d.svg==="function"?d.svg(d.v):d.svg;applyPlay()}
+function showDiagram(k){var d=diagrams[k],box=$("dCtl");
+  $("dCap").textContent=d.cap;box.innerHTML="";
+  if(d.ctl&&!d.v){d.v={};d.ctl.forEach(function(c){d.v[c.id]=c.type==="toggle"?false:c.val})}
+  paint(k);
+  if(!d.ctl)return;
+  var out=el("div","dgout");out.setAttribute("aria-live","polite");
+  function upd(){out.innerHTML=d.out?d.out(d.v):""}
+  d.ctl.forEach(function(c){
+    if(c.type==="toggle"){
+      var b=el("button","dgbtn");function lab(){b.textContent=c.label[d.v[c.id]?1:0];b.setAttribute("aria-pressed",String(!!d.v[c.id]))}
+      b.type="button";lab();
+      b.onclick=function(){d.v[c.id]=!d.v[c.id];lab();upd();if(d.live)d.live(svgEl(),d.v);else paint(k)};
+      box.appendChild(b)}
+    else if(c.type==="choice"){
+      var g=el("div","dgseg"),btns=[];g.setAttribute("role","group");g.setAttribute("aria-label",c.label);g.appendChild(el("span",0,c.label));
+      function sync(){btns.forEach(function(x,i){x.setAttribute("aria-pressed",String(c.options[i]===d.v[c.id]))})}
+      c.options.forEach(function(o){var x=el("button","dgbtn",o+c.unit);x.type="button";x.onclick=function(){d.v[c.id]=o;sync();upd();paint(k)};btns.push(x);g.appendChild(x)});
+      sync();box.appendChild(g)}
+    else{
+      var l=el("label","dgsl"),t=el("span",0,c.label),o=el("output","dgval"),r=document.createElement("input");
+      r.type="range";r.min=c.min;r.max=c.max;r.step=c.step;r.value=d.v[c.id];
+      function show(){o.textContent=Number(d.v[c.id]).toFixed(c.step<1?(c.step<0.1?2:1):0)+c.unit}
+      show();
+      r.oninput=function(){d.v[c.id]=parseFloat(r.value);show();upd();paint(k)};
+      l.appendChild(t);l.appendChild(r);l.appendChild(o);box.appendChild(l)}});
+  box.appendChild(out);upd()}
+$("dgPlay").onclick=function(){playing=!playing;applyPlay()};
 var keys=Object.keys(componentData),cur=0;
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 function select(i,focus){
@@ -281,6 +553,7 @@ function select(i,focus){
   keys.forEach(function(x){var n=$("node-"+x);n.setAttribute("aria-pressed",x===k)});
   $("dTitle").textContent=d.title;$("dStage").textContent=d.stage;$("dDesc").textContent=d.description;$("dRole").textContent=d.role;
   var s=$("dSpecs");s.innerHTML="";d.specs.forEach(function(p){var r=el("div","spec");r.appendChild(el("span",0,p.label));r.appendChild(el("b",0,p.value));s.appendChild(r)});
+  showDiagram(k);
   if(focus)$("node-"+k).focus()}
 keys.forEach(function(k,i){$("node-"+k).onclick=function(){select(i)}});
 $("prev").onclick=function(){select(cur-1)};$("next").onclick=function(){select(cur+1)};
@@ -291,9 +564,10 @@ select(0);
 <script>
 (function(){var r=document.documentElement,m=matchMedia("(prefers-color-scheme: dark)"),b=document.getElementById("theme");
 function dark(){var t=r.dataset.theme;return t?t==="dark":m.matches}
-function label(){b.textContent=dark()?"Light mode":"Dark mode"}
+function label(){var d=dark();document.getElementById("themeIcon").textContent=d?"☀️":"🌙";document.getElementById("themeLabel").textContent=d?"Light mode":"Dark mode"}
 b.onclick=function(){r.dataset.theme=dark()?"light":"dark";label();window.dispatchEvent(new Event("themechange"))};
 m.addEventListener("change",label);label()})();
 </script>
+<script src="nav.js"></script>
 </body>
 </html>
