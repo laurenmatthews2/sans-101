@@ -172,6 +172,23 @@ svg.dg{width:100%;height:auto;display:block}
 .dg.open .topen{opacity:1}
 .dg .tclosed{transition:opacity .5s}
 .dg.open .tclosed{opacity:0}
+
+/* photo album (scroll-snap carousel) */
+.album{min-width:0}
+.atrack{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;border-radius:6px;background:#0b1620;overscroll-behavior-x:contain}
+.atrack::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;position:relative;margin:0}
+.slide img{width:100%;aspect-ratio:4/3;object-fit:contain;display:block;background:#0b1620}
+.slide figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 14px 10px;font-size:14px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.72));text-align:left}
+.abar{display:flex;align-items:center;gap:12px;margin-top:10px}
+.abar button{flex:none;width:38px;height:38px;padding:0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1}
+.adots{flex:1;display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
+.adots button{width:22px;height:22px;border:0;background:none;padding:0;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.adots button::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--line);transition:background .2s,transform .2s}
+.adots button[aria-current=true]::before{background:var(--accent);transform:scale(1.35)}
+.adots button:hover::before{background:var(--mute)}
+.aauto{margin:10px 0 0;font-size:14px;color:var(--mute)}
+.acount{flex:none;font-size:14px;color:var(--mute);font-variant-numeric:tabular-nums;min-width:48px;text-align:right}
 </style>
 </head>
 <body>
@@ -180,7 +197,7 @@ svg.dg{width:100%;height:auto;display:block}
 <button id="theme" class="themebtn" type="button" aria-label="Switch between light and dark mode"><span id="themeIcon" aria-hidden="true">🌙</span><span id="themeLabel">Dark mode</span></button></div></nav>
 <header>
 <h1>Meet SANS2D</h1>
-<p class="lede">ISIS SANS Instruments Explorer. Follow the neutron beam from source to detector and see how each component helps produce high-quality small-angle neutron scattering data.</p>
+<p class="lede">Meet our SANS instrument: SANS2D. Follow the neutron beam from source to detector and see how each component helps produce small-angle neutron scattering data.</p>
 </header>
 <main>
 
@@ -192,8 +209,33 @@ svg.dg{width:100%;height:auto;display:block}
 <section id="sample">
 <h2>The sample area</h2>
 <div class="box"><div class="row" style="align-items:center">
-<div><p style="margin:0">The SANS2D instrument is a time-of-flight instrument</p></div>
-<figure class="photo"><img src="../images/sans2d_sample_area.jpg" alt="Photograph of the SANS2D sample area"></figure>
+<div><p style="margin-bottom: 2.5em;" style="margin:0">SANS2D is a time-of-flight instrument with a large simultaneous Q-range. The large detector tank contains two detectors, which are movable up to 12m for the rear detector - yielding a Q<sub>min</sub> = 0.0015 Å<sup>-1</sup>. The sample area is able to support a wide range of sample environments including rheometers, cryostats, and pressure cells.</p>
+    <p style="margin-bottom: 0.1em;">The SANS2D instrument scientists are:
+        <li style="margin-left: 3.0em;"><a href="mailto:najet.mahmoudi@stfc.ac.uk">Dr Najet Mahmoudi</a></li>
+        <li style="margin-left: 3.0em;"><a href="mailto:james.doutch@stfc.ac.uk">Dr James Doutch</a></li>
+        <li style="margin-left: 3.0em; margin-bottom: 2.5em;"><a href="mailto:lauren.matthews@stfc.ac.uk">Dr Lauren Matthews</a></li>
+    </p>
+<label class="aauto"><input type="checkbox" id="albumAuto" checked> Auto-advance photos (untick to browse manually)</label></div>
+<div class="album" id="album" role="region" aria-roledescription="carousel" aria-label="Photographs of the SANS2D sample area and sample environments">
+<div class="atrack" id="albumTrack" tabindex="0" aria-live="off">
+<figure class="slide" role="group" aria-roledescription="slide" aria-label="1 of 10"><img src="../images/sans2d_sample_area.jpg" alt="Photograph of the SANS2D sample area"><figcaption>The SANS2D sample area</figcaption></figure>
+<figure class="slide" role="group" aria-roledescription="slide" aria-label="2 of 10"><img loading="lazy" src="../images/sans2d_album_01.jpg" alt="A modular compact rheometer mounted in the beam, with the end of the evacuated flight tube pointing at it"><figcaption>Deform the sample with the rheometer</figcaption></figure>
+<figure class="slide" role="group" aria-roledescription="slide" aria-label="3 of 10"><img loading="lazy" src="../images/sans2d_album_02.jpg" alt="A rotating sample stage mounted on a motorised stage"><figcaption>Multi-position rotating sample rack</figcaption></figure>
+<figure class="slide" role="group" aria-roledescription="slide" aria-label="4 of 10"><img loading="lazy" src="../images/sans2d_album_03.jpg" alt="A temperature-controlled sample changer holding a row of vials, with tubing and a waste bottle sat next to the stopped flow rapid mixing device"><figcaption>The stopped-flow rapid mixing device with mini sample changer combined</figcaption></figure>
+<figure class="slide" role="group" aria-roledescription="slide" aria-label="5 of 10"><img loading="lazy" src="../images/sans2d_album_04.jpg" alt="A temperature controller with a touchscreen sitting beside a sample stage in the beam"><figcaption>The Linkam stage for fine temperature control</figcaption></figure>
+<figure class="slide" role="group" aria-roledescription="slide" aria-label="6 of 10"><img loading="lazy" src="../images/sans2d_album_05.jpg" alt="A stack of amber-coloured sample environment blocks with round windows, in front of the flight tube"><figcaption>The Quantum North West temperature controlled sample changer</figcaption></figure>
+<figure class="slide" role="group" aria-roledescription="slide" aria-label="7 of 10"><img loading="lazy" src="../images/sans2d_album_07.jpg" alt="Two heated aluminium sample changer racks with rows of holes for cells, with thermocouples labelled top and bottom"><figcaption>The standard SANS2D double decker sample changer</figcaption></figure>
+<figure class="slide" role="group" aria-roledescription="slide" aria-label="8 of 10"><img loading="lazy" src="../images/sans2d_album_08.jpg" alt="Two circulating water baths, cabling and in situ sample cells set up alongside the flight tube"><figcaption>Circulating baths and in situ LED-illuminated sample cells</figcaption></figure>
+<figure class="slide" role="group" aria-roledescription="slide" aria-label="9 of 10"><img loading="lazy" src="../images/sans2d_album_09.jpg" alt="A large cryostat and high pressure cell on a frame at the end of the beamline, wrapped in cables and hoses"><figcaption>Combined high pressure cell with a cryostat sample environment</figcaption></figure>
+<figure class="slide" role="group" aria-roledescription="slide" aria-label="10 of 10"><img loading="lazy" src="../images/sans2d_album_10.jpg" alt="A microfluidics cell in the beam, with a red syringe pump and tubing in the foreground"><figcaption>Microfluidics cell driven by a syringe pump</figcaption></figure>
+</div>
+<div class="abar">
+<button type="button" id="albumPrev" aria-controls="albumTrack" aria-label="Previous photo">&larr;</button>
+<div class="adots" id="albumDots" role="group" aria-label="Choose a photo"></div>
+<span class="acount" id="albumCount" aria-live="polite"></span>
+<button type="button" id="albumNext" aria-controls="albumTrack" aria-label="Next photo">&rarr;</button>
+</div>
+</div>
 </div></div>
 </section>
 
@@ -230,7 +272,7 @@ svg.dg{width:100%;height:auto;display:block}
 
 <section id="video">
 <h2>Not satisfied? Meet SANS2D directly from our instrument scientists</h2>
-<p>Meet Dr Scientist in the video who will tell you more about SANS2D and the types of science that we typically see on SANS2D.</p>
+<p>Video coming soon...</p>
 <div class="box"><video controls preload="metadata" playsinline>
 <source src="../videos/Crystals.mp4" type="video/mp4">
 Your browser does not support the video tag.
@@ -341,7 +383,7 @@ var componentData = {
             detector: {
                 title: "Detector Array",
                 stage: "Stage 09 of 09",
-                description: "Neutrons carry no net electrical charge, so they cannot be detected directly by ionisation. Detectors use nuclear reaction converters such as Helium-3 (³He) gas proportional tubes or Lithium-6 (⁶Li) scintillators. When a neutron is captured, secondary charged particles ionise gas or create flashes of light recorded by photomultipliers. SANS2D has two large area detectors of about 1 m² each: a rear detector on the beam axis and a front detector offset to one side. Both move inside the evacuated tank, so one measurement can cover a very wide range of scattering angles.",
+                description: "Neutrons carry no net electrical charge, so they cannot be detected directly by ionisation. Detectors use nuclear reaction converters such as Helium-3 (³He) gas proportional tubes or Lithium-6 (⁶Li) scintillators. When a neutron is captured, secondary charged particles ionise gas or create flashes of light recorded by photomultipliers. SANS2D has two large area detectors of about 1 m² each: a rear detector on the beam axis and a front detector offset to one side and rotated slightly to face the sample. Both move inside the evacuated tank, so one measurement can cover a very wide range of scattering angles.",
                 role: "Records the scattering angle (2θ), time-of-flight, and intensity of scattered neutrons to map atomic structures.",
                 specs: [
                     { label: "Detector Media", value: "³He Gas tubes or ⁶Li Glass Scintillators" },
@@ -483,20 +525,25 @@ sample:{cap:"Neutrons are scattered through small angles (2θ) by structure in t
  C(150,120,150,74,'Incident beam','t')+
  C(330,170,330,200,'Sample environment|cryostat, furnace, magnet, rheometer','b')+
  C(560,Math.max(40,120-(560-330)*Math.tan(a)),600,44,'Scattered neutrons','r')+END}},
-detector:{cap:"SANS2D has two detectors in one evacuated tank: a rear detector on the beam axis and a front detector, offset sideways, that catches neutrons scattered to larger angles. Choose the rear detector distance and the front one moves with it. Plan view of the evacuated tank, not to scale.",
+detector:{cap:"SANS2D has two detectors in one evacuated tank: a rear detector on the beam axis and a front detector, offset sideways, that catches neutrons scattered to larger angles; it is rotated slightly (exaggerated here) so it faces the sample. Choose the rear detector distance and the front one moves with it. Plan view of the evacuated tank, not to scale.",
  ctl:[{id:'d',type:'choice',label:'Rear detector distance',options:[4,6,8,12],val:4,unit:' m'}],
  out:function(v){var f={4:2.4,6:4.4,8:4,12:5}[v.d];return 'Rear detector at <b>'+v.d+' m</b>, front detector at <b>'+f+' m</b> from the sample. Closer detectors reach higher Q; further ones reach lower Q.'},
  svg:function(v){var px=function(m){return 78+m*38},xr=px(v.d),xf=px({4:2.4,6:4.4,8:4,12:5}[v.d]),i,gi,k,a,
-  rr=[150,180],fr=[48,76],fl='',
-  s=H()+R(100,30,464,180,'vac',12)+T(114,200,'Vacuum: 0.02 mbar','start')+  L(20,120,60,120,'bc','ac')+R(62,104,16,32,'smp',2)+
+  rr=[86,154],fr=[20,80],fl='',
+  s=H()+R(100,10,464,220,'vac',12)+T(114,222,'Vacuum: 0.02 mbar','start')+  L(20,120,60,120,'bc','ac')+R(62,104,16,32,'smp',2)+
   L(78,120,xr-12,120,'bc2')+F(78,xr-12,120)+R(xr-10,106,8,28,'mt');
-  for(i=0;i<2;i++){s+=L(78,120,xr,rr[i],'bc2 ds')+L(78,120,xf,fr[i],'bc2 ds')}
-  for(i=0;i<2;i++){s+=MV('M78 120 L'+xr+' '+rr[i],2.4,'dc',-0.6*i,'',3.5)+MV('M78 120 L'+xf+' '+fr[i],2,'dc',-0.5-0.7*i,'',3.5)}
-  s+=R(xf,36,12,64,'mt');
-  for(gi=0;gi<=64;gi+=16){s+=L(xf,36+gi,xf+12,36+gi,'ld')}
-  s+=R(xr,40,18,160,'mt');
-  for(gi=0;gi<=160;gi+=16){s+=L(xr,40+gi,xr+18,40+gi,'ld')}
-  s+=L(xf+12,52,630,52,'ld ds')+L(xr+18,170,630,170,'ld ds')+
+  var tilt=-8,th=tilt*Math.PI/180,fcx=xf+6,fcy=50,
+   rot=function(x,y){var dx=x-fcx,dy=y-fcy;return [(fcx+dx*Math.cos(th)-dy*Math.sin(th)).toFixed(1),(fcy+dx*Math.sin(th)+dy*Math.cos(th)).toFixed(1)]},
+   fe=[rot(xf,fr[0]),rot(xf,fr[1])];
+  for(i=0;i<2;i++){s+=L(78,120,xr,rr[i],'bc2 ds')+L(78,120,fe[i][0],fe[i][1],'bc2 ds')}
+  for(i=0;i<2;i++){s+=MV('M78 120 L'+xr+' '+rr[i],2.4,'dc',-0.6*i,'',3.5)+MV('M78 120 L'+fe[i][0]+' '+fe[i][1],2,'dc',-0.5-0.7*i,'',3.5)}
+  /* front detector: faint untilted reference plane, then the detector rotated slightly about its centre (angle exaggerated) */
+  s+=L(fcx,16,fcx,86,'ld ds fd')+'<g transform="rotate('+tilt+' '+fcx+' '+fcy+')">'+R(xf,14,12,72,'mt');
+  for(gi=0;gi<=72;gi+=18){s+=L(xf,14+gi,xf+12,14+gi,'ld')}
+  s+='</g>';
+  s+=R(xr,84,18,72,'mt');
+  for(gi=0;gi<=72;gi+=18){s+=L(xr,84+gi,xr+18,84+gi,'ld')}
+  s+=L(rot(xf+12,50)[0],rot(xf+12,50)[1],630,52,'ld ds')+L(xr+18,156,630,170,'ld ds')+
   R(630,24,110,80,'mt',4)+R(630,124,110,90,'mt',4)+
   '<path class="ring" d="M640 92 Q685 52 730 92" style="stroke-width:3;opacity:.45"/><path class="ring" d="M648 62 Q685 36 722 62" style="stroke-width:3;opacity:.8"/>'+
   '<circle class="ring" cx="685" cy="172" r="36" style="stroke-width:3;opacity:.35"/><circle class="ring" cx="685" cy="172" r="25" style="stroke-width:3;opacity:.6"/><circle class="ring" cx="685" cy="172" r="14" style="stroke-width:3;opacity:.95"/>';
@@ -507,8 +554,8 @@ detector:{cap:"SANS2D has two detectors in one evacuated tank: a rear detector o
   })();
   s+='<circle cx="685" cy="172" r="6" style="fill:var(--ink)"/>'+
   T(685,118,'Front detector image','middle')+T(685,228,'Rear detector image','middle')+
-  C(70,136,70,170,'Sample','b')+C(xr-6,106,xr-6,34,'Beam stop','t')+
-  C(xf+6,36,xf-4,22,'Front detector','l')+C(xr+9,200,xr+9,214,'Rear detector','b');
+  C(70,136,70,170,'Sample','b')+C(xr-6,106,xr-6,78,'Beam stop','t')+
+  C(rot(xf+12,22)[0],rot(xf+12,22)[1],xf+32,24,'Front detector','r')+C(xr+9,156,xr+9,176,'Rear detector',xr>440?'l':'b');
   return s+END}}
 };
 
@@ -567,6 +614,34 @@ function dark(){var t=r.dataset.theme;return t?t==="dark":m.matches}
 function label(){var d=dark();document.getElementById("themeIcon").textContent=d?"☀️":"🌙";document.getElementById("themeLabel").textContent=d?"Light mode":"Dark mode"}
 b.onclick=function(){r.dataset.theme=dark()?"light":"dark";label();window.dispatchEvent(new Event("themechange"))};
 m.addEventListener("change",label);label()})();
+</script>
+<script>
+(function(){var t=document.getElementById("albumTrack");if(!t)return;
+var slides=t.querySelectorAll(".slide"),n=slides.length,dots=document.getElementById("albumDots"),count=document.getElementById("albumCount"),cur=0,db=[];
+var calm=matchMedia("(prefers-reduced-motion: reduce)");
+function go(i){i=Math.max(0,Math.min(n-1,i));t.scrollTo({left:i*t.clientWidth,behavior:calm.matches?"auto":"smooth"})}
+function mark(i){cur=i;count.textContent=(i+1)+" / "+n;db.forEach(function(b,k){if(k===i)b.setAttribute("aria-current","true");else b.removeAttribute("aria-current")});
+  document.getElementById("albumPrev").disabled=i===0;document.getElementById("albumNext").disabled=i===n-1}
+for(var i=0;i<n;i++)(function(i){var b=document.createElement("button");b.type="button";b.setAttribute("aria-label","Photo "+(i+1)+" of "+n);b.onclick=function(){go(i)};dots.appendChild(b);db.push(b)})(i);
+document.getElementById("albumPrev").onclick=function(){go(cur-1)};
+document.getElementById("albumNext").onclick=function(){go(cur+1)};
+var tick;t.addEventListener("scroll",function(){clearTimeout(tick);tick=setTimeout(function(){var i=Math.round(t.scrollLeft/t.clientWidth);if(i!==cur)mark(i)},60)},{passive:true});
+t.addEventListener("keydown",function(e){if(e.key==="Home"){e.preventDefault();go(0)}else if(e.key==="End"){e.preventDefault();go(n-1)}});
+window.addEventListener("resize",function(){t.scrollLeft=cur*t.clientWidth});
+/* auto-advance: on by default (off if the visitor prefers reduced motion); pauses while the pointer or keyboard focus is on the photos */
+var auto=document.getElementById("albumAuto"),timer=null,held=false,DELAY=5000;
+function stop(){if(timer){clearInterval(timer);timer=null}}
+function start(){stop();if(auto.checked&&!held&&!document.hidden)timer=setInterval(function(){go(cur>=n-1?0:cur+1)},DELAY)}
+if(calm.matches)auto.checked=false;
+auto.addEventListener("change",start);
+["pointerenter","focusin"].forEach(function(ev){t.addEventListener(ev,function(){held=true;stop()})});
+["pointerleave","focusout"].forEach(function(ev){t.addEventListener(ev,function(){held=false;start()})});
+/* any manual navigation restarts the countdown so the photo isn't swapped straight after a click */
+["albumPrev","albumNext","albumDots"].forEach(function(id){document.getElementById(id).addEventListener("click",start)});
+t.addEventListener("touchend",start,{passive:true});
+document.addEventListener("visibilitychange",start);
+start();
+mark(0)})();
 </script>
 <script src="nav.js"></script>
 </body>
