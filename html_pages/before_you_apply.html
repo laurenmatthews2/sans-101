@@ -139,6 +139,19 @@ details.more summary{cursor:pointer;color:var(--accent);font-weight:500;font-siz
 .xplot svg .mk{fill:var(--accent)}
 .xplot svg .mk2{fill:none;stroke:var(--accent2);stroke-width:2.5}
 .seg button{white-space:nowrap}
+.xwrap{position:relative}
+.xplot{position:relative}
+.info .hd{flex-wrap:wrap}
+.aggpop{flex:1 1 280px;min-width:0;max-width:460px;align-self:center;margin:0 16px;background:var(--panel);color:var(--ink);border:1px solid var(--accent2);border-left:4px solid var(--accent2);border-radius:6px;padding:8px 8px 8px 12px;font-size:13px;line-height:1.35;animation:aggin .18s ease-out}
+@media(max-width:760px){.aggpop{flex-basis:100%;order:3;margin:10px 0 0}}
+.aggpop[hidden]{display:none}
+.aggpop .ah{display:flex;align-items:flex-start;gap:7px}
+.aggpop .ah svg{width:16px;height:16px;flex:none;margin-top:1px;fill:none;stroke:var(--accent2);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.aggpop .ah p{margin:0;flex:1}
+.aggpop .aggx{flex:none;margin:-2px 0 0;padding:0 5px;font-size:16px;line-height:1.2;border:0;background:none;color:var(--mute)}
+.aggpop .aggx:hover{color:var(--ink)}
+@keyframes aggin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.aggpop{animation:none}}
 .lgd{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--accent);margin-right:7px;vertical-align:-1px}
 </style>
 </head>
@@ -167,12 +180,12 @@ details.more summary{cursor:pointer;color:var(--accent);font-weight:500;font-siz
 <section id="discuss">
 <h2>Talk to us first</h2>
 <p>You are very welcome to contact the SANS group before you apply. A short conversation can save a lot of time, and is <strong>essential</strong> if you plan to use a non-standard sample environment, deuterated materials or any equipment that you will bring yourself. Useful things to have ready:</p>
-<ul class="list">
-<li>The scientific question, in one or two sentences, and why neutrons are needed to answer it.</li>
-<li>What you already know about the sample (see the next section).</li>
-<li>The conditions you want to study: temperature, concentration, pH, flow, shear, pressure and so on.</li>
-<li>Whether the sample is, or could be, isotopically labelled or measured in deuterated solvent.</li>
-</ul>
+<ol class="list">
+<li><strong>Scientific question</strong>: what is your goal and why neutrons are needed to answer it.</li>
+<li><strong>Previous knowledge</strong>: what do you already know about the sample.</li>
+<li><strong>Measurement conditions</strong>: temperature, concentration, pH, flow, shear, pressure and so on.</li>
+<li><strong>Deuteration</strong>: whether the sample is, needs, or could be, isotopically labelled or measured in deuterated solvent.</li>
+</ol>
 </section>
 
 <section id="existing">
@@ -183,9 +196,10 @@ details.more summary{cursor:pointer;color:var(--accent);font-weight:500;font-siz
 <div class="box empty" id="defaultPrompt">Select any technique above to display details here.</div>
 <div class="box" id="infoContent" hidden>
 <div class="hd"><div><span class="badge">Prior characterisation</span><h3 id="infoTitle" style="margin:6px 0 0"></h3></div>
+<div class="aggpop" id="aggpop" role="status" hidden><div class="ah"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3l8 14H2z"/><path d="M10 8v4M10 14.5v.1"/></svg><p id="aggtxt">In scattering experiments, aggregation overwhelms the signal from individual particles.</p><button type="button" class="aggx" id="aggx" aria-label="Dismiss">×</button></div></div>
 <button id="closeBtn" aria-label="Close panel">Close</button></div>
 <div class="row narrow" style="margin-top:14px;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)">
-<div><div class="xplot" id="xplot"><svg id="xsvg" viewBox="0 0 480 280" role="img" aria-label="Illustrative example data that changes as you move the slider"></svg></div>
+<div class="xwrap"><div class="xplot" id="xplot"><svg id="xsvg" viewBox="0 0 480 280" role="img" aria-label="Illustrative example data that changes as you move the slider"></svg></div>
 <div class="note" style="margin-top:6px">Illustrative example data.</div></div>
 <div class="xside">
 <div><label class="xlead" for="xt">Slide the sample from good to problem</label>
@@ -203,7 +217,7 @@ details.more summary{cursor:pointer;color:var(--accent);font-weight:500;font-siz
 </details>
 </div>
 </div>
-<p style="max-width:none;color:var(--mute);margin:0 0 0">You do not need every technique. Choose the two or three that best demonstrate sample quality and that tell us the length scales to expect, then explain what <em>remains unknown</em> that SANS can address.</p>
+<p style="max-width:none;color:var(--mute);margin:0 0 0">You do not need every technique. Choose the two or three that best demonstrate sample quality and that tell us the length scales to expect, then explain what <strong>remains unknown</strong> that SANS can address.</p>
 </section>
 
 <section id="sld">
@@ -229,6 +243,14 @@ details.more summary{cursor:pointer;color:var(--accent);font-weight:500;font-siz
 <div class="formula" id="formula" aria-label="SLD equals sum of scattering lengths divided by molecular volume">ρ<sub>SLD</sub> = Σ<sub>i</sub> <button type="button" class="fsym" data-k="b" aria-pressed="false">b<sub>i</sub></button> / <button type="button" class="fsym" data-k="Vm" aria-pressed="false">V<sub>m</sub></button> = <button type="button" class="fsym" data-k="d" aria-pressed="false">d</button> · <button type="button" class="fsym" data-k="NA" aria-pressed="false">N<sub>A</sub></button> · Σ<sub>i</sub> <button type="button" class="fsym" data-k="b" aria-pressed="false">b<sub>i</sub></button> / <button type="button" class="fsym" data-k="M" aria-pressed="false">M</button></div>
 <div class="fcap" id="fcap" aria-live="polite"></div>
 
+<details class="more"><summary>More detail</summary>
+<p>A SANS (or SAXS) experiment does not see atoms individually; it sees how the <strong>scattering length density (SLD)</strong> varies from place to place in your sample. Particles, polymers, micelles or membranes are visible because their SLD differs from that of their surroundings. The SLD follows directly from the <strong>chemical composition</strong> and the <strong>mass density</strong>, so you can calculate it before you ever come to ISIS, and it tells you how strong the signal will be and whether contrast variation is worth considering.</p>
+<ul class="list">
+<li><strong>b<sub>i</sub></strong> is the scattering length of each atom in the molecule (or repeat unit), <strong>d</strong> the mass density, <strong>M</strong> the molar mass and <strong>N<sub>A</sub></strong> Avogadro's number.</li>
+</ul>
+</details>
+
+
 <h3>Three things change the SLD</h3>
 <div class="box">
 <div class="seg" id="sldSeg" role="group" aria-label="What changes the SLD">
@@ -242,20 +264,19 @@ details.more summary{cursor:pointer;color:var(--accent);font-weight:500;font-siz
 <div class="note" id="sldLine"></div>
 </div>
 <div class="xplot"><svg id="ruler" viewBox="0 0 480 110" role="img" aria-label="Number line showing the SLD value"></svg></div>
-</div></div>
-
+</div>
 <details class="more"><summary>More detail</summary>
-<p>A SANS (or SAXS) experiment does not see atoms individually; it sees how the <strong>scattering length density (SLD)</strong> varies from place to place in your sample. Particles, polymers, micelles or membranes are visible because their SLD differs from that of their surroundings. The SLD follows directly from the <strong>chemical composition</strong> and the <strong>mass density</strong>, so you can calculate it before you ever come to ISIS, and it tells you how strong the signal will be and whether contrast variation is worth considering.</p>
+<p>Why is the chemistry of the system so important for SLDs?</p>
 <ul class="list">
-<li><strong>b<sub>i</sub></strong> is the scattering length of each atom in the molecule (or repeat unit), <strong>d</strong> the mass density, <strong>M</strong> the molar mass and <strong>N<sub>A</sub></strong> Avogadro's number.</li>
 <li><strong>Composition matters, including isotopes.</strong> Hydrogen and deuterium have very different neutron scattering lengths, which is what makes H/D contrast variation possible.</li>
 <li><strong>Exchangeable hydrogens</strong> (for example in -OH, -NH or -COOH groups) swap with the solvent, so the effective SLD of proteins, DNA, polysaccharides and similar materials depends on the H₂O/D₂O ratio.</li>
 <li><strong>Density is part of the answer.</strong> Use the density of the material in your sample (for a dissolved or hydrated component, the partial specific volume), not necessarily the bulk dry value.</li>
 </ul>
 </details>
+</div>
 
-<h3>Neutrons and X-rays see atoms differently</h3>
-<p style="max-width:none;color:var(--mute);margin:0 0 14px">X-ray scattering grows steadily with atomic number Z. Neutron scattering is irregular, differs between isotopes, and can be negative (¹H).</p>
+<h3>Why are SANS and SAXS complementary techniques?</h3>
+<p style="max-width:none;color:var(--mute);margin:0 0 14px">The answer is in how X-rays and neutrons interact with matter. X-rays interact with electron density, hence, the SLD steadily increasing with atomic number Z. However, neutrons interact with atomic nuclei leading to differences between isotopes, highlighted by a hydrogen (¹H; negative) and deuterium (²H; positive) atom.</p>
 <div class="box">
 <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:10px">
 <span style="font-size:14px;color:var(--mute)">Show:</span>
@@ -396,49 +417,49 @@ var css=function(v){return getComputedStyle(document.documentElement).getPropert
 
 /* ---------- technique cards (interactive) ---------- */
 var TECH=[
-{t:"DLS",ab:"DLS",s:"Dynamic light scattering",draw:"dls",
+{t:"DLS",ab:"DLS",s:"Dynamic light scattering",draw:"dls",agg:1,
  lo:"Monodisperse",hi:"Aggregated",ok:"One narrow peak",bad:"Second peak = aggregates",
- f:["Size and clumping","Biased to big particles","Size plot, repeat batches"],
+ f:["Size and aggregation","Biased to big particles, assumes spherical","Size distribution plots"],
  d:"Measures how fast particles diffuse in solution through fluctuations in scattered light, and converts that into a hydrodynamic size distribution. It is quick, uses little sample and is often the first check on a new batch.",
  g:"Hydrodynamic radius, polydispersity, signs of aggregation, and stability over time or temperature.",
  l:"Strongly weighted towards the largest particles, and gives no shape or internal structure. Poor for polydisperse or very concentrated samples.",
- sh:"Size distribution plots with the concentration and temperature used, and repeat batches to show reproducibility."},
-{t:"Microscopy",ab:"EM",s:"TEM, cryo-EM, SEM, AFM",draw:"em",
+ sh:"Size distribution plots with the concentration and temperature used - include errors."},
+{t:"Microscopy",ab:"EM",s:"TEM, cryo-EM, SEM, AFM",draw:"em",agg:1,
  lo:"Well dispersed",hi:"Clumped",ok:"Separate, even particles",bad:"Clumps, uneven sizes",
  f:["Shape and size, directly","Few particles; dried or frozen","Images with scale bar"],
  d:"Direct images of particles, fibres, vesicles or surfaces. Cryo-TEM is especially valuable for soft matter and biological samples because it preserves the solution structure.",
  g:"Morphology, approximate dimensions, and whether the structures you assume are really present.",
  l:"Looks at a tiny number of particles in a prepared state (dried, frozen or on a surface), so it may not represent the bulk solution.",
  sh:"Representative images with scale bars, plus a note on how the sample was prepared and how it compares with the solution conditions."},
-{t:"SAXS",ab:"SAXS",s:"Small-angle X-ray scattering",draw:"saxs",
+{t:"SAXS",ab:"SAXS",s:"Small-angle X-ray scattering",draw:"saxs",agg:1,
  lo:"Clean",hi:"Aggregated",ok:"Clear oscillations",bad:"Low-q upturn = clumping",
  f:["Shape and size in solution","Averages; no component contrast","The curve, plus any fit"],
  d:"Probes the same length scales as SANS, using X-rays. A SAXS curve shows how well the sample scatters, its overall size and shape, and which q-range will be important.",
  g:"Radius of gyration, shape, interparticle interactions, and the q-range with features that you will want to measure with neutrons.",
  l:"X-ray contrast follows electron density, so it cannot separate components the way neutron contrast variation can, and some samples are damaged by the beam.",
  sh:"The curve itself, any fit, and a statement of what the X-ray data could not distinguish and why neutrons will."},
-{t:"SEC / HPLC",ab:"SEC",s:"Chromatography, SEC-MALS",draw:"sec",
+{t:"SEC / HPLC",ab:"SEC",s:"Chromatography, SEC-MALS",draw:"sec",agg:1,
  lo:"Single peak",hi:"With aggregate",ok:"One sharp peak",bad:"Early shoulder = aggregate",
  f:["Purity and oligomeric state","Dilutes the sample","Trace with column and buffer"],
  d:"Size-exclusion chromatography separates species by size and can be combined with multi-angle light scattering (MALS) and UV or refractive index detection. Reverse-phase and other HPLC modes check purity and composition.",
  g:"Purity, oligomeric state, aggregate content, molar mass (with MALS), and the composition of mixtures.",
  l:"The sample is diluted and the buffer and column can change its state, so it may not reflect the sample at the concentration you will measure.",
  sh:"Chromatograms showing a single, well-resolved species (or the mixture you expect), with the column and buffer used."},
-{t:"Light scattering",ab:"SLS",s:"Static light scattering, zeta potential",draw:"sls",
+{t:"Static light scattering",ab:"SLS",s:"SLS, zeta potential",draw:"sls",agg:1,
  lo:"Stable",hi:"Unstable",ok:"Strong charge, stays apart",bad:"Weak charge, sticks together",
  f:["Molar mass and surface charge","Dust ruins it","Values with buffer, pH, salt"],
  d:"Static light scattering gives molar mass and interactions (second virial coefficient), while zeta potential indicates the surface charge and colloidal stability.",
  g:"Weight-average molar mass, interactions in solution, and how charge stabilises particles.",
  l:"Limited length-scale information, and sensitive to dust or large aggregates.",
  sh:"Values with the buffer, pH and ionic strength, especially if interactions are central to the proposed study."},
-{t:"UV-Vis",ab:"UV",s:"Absorbance spectroscopy",draw:"uv",
+{t:"UV-Vis",ab:"UV",s:"Absorbance spectroscopy",draw:"uv",agg:1,
  lo:"Clean",hi:"Aggregated",ok:"Clean peak, flat baseline",bad:"Rising baseline = scattering",
  f:["Concentration, quick purity check","Nothing on structure","Spectrum, ε and pathlength"],
  d:"Measures how much light the sample absorbs at each wavelength. With a known extinction coefficient it gives the concentration quickly, and the shape of the spectrum can flag contaminants or scattering from aggregates.",
  g:"Concentration, extinction coefficient, and a quick check for aggregation (a rising baseline) or contamination.",
  l:"No direct information on structure in solution, and the sample needs a suitable chromophore.",
  sh:"The spectrum, with the concentration, extinction coefficient and pathlength used."},
-{t:"NMR, MS & gels",ab:"NMR",s:"Identity and purity",draw:"gel",
+{t:"NMR, MS & gels",ab:"NMR",s:"Identity and purity",draw:"gel",agg:2,
  lo:"Pure",hi:"Impure",ok:"3 batches, same clean band",bad:"Extra bands in batches 2 and 3",
  f:["Identity, purity, labelling","Gels miss minor impurities","Gel, spectrum or mass, formula"],
  d:"Routine analytical data that confirm identity and purity. For neutron work these also tell you the molecular formula, which is needed to calculate scattering length densities accurately.",
@@ -556,13 +577,22 @@ TECH.forEach(function(p,i){
   b.style.setProperty("--h",HUES[i%HUES.length]);
   b.onclick=function(){showInfo(i)};
   $("cards").appendChild(b);cardEls.push(b)});
+var aggDismissed=false,AGGTXT={1:"In scattering experiments, aggregation overwhelms the signal from individual particles.",2:"Impurities observed in NMR or gels can blur composition, structure, and deuteration levels."};
+function aggPop(show,kind){
+  var el=$("aggpop");
+  if(kind)$("aggtxt").textContent=AGGTXT[kind];
+  if(!show){aggDismissed=false;el.hidden=true;return}
+  if(!aggDismissed)el.hidden=false}
+$("aggx").onclick=function(){aggDismissed=true;$("aggpop").hidden=true};
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("aggpop").hidden){aggDismissed=true;$("aggpop").hidden=true}});
 function xSet(v){
   var d=TECH[xcur],bad=v>=.5;
   $("xt").value=Math.round(v*100);
   $("xsvg").innerHTML=DRAW[d.draw](v);
   $("xverdict").className="verdict "+(bad?"bad":"good");
   $("xvtxt").textContent=bad?d.bad:d.ok;
-  $("xvico").innerHTML=bad?'<path d="M10 3l8 14H2z"/><path d="M10 8v4M10 14.5v.1"/>':'<path d="M4 10.5l4 4 8-9"/>'}
+  $("xvico").innerHTML=bad?'<path d="M10 3l8 14H2z"/><path d="M10 8v4M10 14.5v.1"/>':'<path d="M4 10.5l4 4 8-9"/>';
+  aggPop(bad&&!!d.agg,d.agg)}
 function showInfo(i){
   var d=TECH[i];xcur=i;
   cardEls.forEach(function(c,j){c.setAttribute("aria-pressed",j===i)});
@@ -797,7 +827,7 @@ function buildEl(){
   echart=new Chart($("elemChart").getContext("2d"),{type:"bar",
     data:{labels:EL.map(function(e){return e==="D"?"D (²H)":e}),datasets:[
       {label:"Neutron b (fm)",data:EL.map(function(e){return ELEM[e].b}),backgroundColor:css("--accent"),hidden:probeMode==="x"},
-      {label:"X-ray b = Z × 2.818 (fm)",data:EL.map(function(e){return ELEM[e].Z*2.818}),backgroundColor:css("--accent2"),hidden:probeMode==="n"}]},
+      {label:"X-ray b (fm)",data:EL.map(function(e){return ELEM[e].Z*2.818}),backgroundColor:css("--accent2"),hidden:probeMode==="n"}]},
     options:{responsive:true,maintainAspectRatio:false,animation:false,
       scales:{x:{grid:{color:grid},title:{display:true,text:"Element",font:{weight:"bold"}}},
               y:{min:-5,max:80,grid:{color:grid},title:{display:true,text:"Scattering length (fm)",font:{weight:"bold"}}}},
